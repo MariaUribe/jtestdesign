@@ -17,10 +17,10 @@ import java.awt.Frame;
  *
  * @author maya
  */
-public class AyudaArgumentos extends javax.swing.JDialog {
+public class AyudaAssert extends javax.swing.JDialog {
 
     /** Creates new form AyudaArgumentos */
-    public AyudaArgumentos(Frame frame, Boolean modal) {
+    public AyudaAssert(Frame frame, Boolean modal) {
         super(frame, modal);
         initComponents();
     }
@@ -34,7 +34,7 @@ public class AyudaArgumentos extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        tituloArgumentos = new javax.swing.JLabel();
+        tituloAssert = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         ejemploArgumentos = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
@@ -47,46 +47,57 @@ public class AyudaArgumentos extends javax.swing.JDialog {
         numero3 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
+        numero4 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        tituloArgumentos.setFont(new java.awt.Font("Lucida Grande", 1, 14));
-        tituloArgumentos.setText(org.openide.util.NbBundle.getMessage(AyudaArgumentos.class, "AyudaArgumentos.tituloArgumentos.text")); // NOI18N
+        tituloAssert.setFont(new java.awt.Font("Lucida Grande", 1, 14));
+        tituloAssert.setText(org.openide.util.NbBundle.getMessage(AyudaAssert.class, "AyudaAssert.tituloAssert.text")); // NOI18N
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
-        ejemploArgumentos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/teg/recursos/imagenes/ayudaArgumentos.png"))); // NOI18N
-        ejemploArgumentos.setText(org.openide.util.NbBundle.getMessage(AyudaArgumentos.class, "AyudaArgumentos.ejemploArgumentos.text")); // NOI18N
+        ejemploArgumentos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/teg/recursos/imagenes/ayudaAssert.png"))); // NOI18N
+        ejemploArgumentos.setText(org.openide.util.NbBundle.getMessage(AyudaAssert.class, "AyudaAssert.ejemploArgumentos.text")); // NOI18N
         ejemploArgumentos.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         jPanel4.setBackground(new java.awt.Color(255, 255, 255));
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
-        numero1.setFont(new java.awt.Font("Lucida Grande", 1, 13)); // NOI18N
+        numero1.setFont(new java.awt.Font("Lucida Grande", 1, 13));
         numero1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/teg/recursos/imagenes/uno.png"))); // NOI18N
-        numero1.setText(org.openide.util.NbBundle.getMessage(AyudaArgumentos.class, "AyudaArgumentos.numero1.text")); // NOI18N
+        numero1.setText(org.openide.util.NbBundle.getMessage(AyudaAssert.class, "AyudaAssert.numero1.text")); // NOI18N
 
-        jLabel1.setText(org.openide.util.NbBundle.getMessage(AyudaArgumentos.class, "AyudaArgumentos.jLabel1.text")); // NOI18N
+        jLabel1.setText(org.openide.util.NbBundle.getMessage(AyudaAssert.class, "AyudaAssert.jLabel1.text")); // NOI18N
 
-        jLabel2.setText(org.openide.util.NbBundle.getMessage(AyudaArgumentos.class, "AyudaArgumentos.jLabel2.text")); // NOI18N
+        jLabel2.setText(org.openide.util.NbBundle.getMessage(AyudaAssert.class, "AyudaAssert.jLabel2.text")); // NOI18N
 
-        numero2.setFont(new java.awt.Font("Lucida Grande", 1, 13)); // NOI18N
+        numero2.setFont(new java.awt.Font("Lucida Grande", 1, 13));
         numero2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/teg/recursos/imagenes/dos.png"))); // NOI18N
-        numero2.setText(org.openide.util.NbBundle.getMessage(AyudaArgumentos.class, "AyudaArgumentos.numero2.text")); // NOI18N
+        numero2.setText(org.openide.util.NbBundle.getMessage(AyudaAssert.class, "AyudaAssert.numero2.text")); // NOI18N
 
-        jLabel3.setText(org.openide.util.NbBundle.getMessage(AyudaArgumentos.class, "AyudaArgumentos.jLabel3.text")); // NOI18N
+        jLabel3.setText(org.openide.util.NbBundle.getMessage(AyudaAssert.class, "AyudaAssert.jLabel3.text")); // NOI18N
 
-        jLabel4.setText(org.openide.util.NbBundle.getMessage(AyudaArgumentos.class, "AyudaArgumentos.jLabel4.text")); // NOI18N
+        jLabel4.setText(org.openide.util.NbBundle.getMessage(AyudaAssert.class, "AyudaAssert.jLabel4.text")); // NOI18N
 
-        numero3.setFont(new java.awt.Font("Lucida Grande", 1, 13)); // NOI18N
+        numero3.setFont(new java.awt.Font("Lucida Grande", 1, 13));
         numero3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/teg/recursos/imagenes/tres.png"))); // NOI18N
-        numero3.setText(org.openide.util.NbBundle.getMessage(AyudaArgumentos.class, "AyudaArgumentos.numero3.text")); // NOI18N
+        numero3.setText(org.openide.util.NbBundle.getMessage(AyudaAssert.class, "AyudaAssert.numero3.text")); // NOI18N
 
-        jLabel5.setText(org.openide.util.NbBundle.getMessage(AyudaArgumentos.class, "AyudaArgumentos.jLabel5.text")); // NOI18N
+        jLabel5.setText(org.openide.util.NbBundle.getMessage(AyudaAssert.class, "AyudaAssert.jLabel5.text")); // NOI18N
 
-        jLabel6.setText(org.openide.util.NbBundle.getMessage(AyudaArgumentos.class, "AyudaArgumentos.jLabel6.text")); // NOI18N
+        jLabel6.setText(org.openide.util.NbBundle.getMessage(AyudaAssert.class, "AyudaAssert.jLabel6.text")); // NOI18N
+
+        numero4.setFont(new java.awt.Font("Lucida Grande", 1, 13)); // NOI18N
+        numero4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/teg/recursos/imagenes/cuatro.png"))); // NOI18N
+        numero4.setText(org.openide.util.NbBundle.getMessage(AyudaAssert.class, "AyudaAssert.numero4.text")); // NOI18N
+
+        jLabel8.setText(org.openide.util.NbBundle.getMessage(AyudaAssert.class, "AyudaAssert.jLabel8.text")); // NOI18N
+
+        jLabel9.setText(org.openide.util.NbBundle.getMessage(AyudaAssert.class, "AyudaAssert.jLabel9.text")); // NOI18N
 
         org.jdesktop.layout.GroupLayout jPanel4Layout = new org.jdesktop.layout.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -110,16 +121,22 @@ public class AyudaArgumentos extends javax.swing.JDialog {
                     .add(jPanel4Layout.createSequentialGroup()
                         .add(numero3)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                        .add(jLabel5))
+                        .add(jPanel4Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(jLabel6)
+                            .add(jLabel5)))
                     .add(jPanel4Layout.createSequentialGroup()
-                        .add(52, 52, 52)
-                        .add(jLabel6)))
+                        .add(numero4)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(jLabel8))
+                    .add(jPanel4Layout.createSequentialGroup()
+                        .add(46, 46, 46)
+                        .add(jLabel9)))
                 .addContainerGap(24, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(jPanel4Layout.createSequentialGroup()
-                .add(29, 29, 29)
+                .addContainerGap()
                 .add(jPanel4Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(numero1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 33, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(jPanel4Layout.createSequentialGroup()
@@ -140,11 +157,18 @@ public class AyudaArgumentos extends javax.swing.JDialog {
                         .add(jLabel5)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(jLabel6)))
-                .addContainerGap(34, Short.MAX_VALUE))
+                .add(18, 18, 18)
+                .add(jPanel4Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(numero4, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 35, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(jPanel4Layout.createSequentialGroup()
+                        .add(jLabel8)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(jLabel9)))
+                .addContainerGap(39, Short.MAX_VALUE))
         );
 
         jLabel7.setFont(new java.awt.Font("Lucida Grande", 1, 14)); // NOI18N
-        jLabel7.setText(org.openide.util.NbBundle.getMessage(AyudaArgumentos.class, "AyudaArgumentos.jLabel7.text")); // NOI18N
+        jLabel7.setText(org.openide.util.NbBundle.getMessage(AyudaAssert.class, "AyudaAssert.jLabel7.text")); // NOI18N
 
         org.jdesktop.layout.GroupLayout jPanel3Layout = new org.jdesktop.layout.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -152,10 +176,10 @@ public class AyudaArgumentos extends javax.swing.JDialog {
             jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .add(jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(ejemploArgumentos)
-                    .add(jPanel4, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .add(jLabel7))
+                .add(jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, jPanel4, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, ejemploArgumentos)
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, jLabel7))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -163,14 +187,14 @@ public class AyudaArgumentos extends javax.swing.JDialog {
             .add(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .add(ejemploArgumentos)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 23, Short.MAX_VALUE)
+                .add(30, 30, 30)
                 .add(jLabel7)
-                .add(18, 18, 18)
-                .add(jPanel4, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                .add(jPanel4, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
-        jButton2.setText(org.openide.util.NbBundle.getMessage(AyudaArgumentos.class, "AyudaArgumentos.jButton2.text")); // NOI18N
+        jButton2.setText(org.openide.util.NbBundle.getMessage(AyudaAssert.class, "AyudaAssert.jButton2.text")); // NOI18N
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
@@ -183,10 +207,10 @@ public class AyudaArgumentos extends javax.swing.JDialog {
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(layout.createSequentialGroup()
                 .addContainerGap()
-                .add(tituloArgumentos)
-                .addContainerGap(410, Short.MAX_VALUE))
+                .add(tituloAssert)
+                .addContainerGap(459, Short.MAX_VALUE))
             .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(484, Short.MAX_VALUE)
+                .addContainerGap(491, Short.MAX_VALUE)
                 .add(jButton2)
                 .addContainerGap())
             .add(layout.createSequentialGroup()
@@ -198,10 +222,10 @@ public class AyudaArgumentos extends javax.swing.JDialog {
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .add(tituloArgumentos)
-                .add(18, 18, 18)
-                .add(jPanel3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .add(tituloAssert)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                .add(jPanel3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .add(18, 18, 18)
                 .add(jButton2)
                 .addContainerGap())
         );
@@ -223,12 +247,15 @@ public class AyudaArgumentos extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JLabel numero1;
     private javax.swing.JLabel numero2;
     private javax.swing.JLabel numero3;
-    private javax.swing.JLabel tituloArgumentos;
+    private javax.swing.JLabel numero4;
+    private javax.swing.JLabel tituloAssert;
     // End of variables declaration//GEN-END:variables
 
 }
