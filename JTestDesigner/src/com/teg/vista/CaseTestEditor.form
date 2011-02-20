@@ -68,12 +68,12 @@
                           </Group>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" alignment="0" attributes="0">
+                              <Group type="102" attributes="0">
                                   <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="nombreEscenario" pref="345" max="32767" attributes="0"/>
                               </Group>
-                              <Component id="panelMetodoInfo" min="-2" max="-2" attributes="0"/>
+                              <Component id="panelMetodoInfo" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -85,7 +85,7 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="1" attributes="0">
                   <EmptySpace max="32767" attributes="0"/>
-                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                  <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="1">
                           <Component id="jPanel4" min="-2" pref="205" max="-2" attributes="0"/>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
@@ -93,13 +93,13 @@
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <Group type="102" alignment="0" attributes="1">
+                      <Group type="102" alignment="0" attributes="0">
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="nombreEscenario" linkSize="12" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel5" linkSize="12" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="panelMetodoInfo" min="0" pref="579" max="32767" attributes="1"/>
+                          <Component id="panelMetodoInfo" min="0" max="32767" attributes="1"/>
                       </Group>
                   </Group>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
@@ -232,11 +232,11 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
+                  <Group type="102" alignment="1" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Component id="panelTablaArgumentos" alignment="0" max="32767" attributes="1"/>
                           <Component id="panelAssert" alignment="0" min="0" max="32767" attributes="1"/>
-                          <Component id="panelTablaArgumentos" alignment="0" min="-2" max="-2" attributes="1"/>
                           <Component id="guardarBt" alignment="1" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
@@ -246,10 +246,10 @@
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
-                      <Component id="panelTablaArgumentos" min="-2" max="-2" attributes="1"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="panelTablaArgumentos" max="32767" attributes="1"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="panelAssert" max="32767" attributes="0"/>
+                      <Component id="panelAssert" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="guardarBt" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
@@ -282,12 +282,12 @@
                           <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="192" max="-2" attributes="0"/>
                       </Group>
-                      <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace max="-2" attributes="0"/>
+                      <Group type="102" alignment="1" attributes="0">
+                          <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
                           <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="labelObjetoRetorno" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="252" max="32767" attributes="0"/>
+                          <EmptySpace pref="244" max="32767" attributes="0"/>
                           <Component id="ayudaArgumento" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
@@ -300,10 +300,10 @@
                               <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="135" max="32767" attributes="0"/>
+                          <EmptySpace pref="138" max="32767" attributes="0"/>
                           <Group type="103" groupAlignment="1" attributes="0">
-                              <Component id="ayudaArgumento" linkSize="11" alignment="1" min="-2" max="-2" attributes="0"/>
-                              <Group type="103" alignment="1" groupAlignment="3" attributes="0">
+                              <Component id="ayudaArgumento" linkSize="11" min="-2" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="jLabel6" linkSize="11" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="labelObjetoRetorno" linkSize="11" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
@@ -411,7 +411,7 @@
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="assertVariables" linkSize="1" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="lbAssertVariables" linkSize="1" alignment="3" min="-2" pref="22" max="-2" attributes="0"/>
@@ -431,7 +431,7 @@
                               <Component id="assertMensaje" linkSize="1" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="lbAssertMensaje" linkSize="1" alignment="3" min="-2" pref="22" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="12" max="32767" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
                           <Component id="ayudaAssert" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
