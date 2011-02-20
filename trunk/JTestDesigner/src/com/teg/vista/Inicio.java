@@ -71,6 +71,9 @@ public class Inicio extends javax.swing.JFrame {
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         seleccionarJar = new javax.swing.JMenuItem();
+        anadirJarAlClasspath = new javax.swing.JMenuItem();
+        jSeparator1 = new javax.swing.JPopupMenu.Separator();
+        jMenuItem2 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -104,6 +107,26 @@ public class Inicio extends javax.swing.JFrame {
             }
         });
         jMenu1.add(seleccionarJar);
+
+        anadirJarAlClasspath.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/teg/recursos/imagenes/add.png"))); // NOI18N
+        anadirJarAlClasspath.setText("Añadir JAR al Classpath");
+        anadirJarAlClasspath.setEnabled(false);
+        anadirJarAlClasspath.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                anadirJarAlClasspathActionPerformed(evt);
+            }
+        });
+        jMenu1.add(anadirJarAlClasspath);
+        jMenu1.add(jSeparator1);
+
+        jMenuItem2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/teg/recursos/imagenes/quit.png"))); // NOI18N
+        jMenuItem2.setText("Salir");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem2);
 
         jMenuBar1.add(jMenu1);
 
@@ -142,6 +165,33 @@ public class Inicio extends javax.swing.JFrame {
         }
 
     }//GEN-LAST:event_seleccionarJarActionPerformed
+
+    private void anadirJarAlClasspathActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_anadirJarAlClasspathActionPerformed
+
+        JFileChooser fc = new JFileChooser();
+        fc.addChoosableFileFilter(new Extension());
+        int returnVal = fc.showOpenDialog(Inicio.this);
+
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+
+            File jarFile = fc.getSelectedFile();
+            String jarString = jarFile.getPath();
+            File jar = new File(jarString);
+            this.copyToLib(jar);
+            this.jarsRuta.add(jar);
+            this.setJarsRuta(jarsRuta);
+            //this.nombresJar.add(jar.getName());
+            //this.classManager.getJarLista().setListData(nombresJar.toArray());
+        }
+
+    }//GEN-LAST:event_anadirJarAlClasspathActionPerformed
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+
+        this.setVisible(false);
+        this.dispose();
+        
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     public File getJava(String nombreCasoPrueba){
         File javaTest = null;
@@ -426,9 +476,12 @@ public class Inicio extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem anadirJarAlClasspath;
     private javax.swing.JDesktopPane jDesktopPane;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JMenuItem seleccionarJar;
     private javax.swing.JPanel tapa;
     // End of variables declaration//GEN-END:variables
@@ -515,5 +568,19 @@ public class Inicio extends javax.swing.JFrame {
      */
     public void setDirectorioCasoPrueba(File directorioCasoPrueba) {
         this.directorioCasoPrueba = directorioCasoPrueba;
+    }
+
+    /**
+     * @return the anadirJarAlClasspath
+     */
+    public javax.swing.JMenuItem getAnadirJarAlClasspath() {
+        return anadirJarAlClasspath;
+    }
+
+    /**
+     * @param anadirJarAlClasspath the anadirJarAlClasspath to set
+     */
+    public void setAnadirJarAlClasspath(javax.swing.JMenuItem anadirJarAlClasspath) {
+        this.anadirJarAlClasspath = anadirJarAlClasspath;
     }
 }
