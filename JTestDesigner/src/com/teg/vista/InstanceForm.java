@@ -5,7 +5,6 @@
  */
 package com.teg.vista;
 
-
 import com.teg.dominio.VariableInstancia;
 import com.teg.logica.ClassLoading;
 
@@ -89,52 +88,31 @@ import org.metawidget.swing.widgetprocessor.binding.beansbinding.BeansBindingPro
 public class InstanceForm extends javax.swing.JDialog {
 
     private Object instanceInspect;
-
     private String path;
-
     private WidgetObjectLoading listWidget = new WidgetObjectLoading();
-
     private SwingMetawidget metawidget = new SwingMetawidget();
-
     private javax.swing.JButton buttonCancelar;
-
     private org.jdom.Document docXml;
-
     private javax.swing.JButton buttonGuardar;
-
     private javax.swing.JPanel buttonPanel;
-
     private javax.swing.JPanel objectContainer;
-
-     private javax.swing.JTabbedPane tabPanel;
-
+    private javax.swing.JTabbedPane tabPanel;
     private javax.swing.JPanel panelSeleccion;
- 
-
     private Inicio inicio;
-
     private String casoPrueba;
-
     private Class clase;
-
     private ArrayList<Class> claseJars;
-
     private ClassLoading classLoader = new ClassLoading();
-
     private int objId;
-
     private JList listaSeleccionAbstracta;
-
     private JButton aceptarSeleccion;
-
     private JButton cancelarSeleccion;
-    
     private SwingDialog dialogoColeccion;
-
     VariableInstancia variableInstancia;
+    boolean vieneDelAssert;
 
     /** Creates new form InstanceForm */
-    public InstanceForm(java.awt.Frame parent, boolean modal,Object instance, String dataPath, WidgetObjectLoading listObject, Inicio inicio, int objId) {
+    public InstanceForm(java.awt.Frame parent, boolean modal, Object instance, String dataPath, WidgetObjectLoading listObject, Inicio inicio, int objId, boolean vieneDelAssert) {
 
         super(parent, modal);
 
@@ -152,6 +130,8 @@ public class InstanceForm extends javax.swing.JDialog {
 
         this.objId = objId;
 
+        this.vieneDelAssert = vieneDelAssert;
+
         initComponents2();
 
     }
@@ -160,10 +140,11 @@ public class InstanceForm extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
     }
-    public InstanceForm(java.awt.Frame parent, boolean modal, ArrayList<Class> clasesJars, String path, WidgetObjectLoading listObject, Inicio inicio, int objId){
+
+    public InstanceForm(java.awt.Frame parent, boolean modal, ArrayList<Class> clasesJars, String path, WidgetObjectLoading listObject, Inicio inicio, int objId, boolean vieneDelAssert) {
 
         super(parent, modal);
-       
+
 
         this.path = path;
 
@@ -177,12 +158,12 @@ public class InstanceForm extends javax.swing.JDialog {
 
         this.casoPrueba = inicio.getNombreCasoPrueba();
 
+        this.vieneDelAssert = vieneDelAssert;
+
         initComponentsAbstract();
 
-       
-    }
 
-    
+    }
 
     public void InspectObject(Object instance) {
         // asociamor al metawidget la instancia que va a manejar el "binding" de propiedades
@@ -195,7 +176,7 @@ public class InstanceForm extends javax.swing.JDialog {
             XmlInspectorConfig xmlConfig = new XmlInspectorConfig();
 
             File file = new File(path + "/" + "metawidgetData.xml");
-           // System.out.println(file.exists());
+            // System.out.println(file.exists());
 
             xmlConfig.setInputStream(new FileInputStream(new File(path + "/" + "metawidgetData.xml")));
             PropertyTypeInspector inspector = new PropertyTypeInspector();
@@ -224,7 +205,7 @@ public class InstanceForm extends javax.swing.JDialog {
         objectContainer.add(metawidget);
     }
 
-    private void initComponentsAbstract(){
+    private void initComponentsAbstract() {
 
         tabPanel = new javax.swing.JTabbedPane();
 
@@ -240,9 +221,9 @@ public class InstanceForm extends javax.swing.JDialog {
 
         listaSeleccionAbstracta.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        listaSeleccionAbstracta.setSize(new Dimension(100,100));
+        listaSeleccionAbstracta.setSize(new Dimension(100, 100));
 
-        listaSeleccionAbstracta.setMaximumSize(new Dimension(1000,1000));
+        listaSeleccionAbstracta.setMaximumSize(new Dimension(1000, 1000));
 
         listaSeleccionAbstracta.setLayoutOrientation(JList.HORIZONTAL_WRAP);
 
@@ -258,7 +239,7 @@ public class InstanceForm extends javax.swing.JDialog {
 
         c.gridy = 0;
 
-        c.insets = new Insets(10,20,0,5);
+        c.insets = new Insets(10, 20, 0, 5);
 
         c.anchor = GridBagConstraints.CENTER;
 
@@ -269,16 +250,16 @@ public class InstanceForm extends javax.swing.JDialog {
 
         aceptarSeleccion.setText("Aceptar Seleccion..");
 
-        aceptarSeleccion.setFont(new Font("Calibri",Font.BOLD,12));
+        aceptarSeleccion.setFont(new Font("Calibri", Font.BOLD, 12));
 
-        aceptarSeleccion.setSize(new Dimension(20,20));
+        aceptarSeleccion.setSize(new Dimension(20, 20));
 
         aceptarSeleccion.addActionListener(new java.awt.event.ActionListener() {
 
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-             
-                    aceptarSeleccionActionPerformed(evt);
-               
+
+                aceptarSeleccionActionPerformed(evt);
+
             }
         });
 
@@ -296,9 +277,9 @@ public class InstanceForm extends javax.swing.JDialog {
 
         cancelarSeleccion.setEnabled(false);
 
-        cancelarSeleccion.setSize(new Dimension(20,20));
+        cancelarSeleccion.setSize(new Dimension(20, 20));
 
-        cancelarSeleccion.setFont(new Font("Calibri",Font.BOLD,12));
+        cancelarSeleccion.setFont(new Font("Calibri", Font.BOLD, 12));
 
         cancelarSeleccion.addActionListener(new java.awt.event.ActionListener() {
 
@@ -313,7 +294,7 @@ public class InstanceForm extends javax.swing.JDialog {
 
         c.anchor = GridBagConstraints.EAST;
 
-        panelSeleccion.add(cancelarSeleccion, c );
+        panelSeleccion.add(cancelarSeleccion, c);
 
         objectContainer = new javax.swing.JPanel(false);
 
@@ -344,7 +325,7 @@ public class InstanceForm extends javax.swing.JDialog {
             }
         });
 
-         buttonGuardar.setText("Guardar Objeto");
+        buttonGuardar.setText("Guardar Objeto");
 
         buttonGuardar.addActionListener(new java.awt.event.ActionListener() {
 
@@ -361,7 +342,7 @@ public class InstanceForm extends javax.swing.JDialog {
 
         tabPanel.setMnemonicAt(0, KeyEvent.VK_1);
 
-        tabPanel.addTab("Objeto",objectContainer);
+        tabPanel.addTab("Objeto", objectContainer);
 
         tabPanel.setMnemonicAt(1, KeyEvent.VK_2);
 
@@ -438,25 +419,23 @@ public class InstanceForm extends javax.swing.JDialog {
         setSize(500, 500);
     }
 
-     private void llenarListaJarSeleccion(javax.swing.JList lista){
+    private void llenarListaJarSeleccion(javax.swing.JList lista) {
 
-         lista.setListData(claseJars.toArray());
-     }
+        lista.setListData(claseJars.toArray());
+    }
 
-    
-
-     private void aceptarSeleccionActionPerformed(java.awt.event.ActionEvent evt){
+    private void aceptarSeleccionActionPerformed(java.awt.event.ActionEvent evt) {
         try {
 
-             buttonGuardar.setEnabled(true);
+            buttonGuardar.setEnabled(true);
 
-     
+
             Class claseAbstracta = (Class) listaSeleccionAbstracta.getSelectedValue();
 
 
             Object instance = getInstance(claseAbstracta);
 
-             InspectObject(instance);
+            InspectObject(instance);
 
         } catch (InstantiationException ex) {
             Logger.getLogger(InstanceForm.class.getName()).log(Level.SEVERE, null, ex);
@@ -479,15 +458,15 @@ public class InstanceForm extends javax.swing.JDialog {
         cancelarSeleccion.setEnabled(true);
 
 
-     }
+    }
 
-     private void cancelarSeleccionActionPerformed(java.awt.event.ActionEvent evt){
+    private void cancelarSeleccionActionPerformed(java.awt.event.ActionEvent evt) {
 
-         dialogoColeccion = new com.teg.util.SwingDialog();
+        dialogoColeccion = new com.teg.util.SwingDialog();
 
         int opcion = dialogoColeccion.advertenciaDialog("Se perdera el objeto generado, Desea Continuar?", this);
 
-        if (opcion == 0){
+        if (opcion == 0) {
 
             aceptarSeleccion.setEnabled(true);
 
@@ -500,10 +479,9 @@ public class InstanceForm extends javax.swing.JDialog {
 
         }
 
-     }
+    }
 
     private void buttonCrearOtroActionPerformed(java.awt.event.ActionEvent evt) {
-
         //InspectObject(instanceInspect);
     }
 
@@ -514,7 +492,7 @@ public class InstanceForm extends javax.swing.JDialog {
         Object instance = metawidget.getToInspect();
 
         variableInstancia = new VariableInstancia();
-        
+
         variableInstancia.setInstancia(instance);
 
 
@@ -530,28 +508,32 @@ public class InstanceForm extends javax.swing.JDialog {
     public void crearXML(Class claseJar, Object instance, String casoPrueba) {
 
         objId++;
-        
+
         try {
 
             File casoPruebaFile = new File(System.getProperty("user.home")
-
                     + System.getProperty("file.separator") + casoPrueba
-
                     + System.getProperty("file.separator"));
 
             File metadata = new File(casoPruebaFile.getPath()
-
                     + System.getProperty("file.separator") + "metadata"
-
                     + System.getProperty("file.separator"));
 
-            FileOutputStream fos = new FileOutputStream(metadata.getPath()
+            FileOutputStream fos = null;
 
-                    + System.getProperty("file.separator") + "object" + objId + ".xml");
+            if (vieneDelAssert) {
+
+                fos = new FileOutputStream(metadata.getPath()
+                        + System.getProperty("file.separator") + "resultadoObject" + objId + ".xml");
+            } else {
+
+                fos = new FileOutputStream(metadata.getPath()
+                        + System.getProperty("file.separator") + "object" + objId + ".xml");
+            }
 
             XStream xstream = new XStream(new DomDriver());
 
-           // xstream.alias("" + claseJar.getName() + "", instance.getClass());
+            // xstream.alias("" + claseJar.getName() + "", instance.getClass());
             xstream.toXML(instance, fos);
 
         } catch (FileNotFoundException ex) {
@@ -559,28 +541,19 @@ public class InstanceForm extends javax.swing.JDialog {
             Logger.getLogger(InstanceForm.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     private boolean verificarDato(Class clase) {
 
         boolean verificado = false;
         if (clase.getName().equals("java.lang.Integer")
-
                 || clase.getName().equals("java.lang.Float")
-
                 || clase.getName().equals("java.lang.Double")
-
                 || clase.getName().equals("java.lang.Long")
-
                 || clase.getName().equals("java.lang.Short")
-
                 || clase.getName().equals("java.lang.Byte")
-
                 || clase.getName().equals("java.lang.Character")
-
                 || clase.getName().equals("java.lang.String")
-
                 || clase.getName().equals("java.lang.Boolean")
-
                 || clase.isPrimitive() == true) {
 
             verificado = true;
@@ -634,7 +607,6 @@ public class InstanceForm extends javax.swing.JDialog {
             }
         }
     }
-
 
     public org.jdom.Element getEntity(Class clase) {
 
@@ -700,7 +672,6 @@ public class InstanceForm extends javax.swing.JDialog {
         return entidad;
     }
 
-
     public java.util.List<Field> getAllFields(java.util.List<Field> fields, Class<?> clase) {
 
 
@@ -709,27 +680,27 @@ public class InstanceForm extends javax.swing.JDialog {
         }
 
 
-    if (clase.getSuperclass() != null) {
+        if (clase.getSuperclass() != null) {
 
-        fields = getAllFields(fields, clase.getSuperclass());
+            fields = getAllFields(fields, clase.getSuperclass());
+        }
+
+        return fields;
     }
 
-    return fields;
-}
+    public java.util.ArrayList<Method> getAllMethods(java.util.ArrayList<Method> methods, Class<?> clase) {
 
-    public java.util.ArrayList<Method> getAllMethods (java.util.ArrayList<Method> methods, Class<?> clase){
+        methods.addAll(Arrays.asList(clase.getDeclaredMethods()));
 
-       methods.addAll(Arrays.asList(clase.getDeclaredMethods()));
+        for (Method method : clase.getMethods()) {
 
-       for (Method method : clase.getMethods()){
-
-           if (methods.contains(method) == false){
-               methods.add(method);
-           }
-       }
+            if (methods.contains(method) == false) {
+                methods.add(method);
+            }
+        }
 
 
-       return methods;
+        return methods;
     }
 
     public Object getInstance(Class clase) throws InstantiationException, IllegalAccessException, NoSuchMethodException, IllegalArgumentException, InvocationTargetException, JDOMException, IOException {
@@ -752,7 +723,7 @@ public class InstanceForm extends javax.swing.JDialog {
 
             boolean flag = false;
 
-             java.util.ArrayList<Method> metodosClase = new java.util.ArrayList<Method>();
+            java.util.ArrayList<Method> metodosClase = new java.util.ArrayList<Method>();
 
             metodosClase = getAllMethods(metodosClase, clase);
 
@@ -791,7 +762,7 @@ public class InstanceForm extends javax.swing.JDialog {
 
     }
 
-     public void crearMetawidgetMetadata(org.jdom.Document docXml) throws JDOMException, IOException {
+    public void crearMetawidgetMetadata(org.jdom.Document docXml) throws JDOMException, IOException {
 
         try {
 
@@ -810,7 +781,6 @@ public class InstanceForm extends javax.swing.JDialog {
         } catch (Exception e) {
         }
     }
-
 
     public Class loadClass(Class miClase) {
 

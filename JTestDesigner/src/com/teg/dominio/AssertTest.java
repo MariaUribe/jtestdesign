@@ -14,6 +14,16 @@ public class AssertTest {
 
     private String valorAssert;
 
+    private String tipoDatoAssert;
+
+    private boolean complejo;
+
+    private boolean arreglo;
+    
+    private boolean mapa;
+
+    private boolean generarXstream;
+
     public AssertTest() {
     }
     
@@ -84,6 +94,76 @@ public class AssertTest {
      */
     public void setValorAssert(String valorAssert) {
         this.valorAssert = valorAssert;
+    }
+
+    /**
+     * @return the complejo
+     */
+    public boolean isComplejo() {
+        return complejo;
+    }
+
+    /**
+     * @param complejo the complejo to set
+     */
+    public void setComplejo(boolean complejo) {
+        this.complejo = complejo;
+    }
+
+    /**
+     * @return the arreglo
+     */
+    public boolean isArreglo() {
+        return arreglo;
+    }
+
+    /**
+     * @param arreglo the arreglo to set
+     */
+    public void setArreglo(boolean arreglo) {
+        this.arreglo = arreglo;
+    }
+
+    /**
+     * @return the mapa
+     */
+    public boolean isMapa() {
+        return mapa;
+    }
+
+    /**
+     * @param mapa the mapa to set
+     */
+    public void setMapa(boolean mapa) {
+        this.mapa = mapa;
+    }
+
+    /**
+     * @return the generarXstream
+     */
+    public boolean isGenerarXstream() {
+        return generarXstream;
+    }
+
+    /**
+     * @param generarXstream the generarXstream to set
+     */
+    public void setGenerarXstream(boolean generarXstream) {
+        this.generarXstream = generarXstream;
+    }
+
+    /**
+     * @return the tipoDatoAssert
+     */
+    public String getTipoDatoAssert() {
+        return tipoDatoAssert;
+    }
+
+    /**
+     * @param tipoDatoAssert the tipoDatoAssert to set
+     */
+    public void setTipoDatoAssert(String tipoDatoAssert) {
+        this.tipoDatoAssert = tipoDatoAssert;
     }
 
 }
