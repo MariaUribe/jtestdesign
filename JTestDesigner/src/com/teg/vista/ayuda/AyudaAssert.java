@@ -50,6 +50,9 @@ public class AyudaAssert extends javax.swing.JDialog {
         numero4 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
+        numero5 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
 
@@ -60,7 +63,7 @@ public class AyudaAssert extends javax.swing.JDialog {
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
-        ejemploArgumentos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/teg/recursos/imagenes/ayudaAssert.png"))); // NOI18N
+        ejemploArgumentos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/teg/recursos/imagenes/ayudaAssert2.png"))); // NOI18N
         ejemploArgumentos.setText(org.openide.util.NbBundle.getMessage(AyudaAssert.class, "AyudaAssert.ejemploArgumentos.text")); // NOI18N
         ejemploArgumentos.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -91,13 +94,21 @@ public class AyudaAssert extends javax.swing.JDialog {
 
         jLabel6.setText(org.openide.util.NbBundle.getMessage(AyudaAssert.class, "AyudaAssert.jLabel6.text")); // NOI18N
 
-        numero4.setFont(new java.awt.Font("Lucida Grande", 1, 13)); // NOI18N
+        numero4.setFont(new java.awt.Font("Lucida Grande", 1, 13));
         numero4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/teg/recursos/imagenes/cuatro.png"))); // NOI18N
         numero4.setText(org.openide.util.NbBundle.getMessage(AyudaAssert.class, "AyudaAssert.numero4.text")); // NOI18N
 
         jLabel8.setText(org.openide.util.NbBundle.getMessage(AyudaAssert.class, "AyudaAssert.jLabel8.text")); // NOI18N
 
         jLabel9.setText(org.openide.util.NbBundle.getMessage(AyudaAssert.class, "AyudaAssert.jLabel9.text")); // NOI18N
+
+        numero5.setFont(new java.awt.Font("Lucida Grande", 1, 13)); // NOI18N
+        numero5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/teg/recursos/imagenes/cinco.png"))); // NOI18N
+        numero5.setText(org.openide.util.NbBundle.getMessage(AyudaAssert.class, "AyudaAssert.numero5.text")); // NOI18N
+
+        jLabel10.setText(org.openide.util.NbBundle.getMessage(AyudaAssert.class, "AyudaAssert.jLabel10.text")); // NOI18N
+
+        jLabel11.setText(org.openide.util.NbBundle.getMessage(AyudaAssert.class, "AyudaAssert.jLabel11.text")); // NOI18N
 
         org.jdesktop.layout.GroupLayout jPanel4Layout = new org.jdesktop.layout.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -120,18 +131,23 @@ public class AyudaAssert extends javax.swing.JDialog {
                             .add(jLabel4)))
                     .add(jPanel4Layout.createSequentialGroup()
                         .add(numero3)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                        .add(18, 18, 18)
                         .add(jPanel4Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                             .add(jLabel6)
                             .add(jLabel5)))
                     .add(jPanel4Layout.createSequentialGroup()
                         .add(numero4)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(jLabel8))
+                        .add(18, 18, 18)
+                        .add(jPanel4Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(jLabel8)
+                            .add(jLabel9)))
                     .add(jPanel4Layout.createSequentialGroup()
-                        .add(46, 46, 46)
-                        .add(jLabel9)))
-                .addContainerGap(24, Short.MAX_VALUE))
+                        .add(numero5)
+                        .add(18, 18, 18)
+                        .add(jPanel4Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(jLabel10)
+                            .add(jLabel11))))
+                .addContainerGap(79, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -164,10 +180,17 @@ public class AyudaAssert extends javax.swing.JDialog {
                         .add(jLabel8)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(jLabel9)))
-                .addContainerGap(39, Short.MAX_VALUE))
+                .add(18, 18, 18)
+                .add(jPanel4Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(numero5, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 35, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(jPanel4Layout.createSequentialGroup()
+                        .add(jLabel10)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(jLabel11)))
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jLabel7.setFont(new java.awt.Font("Lucida Grande", 1, 14)); // NOI18N
+        jLabel7.setFont(new java.awt.Font("Lucida Grande", 1, 14));
         jLabel7.setText(org.openide.util.NbBundle.getMessage(AyudaAssert.class, "AyudaAssert.jLabel7.text")); // NOI18N
 
         org.jdesktop.layout.GroupLayout jPanel3Layout = new org.jdesktop.layout.GroupLayout(jPanel3);
@@ -190,8 +213,8 @@ public class AyudaAssert extends javax.swing.JDialog {
                 .add(30, 30, 30)
                 .add(jLabel7)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                .add(jPanel4, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .add(jPanel4, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jButton2.setText(org.openide.util.NbBundle.getMessage(AyudaAssert.class, "AyudaAssert.jButton2.text")); // NOI18N
@@ -208,9 +231,9 @@ public class AyudaAssert extends javax.swing.JDialog {
             .add(layout.createSequentialGroup()
                 .addContainerGap()
                 .add(tituloAssert)
-                .addContainerGap(459, Short.MAX_VALUE))
+                .addContainerGap(519, Short.MAX_VALUE))
             .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(491, Short.MAX_VALUE)
+                .addContainerGap(551, Short.MAX_VALUE)
                 .add(jButton2)
                 .addContainerGap())
             .add(layout.createSequentialGroup()
@@ -224,8 +247,8 @@ public class AyudaAssert extends javax.swing.JDialog {
                 .addContainerGap()
                 .add(tituloAssert)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                .add(jPanel3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .add(18, 18, 18)
+                .add(jPanel3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .add(jButton2)
                 .addContainerGap())
         );
@@ -241,6 +264,8 @@ public class AyudaAssert extends javax.swing.JDialog {
     private javax.swing.JLabel ejemploArgumentos;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -255,6 +280,7 @@ public class AyudaAssert extends javax.swing.JDialog {
     private javax.swing.JLabel numero2;
     private javax.swing.JLabel numero3;
     private javax.swing.JLabel numero4;
+    private javax.swing.JLabel numero5;
     private javax.swing.JLabel tituloAssert;
     // End of variables declaration//GEN-END:variables
 
