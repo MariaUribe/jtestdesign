@@ -153,7 +153,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
         this.inicio = inicio;
 
         this.inicio.getSeleccionarJar().setEnabled(false);
-        
+
         this.inicio.getAnadirJarAlClasspath().setEnabled(false);
 
         archivosJavaDoc = inicio.getArchivosJavaDoc();
@@ -277,11 +277,11 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
             assertVariables.addItem("resultado" + countVar);
 
-            for (Method method : metodoRetorno.getDeclaredMethods()){
+            for (Method method : metodoRetorno.getDeclaredMethods()) {
                 if (Modifier.isPublic(method.getModifiers()) && method.getReturnType() != null
-                        && method.getParameterTypes().length != 0){
-                    assertVariables.addItem("resultado" + countVar + "." +
-                            method.getName());
+                        && method.getParameterTypes().length != 0) {
+                    assertVariables.addItem("resultado" + countVar + "."
+                            + method.getName());
                 }
             }
 
@@ -600,27 +600,21 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
     @SuppressWarnings("ManualArrayToCollectionCopy")
     public static java.util.List<Field> getAllFields(java.util.List<Field> fields, Class<?> clase) {
 
-        for (Field field: clase.getDeclaredFields()) {
+        for (Field field : clase.getDeclaredFields()) {
 
-        fields.add(field);
-    }
-
-        if (!fields.isEmpty()){
-
-
-
-
-
+            fields.add(field);
         }
 
-    if (clase.getSuperclass() != null) {
-        
-        fields = getAllFields(fields, clase.getSuperclass());
+        if (!fields.isEmpty()) {
+        }
+
+        if (clase.getSuperclass() != null) {
+
+            fields = getAllFields(fields, clase.getSuperclass());
+        }
+
+        return fields;
     }
-
-    return fields;
-}
-
 
     public Object getInstance(Class clase) throws InstantiationException, IllegalAccessException, NoSuchMethodException, IllegalArgumentException, InvocationTargetException, JDOMException, IOException {
 
@@ -672,7 +666,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
     }
 
     public void addInstanceVariable() {
-        if (listWidget.getObject() != null) {
+        if (listWidget.getVariableInstancia() != null) {
 
             objId++;
 
@@ -682,34 +676,29 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
             Method method = this.getActualMethod();
 
-            for (Object object : listWidget.getObject()) {
 
-                VariableInstancia varInstancia = new VariableInstancia();
+            listWidget.getVariableInstancia().setNombreVariable("objeto" + objId);
 
-                varInstancia.setInstancia(object);
+            variablesGuardadas.add(listWidget.getVariableInstancia());
 
-                varInstancia.setNombreVariable("objeto" + objId);
+            Vector objects = new Vector();
 
-                variablesGuardadas.add(varInstancia);
-
-                Vector objects = new Vector();
-
-                objects.add("objeto" + objId);
+            objects.add("objeto" + objId);
 
 
-                objects.add(method.getName());
+            objects.add(method.getName());
 
-                objects.add(object.getClass().getName());
+            objects.add(listWidget.getVariableInstancia().getInstancia().getClass().getName());
 
-                model.addRow(objects);
-            }
+            model.addRow(objects);
+
 
         }
 
     }
 
-    private void addInstanceArreglo(ArregloInstancia arregloInstancia) {
-        if (listWidget.getArreglo() != null) {
+    private void addInstanceArreglo() {
+        if (listWidget.getArregloInstancia() != null) {
 
             arregloId++;
 
@@ -717,27 +706,18 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
             model = (DefaultTableModel) tablaVariables.getModel();
 
-            Method method = this.getActualMethod();
 
+            listWidget.getArregloInstancia().setNombreArreglo("arreglo" + arregloId);
 
-
-            arregloGuardado = listWidget.getArreglo().toArray();
-
-
-
-            arregloInstancia.setArreglo(arregloGuardado);
-
-            arregloInstancia.setNombreArreglo("arreglo" + arregloId);
-
-            arreglosGuardados.add(arregloInstancia);
+            arreglosGuardados.add(listWidget.getArregloInstancia());
 
             Vector arreglos = new Vector();
 
             arreglos.add("arreglo" + arregloId);
 
-            arreglos.add(method.getName());
+            arreglos.add(this.getActualMethod().getName());
 
-            arreglos.add(arregloGuardado.getClass().getName());
+            arreglos.add(listWidget.getArregloInstancia().getClaseComponente().getClass().getSimpleName());
 
             model.addRow(arreglos);
 
@@ -747,9 +727,9 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
     }
 
-    private void addInstanceMap(MapaInstancia mapaInstancia) {
+    private void addInstanceMap() {
 
-        if (listWidget.getMapa() != null) {
+        if (listWidget.getMapaInstancia() != null) {
 
             mapaId++;
 
@@ -757,25 +737,19 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
             model = (DefaultTableModel) tablaVariables.getModel();
 
-            Method method = this.getActualMethod();
 
-            Map mapa = listWidget.getMapa();
+            listWidget.getMapaInstancia().setNombreMapa("mapa" + mapaId);
 
-
-
-            mapaInstancia.setMapa(mapa);
-
-            mapaInstancia.setNombreMapa("mapa" + mapaId);
-
-            mapasGuardados.add(mapaInstancia);
+            mapasGuardados.add(listWidget.getMapaInstancia());
 
             Vector mapas = new Vector();
 
             mapas.add("mapa" + mapaId);
 
-            mapas.add(method.getName());
+            mapas.add(this.getActualMethod().getName());
 
-            mapas.add(mapa.getClass().getName());
+            mapas.add("<" + listWidget.getMapaInstancia().getClaseKey().getSimpleName()
+                    + "," + listWidget.getMapaInstancia().getClaseValue().getSimpleName() + ">");
 
             model.addRow(mapas);
 
@@ -783,8 +757,8 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
         }
     }
 
-    public void addInstanceCollection(ColeccionInstancia colInstancia) {
-        if (listWidget.getColeccion() != null) {
+    public void addInstanceCollection() {
+        if (listWidget.getColeccionInstancia() != null) {
 
             coleccionId++;
 
@@ -794,19 +768,19 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
             Method method = this.getActualMethod();
 
-            Collection collection = listWidget.getColeccion();
 
-            colInstancia.setColeccionInstancia(collection);
 
-            colInstancia.setNombreColeccion("coleccion" + coleccionId);
+            listWidget.getColeccionInstancia().setNombreColeccion("coleccion" + coleccionId);
 
-            coleccionesGuardadas.add(colInstancia);
+            coleccionesGuardadas.add(listWidget.getColeccionInstancia());
 
             Vector colecciones = new Vector();
 
             colecciones.add("coleccion" + coleccionId);
 
-            colecciones.add(method.getName());
+            colecciones.add(this.getActualMethod().getName());
+
+            colecciones.add(listWidget.getColeccionInstancia().getTipoDatoColeccion());
 
             colecciones.add("Collection");
 
@@ -1109,8 +1083,8 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
             if (superClass.toString().equals(claseAbstracta.toString()) == true) {
                 clasesImplAbstracta.add(class1);
-            
-        }
+
+            }
         }
 
         return clasesImplAbstracta;
@@ -1262,32 +1236,29 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
                             ArrayList<Object> objectInstances;
 
-                            ColeccionInstancia coleccionInstancia;
-                            MapaInstancia mapaInstancia;
-
                             if (argument.isInterface()) {
                                 if (argumentoEsColeccion(argument) == true && argumentoEsMapa(argument) == false) {
 
-                                    coleccionInstancia = new ColeccionInstancia();
-
-                                    InstanceListForm editorInstance = new InstanceListForm(inicio, true, coleccionInstancia, getClasesColeccion(argument), obtenerGenericos(metodo, pos), obtenerClasesJars(), inicio.getDirectorioCasoPrueba().getPath(), listWidget, inicio, coleccionId);
+                                    InstanceListForm editorInstance = new InstanceListForm(inicio, true,
+                                            getClasesColeccion(argument), obtenerGenericos(metodo, pos), obtenerClasesJars(),
+                                            inicio.getDirectorioCasoPrueba().getPath(), listWidget, inicio, coleccionId);
 
                                     editorInstance.setVisible(true);
-
-
 
                                 } else {
 
                                     if (argumentoEsMapa(argument) == true) {
 
-                                        InstanceMapForm editorInstance = new InstanceMapForm(inicio, true, getClasesColeccion(argument), obtenerGenericos(metodo, pos), obtenerClasesJars(), inicio.getDirectorioCasoPrueba().getPath(), listWidget, inicio, mapaId);
+                                        InstanceMapForm editorInstance = new InstanceMapForm(inicio, true, getClasesColeccion(argument),
+                                                obtenerGenericos(metodo, pos), obtenerClasesJars(),
+                                                inicio.getDirectorioCasoPrueba().getPath(), listWidget, inicio, mapaId);
 
                                         editorInstance.setVisible(true);
                                     } else {
 
-
-
-                                        InstanceForm editorInstance = new InstanceForm(inicio, true, obtenerClasesDeInterfaz(argument), inicio.getDirectorioCasoPrueba().getPath(), listWidget, inicio, objId);
+                                        InstanceForm editorInstance = new InstanceForm(inicio, true,
+                                                obtenerClasesDeInterfaz(argument), inicio.getDirectorioCasoPrueba().getPath(),
+                                                listWidget, inicio, objId);
 
                                         editorInstance.setVisible(true);
                                     }
@@ -1295,15 +1266,13 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
                             } else {
                                 if (Modifier.isAbstract(argument.getModifiers()) == true) {
 
-                                    InstanceForm editorInstance = new InstanceForm(inicio, true, obtenerClasesDeClaseAbstracta(argument), inicio.getDirectorioCasoPrueba().getPath(), listWidget, inicio, objId);
+                                    InstanceForm editorInstance = new InstanceForm(inicio, true,
+                                            obtenerClasesDeClaseAbstracta(argument),
+                                            inicio.getDirectorioCasoPrueba().getPath(), listWidget, inicio, objId);
 
                                     editorInstance.setVisible(true);
 
                                 } else {
-
-
-
-
 
                                     if (argumentoEsColeccion(argument) == true) {
 
@@ -1319,15 +1288,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
                                                 editorMap.setVisible(true);
 
-                                                editorMap.getMapa();
-
-                                                mapaInstancia = new MapaInstancia();
-
-                                                mapaInstancia.setClaseKey(classInstances.get(0));
-
-                                                mapaInstancia.setClaseValue(classInstances.get(1));
-
-                                                addInstanceMap(mapaInstancia);
+                                                addInstanceMap();
 
                                             } catch (InstantiationException ex) {
 
@@ -1348,15 +1309,15 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
                                                         Object claseInstance = getInstance(classInstances.get(0));
 
 
-                                                        if (listWidget.getColeccion() != null) {
+                                                        if (listWidget.getColeccionInstancia() != null) {
 
 
-                                                            listWidget.getColeccion().clear();
+                                                            listWidget.setColeccionInstancia(null);
                                                         } else {
 
-                                                            if (listWidget.getMapa() != null) {
+                                                            if (listWidget.getMapaInstancia() != null) {
 
-                                                                listWidget.getMapa().clear();
+                                                                listWidget.setMapaInstancia(null);
                                                             }
                                                         }
 
@@ -1364,15 +1325,8 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
                                                         editorList.Visible();
 
-                                                        editorList.getColeccion();
 
-                                                        coleccionInstancia = new ColeccionInstancia();
-
-
-
-                                                        coleccionInstancia.setTipoDatoColeccion(claseInstance.getClass().getName());
-
-                                                        addInstanceCollection(coleccionInstancia);
+                                                        addInstanceCollection();
 
                                                     } catch (InstantiationException ex) {
 
@@ -1411,15 +1365,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
                                                         editorList.setVisible(true);
 
-                                                        editorList.getColeccion();
-
-                                                        coleccionInstancia = new ColeccionInstancia();
-
-
-
-                                                        coleccionInstancia.setTipoDatoColeccion(classInstances.get(0).getName());
-
-                                                        addInstanceCollection(coleccionInstancia);
+                                                        addInstanceCollection();
 
 
                                                     }
@@ -1428,41 +1374,20 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
                                                 if (classInstances.isEmpty()) {
 
-                                                    coleccionInstancia = new ColeccionInstancia();
-
                                                     if (java.util.Map.class.isAssignableFrom(argument) == false) {
 
                                                         InstanceListForm selector = new InstanceListForm(inicio, true, obtenerClasesJars(), inicio.getDirectorioCasoPrueba().getPath(), listWidget, argument, inicio, coleccionId);
 
                                                         selector.setVisible(true);
 
-                                                        selector.getColeccion();
-
-                                                        coleccionInstancia.setTipoDatoColeccion(argument.getName());
-
-                                                        addInstanceCollection(coleccionInstancia);
-
-
-
                                                     } else {
                                                         if (argumentoEsMapa(argument) == true) {
 
-
-                                                            mapaInstancia = new MapaInstancia();
-
-                                                            InstanceMapForm selector = new InstanceMapForm(inicio, true, obtenerClasesJars(), listWidget, argument, inicio, mapaId, mapaInstancia);
+                                                            InstanceMapForm selector = new InstanceMapForm(inicio, true, obtenerClasesJars(), listWidget, argument, inicio, mapaId);
 
                                                             selector.setVisible(true);
 
-                                                            selector.getMapa();
-
-                                                            selector.getMapaTipos();
-
-                                                            //mapInstancia.setClaseKey(classInstances.get(0));
-
-                                                            //mapInstancia.setClaseValue(classInstances.get(1));
-
-                                                            addInstanceMap(mapaInstancia);
+                                                            addInstanceMap();
 
                                                         }
                                                     }
@@ -1488,13 +1413,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
                                                 editorArray.setVisible(true);
 
-                                                editorArray.getArreglo();
-
-                                                ArregloInstancia arregloInstancia = new ArregloInstancia();
-
-                                                arregloInstancia.setClaseComponente(arrayComponente.getName());
-
-                                                addInstanceArreglo(arregloInstancia);
+                                                addInstanceArreglo();
                                             } else {
                                                 if (!arrayComponente.isPrimitive()
                                                         && verificarDato(arrayComponente) == false) {
@@ -1505,13 +1424,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
                                                         editorArray.VisibleObject();
 
-                                                        editorArray.getArreglo();
-
-                                                        ArregloInstancia arregloInstancia = new ArregloInstancia();
-
-                                                        arregloInstancia.setClaseComponente(object.getClass().getName());
-
-                                                        addInstanceArreglo(arregloInstancia);
+                                                        addInstanceArreglo();
 
 
                                                     } catch (InstantiationException ex) {
@@ -1550,26 +1463,19 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
                                             try {
 
-                                                if (listWidget.getObject() != null) {
-                                                    listWidget.getObject().clear();
+                                                if (listWidget.getVariableInstancia() != null) {
+                                                    listWidget.setVariableInstancia(null);
                                                 }
 
                                                 Object clase = getInstance(argument);
-
-
 
                                                 InstanceForm editorInstance = new InstanceForm(inicio, true, clase, inicio.getDirectorioCasoPrueba().getPath(), listWidget, inicio, objId);
 
                                                 editorInstance.Visible();
 
-
-                                                //editorInstance.getObject();
-
-
                                                 addInstanceVariable();
 
 
-                                                int row = tablaVariables.getSelectedRow();
 
                                             } catch (JDOMException ex) {
 
@@ -1745,7 +1651,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
             },
             new String [] {
-                "Resultado", "Metodo", "Tipo Retorno"
+                "Variable", "Metodo", "Tipo Retorno"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -2580,13 +2486,19 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
         } else {
             if (opcion.length == 2) {
 
-                String campo = opcion[1];
+                String metodoNombre = opcion[1];
 
-                for (Field field : retorno.getDeclaredFields()) {
-                    if (field.getName().equals(campo)) {
-                        claseEvaluar = field.getClass();
+                Method metodoAEvaluar = null;
+
+                for (Method method : retorno.getDeclaredMethods()) {
+                    if (method.getName().equals(metodoNombre)) {
+
+                        metodoAEvaluar = method;
+
                     }
                 }
+
+                claseEvaluar = metodoAEvaluar.getReturnType();
             }
         }
 
@@ -2594,313 +2506,288 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
     }
 
     private void resultadoAssertMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_resultadoAssertMouseClicked
-        // TODO add your handling code here:
         Method method = getActualMethod();
 
         Class retorno = method.getReturnType();
 
-        String opcionAssert[] = assertVariables.getSelectedItem().toString().split(".");
+        String opcionAssert[] = assertVariables.getSelectedItem().toString().split("\\.");
 
         Class assertion = getClaseEvaluar(retorno, opcionAssert);
 
-        ColeccionInstancia coleccionInstancia;
+        if (!assertion.isPrimitive() && verificarDato(assertion) == false) {
 
-        MapaInstancia mapaInstancia;
+            ArrayList<Class> classInstances;
 
-        ArregloInstancia arregloInstancia;
+            ArrayList<Object> objectInstances;
 
-        ArrayList<Class> classInstances;
+            listWidget = new WidgetObjectLoading();
 
-        ArrayList<Object> objectInstances;
-
-
-
-        if (assertion.isInterface()) {
-            if (argumentoEsColeccion(assertion) == true && argumentoEsMapa(assertion) == false) {
-
-                coleccionInstancia = new ColeccionInstancia();
-
-                InstanceListForm editorInstance = new InstanceListForm(inicio, true, coleccionInstancia, getClasesColeccion(assertion), obtenerGenericos(assertion), obtenerClasesJars(), inicio.getDirectorioCasoPrueba().getPath(), listWidget, inicio, coleccionId);
-
-                editorInstance.setVisible(true);
+            if (assertion.isInterface()) {
+                if (argumentoEsColeccion(assertion) == true && argumentoEsMapa(assertion) == false) {
 
 
-
-            } else {
-
-                if (argumentoEsMapa(assertion) == true) {
-
-                    InstanceMapForm editorInstance = new InstanceMapForm(inicio, true, getClasesColeccion(assertion), obtenerGenericos(assertion), obtenerClasesJars(), inicio.getDirectorioCasoPrueba().getPath(), listWidget, inicio, mapaId);
+                    InstanceListForm editorInstance = new InstanceListForm(inicio, true, getClasesColeccion(assertion), obtenerGenericos(assertion), obtenerClasesJars(), inicio.getDirectorioCasoPrueba().getPath(), listWidget, inicio, coleccionId);
 
                     editorInstance.setVisible(true);
+
+
+
+                } else {
+
+                    if (argumentoEsMapa(assertion) == true) {
+
+                        InstanceMapForm editorInstance = new InstanceMapForm(inicio, true, getClasesColeccion(assertion), obtenerGenericos(assertion), obtenerClasesJars(), inicio.getDirectorioCasoPrueba().getPath(), listWidget, inicio, mapaId);
+
+                        editorInstance.setVisible(true);
+                    } else {
+
+                        InstanceForm editorInstance = new InstanceForm(inicio, true, obtenerClasesDeInterfaz(assertion), inicio.getDirectorioCasoPrueba().getPath(), listWidget, inicio, objId);
+
+                        editorInstance.setVisible(true);
+                    }
+                }
+            } else {
+                if (Modifier.isAbstract(assertion.getModifiers()) == true) {
+
+                    InstanceForm editorInstance = new InstanceForm(inicio, true, obtenerClasesDeClaseAbstracta(assertion), inicio.getDirectorioCasoPrueba().getPath(), listWidget, inicio, objId);
+
+                    editorInstance.setVisible(true);
+
                 } else {
 
 
+                    if (argumentoEsColeccion(assertion) == true) {
 
-                    InstanceForm editorInstance = new InstanceForm(inicio, true, obtenerClasesDeInterfaz(assertion), inicio.getDirectorioCasoPrueba().getPath(), listWidget, inicio, objId);
+                        classInstances = obtenerGenericos(assertion);
 
-                    editorInstance.setVisible(true);
-                }
-            }
-        } else {
-            if (Modifier.isAbstract(assertion.getModifiers()) == true) {
-
-                InstanceForm editorInstance = new InstanceForm(inicio, true, obtenerClasesDeClaseAbstracta(assertion), inicio.getDirectorioCasoPrueba().getPath(), listWidget,  inicio, objId);
-
-                editorInstance.setVisible(true);
-
-            } else {
+                        objectInstances = new ArrayList<Object>();
 
 
+                        if (classInstances.size() == 2) {
+
+                            try {
+                                InstanceMapForm editorMap = new InstanceMapForm(inicio, true, classInstances, inicio.getDirectorioCasoPrueba().getPath(), listWidget, assertion, mapaId);
+
+                                editorMap.setVisible(true);
 
 
+                            } catch (InstantiationException ex) {
 
-                if (argumentoEsColeccion(assertion) == true) {
-
-                    classInstances = obtenerGenericos(assertion);
-
-                    objectInstances = new ArrayList<Object>();
-
-
-                    if (classInstances.size() == 2) {
-
-                        try {
-                            InstanceMapForm editorMap = new InstanceMapForm(inicio, true, classInstances, inicio.getDirectorioCasoPrueba().getPath(), listWidget, assertion, mapaId);
-
-                            editorMap.setVisible(true);
-
-                            editorMap.getMapa();
-
-
-                        } catch (InstantiationException ex) {
-
-                            Logger.getLogger(CaseTestEditor.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-
-
-
-                    } else {
-
-                        if (classInstances.size() == 1) {
-
-
-                            if (!classInstances.get(0).isPrimitive()
-                                    && verificarDato(classInstances.get(0)) == false) {
-                                try {
-
-                                    Object claseInstance = getInstance(classInstances.get(0));
-
-
-                                    if (listWidget.getColeccion() != null) {
-
-
-                                        listWidget.getColeccion().clear();
-                                    } else {
-
-                                        if (listWidget.getMapa() != null) {
-
-                                            listWidget.getMapa().clear();
-                                        }
-                                    }
-
-                                    InstanceListForm editorList = new InstanceListForm(inicio, true, claseInstance, inicio.getDirectorioCasoPrueba().getPath(), listWidget, assertion, inicio, coleccionId);
-
-                                    editorList.Visible();
-
-                                    editorList.getColeccion();
-
-
-                                } catch (InstantiationException ex) {
-
-                                    Logger.getLogger(CaseTestEditor.class.getName()).log(Level.SEVERE, null, ex);
-
-                                } catch (IllegalAccessException ex) {
-
-                                    Logger.getLogger(CaseTestEditor.class.getName()).log(Level.SEVERE, null, ex);
-
-                                } catch (NoSuchMethodException ex) {
-
-                                    Logger.getLogger(CaseTestEditor.class.getName()).log(Level.SEVERE, null, ex);
-
-                                } catch (IllegalArgumentException ex) {
-
-                                    Logger.getLogger(CaseTestEditor.class.getName()).log(Level.SEVERE, null, ex);
-
-                                } catch (InvocationTargetException ex) {
-
-                                    Logger.getLogger(CaseTestEditor.class.getName()).log(Level.SEVERE, null, ex);
-
-                                } catch (JDOMException ex) {
-
-                                    Logger.getLogger(CaseTestEditor.class.getName()).log(Level.SEVERE, null, ex);
-
-                                } catch (IOException ex) {
-
-                                    Logger.getLogger(CaseTestEditor.class.getName()).log(Level.SEVERE, null, ex);
-                                }
-
-                            } else {
-                                if (classInstances.get(0).isPrimitive()
-                                        || verificarDato(classInstances.get(0)) == true) {
-
-                                    InstanceListForm editorList = new InstanceListForm(inicio, true, classInstances.get(0), listWidget, assertion, coleccionId);
-
-                                    editorList.setVisible(true);
-
-                                    editorList.getColeccion();
-
-     
-
-
-                                }
+                                Logger.getLogger(CaseTestEditor.class.getName()).log(Level.SEVERE, null, ex);
                             }
+
+
+
                         } else {
 
-                            if (classInstances.isEmpty()) {
-
-                                coleccionInstancia = new ColeccionInstancia();
-
-                                if (java.util.Map.class.isAssignableFrom(assertion) == false) {
-
-                                    InstanceListForm selector = new InstanceListForm(inicio, true, obtenerClasesJars(), inicio.getDirectorioCasoPrueba().getPath(), listWidget, assertion, inicio, coleccionId);
-
-                                    selector.setVisible(true);
-
- 
+                            if (classInstances.size() == 1) {
 
 
+                                if (!classInstances.get(0).isPrimitive()
+                                        && verificarDato(classInstances.get(0)) == false) {
+                                    try {
+
+                                        Object claseInstance = getInstance(classInstances.get(0));
+
+
+                                        if (listWidget.getColeccionInstancia() != null) {
+
+
+                                            listWidget.setColeccionInstancia(null);
+                                        } else {
+
+                                            if (listWidget.getMapaInstancia() != null) {
+
+                                                listWidget.setMapaInstancia(null);
+                                            }
+                                        }
+
+                                        InstanceListForm editorList = new InstanceListForm(inicio, true, claseInstance, inicio.getDirectorioCasoPrueba().getPath(), listWidget, assertion, inicio, coleccionId);
+
+                                        editorList.Visible();
+
+                                    } catch (InstantiationException ex) {
+
+                                        Logger.getLogger(CaseTestEditor.class.getName()).log(Level.SEVERE, null, ex);
+
+                                    } catch (IllegalAccessException ex) {
+
+                                        Logger.getLogger(CaseTestEditor.class.getName()).log(Level.SEVERE, null, ex);
+
+                                    } catch (NoSuchMethodException ex) {
+
+                                        Logger.getLogger(CaseTestEditor.class.getName()).log(Level.SEVERE, null, ex);
+
+                                    } catch (IllegalArgumentException ex) {
+
+                                        Logger.getLogger(CaseTestEditor.class.getName()).log(Level.SEVERE, null, ex);
+
+                                    } catch (InvocationTargetException ex) {
+
+                                        Logger.getLogger(CaseTestEditor.class.getName()).log(Level.SEVERE, null, ex);
+
+                                    } catch (JDOMException ex) {
+
+                                        Logger.getLogger(CaseTestEditor.class.getName()).log(Level.SEVERE, null, ex);
+
+                                    } catch (IOException ex) {
+
+                                        Logger.getLogger(CaseTestEditor.class.getName()).log(Level.SEVERE, null, ex);
+                                    }
 
                                 } else {
-                                    if (argumentoEsMapa(assertion) == true) {
+                                    if (classInstances.get(0).isPrimitive()
+                                            || verificarDato(classInstances.get(0)) == true) {
+
+                                        InstanceListForm editorList = new InstanceListForm(inicio, true, classInstances.get(0), listWidget, assertion, coleccionId);
+
+                                        editorList.setVisible(true);
+                                    }
+                                }
+                            } else {
+
+                                if (classInstances.isEmpty()) {
 
 
-                                        mapaInstancia = new MapaInstancia();
 
-                                        InstanceMapForm selector = new InstanceMapForm(inicio, true, obtenerClasesJars(), listWidget, assertion, inicio, mapaId, mapaInstancia);
+                                    if (java.util.Map.class.isAssignableFrom(assertion) == false) {
+
+                                        InstanceListForm selector = new InstanceListForm(inicio, true, obtenerClasesJars(), inicio.getDirectorioCasoPrueba().getPath(), listWidget, assertion, inicio, coleccionId);
 
                                         selector.setVisible(true);
 
-                                        selector.getMapa();
-
-                                        selector.getMapaTipos();
 
 
+
+
+                                    } else {
+                                        if (argumentoEsMapa(assertion) == true) {
+
+
+                                            InstanceMapForm selector = new InstanceMapForm(inicio, true, obtenerClasesJars(), listWidget, assertion, inicio, mapaId);
+
+                                            selector.setVisible(true);
+
+
+                                        }
                                     }
-                                }
 
 
 
 
-                            }
-                        }
-
-                    }
-
-
-                } else {
-
-                    if (argumentoEsArreglo(assertion) == true) {
-
-                        Class arrayComponente = assertion.getComponentType();
-
-                        if (arrayComponente.isPrimitive()
-                                || verificarDato(arrayComponente) == true) {
-                            InstanceArrayForm editorArray = new InstanceArrayForm(inicio, true, arrayComponente, inicio.getDirectorioCasoPrueba().getPath(), listWidget, inicio, arregloId);
-
-                            editorArray.setVisible(true);
-
-
-                        } else {
-                            if (!arrayComponente.isPrimitive()
-                                    && verificarDato(arrayComponente) == false) {
-                                try {
-                                    Object object = getInstance(arrayComponente);
-
-                                    InstanceArrayForm editorArray = new InstanceArrayForm(inicio, true, object, inicio.getDirectorioCasoPrueba().getPath(), listWidget, inicio, arregloId);
-
-
-
-
-                                } catch (InstantiationException ex) {
-
-                                    Logger.getLogger(CaseTestEditor.class.getName()).log(Level.SEVERE, null, ex);
-
-                                } catch (IllegalAccessException ex) {
-
-                                    Logger.getLogger(CaseTestEditor.class.getName()).log(Level.SEVERE, null, ex);
-
-                                } catch (NoSuchMethodException ex) {
-
-                                    Logger.getLogger(CaseTestEditor.class.getName()).log(Level.SEVERE, null, ex);
-
-                                } catch (IllegalArgumentException ex) {
-
-                                    Logger.getLogger(CaseTestEditor.class.getName()).log(Level.SEVERE, null, ex);
-
-                                } catch (InvocationTargetException ex) {
-
-                                    Logger.getLogger(CaseTestEditor.class.getName()).log(Level.SEVERE, null, ex);
-
-                                } catch (JDOMException ex) {
-
-                                    Logger.getLogger(CaseTestEditor.class.getName()).log(Level.SEVERE, null, ex);
-
-                                } catch (IOException ex) {
-
-                                    Logger.getLogger(CaseTestEditor.class.getName()).log(Level.SEVERE, null, ex);
                                 }
                             }
+
                         }
 
 
                     } else {
 
-                        try {
+                        if (argumentoEsArreglo(assertion) == true) {
 
-                            if (listWidget.getObject() != null) {
-                                listWidget.getObject().clear();
+                            Class arrayComponente = assertion.getComponentType();
+
+                            if (arrayComponente.isPrimitive()
+                                    || verificarDato(arrayComponente) == true) {
+                                InstanceArrayForm editorArray = new InstanceArrayForm(inicio, true, arrayComponente, inicio.getDirectorioCasoPrueba().getPath(), listWidget, inicio, arregloId);
+
+                                editorArray.setVisible(true);
+
+
+                            } else {
+                                if (!arrayComponente.isPrimitive()
+                                        && verificarDato(arrayComponente) == false) {
+                                    try {
+                                        Object object = getInstance(arrayComponente);
+
+                                        InstanceArrayForm editorArray = new InstanceArrayForm(inicio, true, object, inicio.getDirectorioCasoPrueba().getPath(), listWidget, inicio, arregloId);
+
+
+
+
+                                    } catch (InstantiationException ex) {
+
+                                        Logger.getLogger(CaseTestEditor.class.getName()).log(Level.SEVERE, null, ex);
+
+                                    } catch (IllegalAccessException ex) {
+
+                                        Logger.getLogger(CaseTestEditor.class.getName()).log(Level.SEVERE, null, ex);
+
+                                    } catch (NoSuchMethodException ex) {
+
+                                        Logger.getLogger(CaseTestEditor.class.getName()).log(Level.SEVERE, null, ex);
+
+                                    } catch (IllegalArgumentException ex) {
+
+                                        Logger.getLogger(CaseTestEditor.class.getName()).log(Level.SEVERE, null, ex);
+
+                                    } catch (InvocationTargetException ex) {
+
+                                        Logger.getLogger(CaseTestEditor.class.getName()).log(Level.SEVERE, null, ex);
+
+                                    } catch (JDOMException ex) {
+
+                                        Logger.getLogger(CaseTestEditor.class.getName()).log(Level.SEVERE, null, ex);
+
+                                    } catch (IOException ex) {
+
+                                        Logger.getLogger(CaseTestEditor.class.getName()).log(Level.SEVERE, null, ex);
+                                    }
+                                }
                             }
 
-                            Object claseInstance = getInstance(assertion);
+
+                        } else {
+
+                            try {
+
+                                if (listWidget.getVariableInstancia() != null) {
+                                    listWidget.setVariableInstancia(null);
+                                }
+
+                                Object claseInstance = getInstance(assertion);
 
 
 
-                            InstanceForm editorInstance = new InstanceForm(inicio, true, claseInstance, inicio.getDirectorioCasoPrueba().getPath(), listWidget, inicio, objId);
+                                InstanceForm editorInstance = new InstanceForm(inicio, true, claseInstance, inicio.getDirectorioCasoPrueba().getPath(), listWidget, inicio, objId);
 
-                            editorInstance.Visible();
+                                editorInstance.Visible();
 
-                        } catch (JDOMException ex) {
+                            } catch (JDOMException ex) {
 
-                            Logger.getLogger(CaseTestEditor.class.getName()).log(Level.SEVERE, null, ex);
+                                Logger.getLogger(CaseTestEditor.class.getName()).log(Level.SEVERE, null, ex);
 
-                        } catch (IOException ex) {
+                            } catch (IOException ex) {
 
-                            Logger.getLogger(CaseTestEditor.class.getName()).log(Level.SEVERE, null, ex);
+                                Logger.getLogger(CaseTestEditor.class.getName()).log(Level.SEVERE, null, ex);
 
-                        } catch (InstantiationException ex) {
+                            } catch (InstantiationException ex) {
 
-                            Logger.getLogger(CaseTestEditor.class.getName()).log(Level.SEVERE, null, ex);
+                                Logger.getLogger(CaseTestEditor.class.getName()).log(Level.SEVERE, null, ex);
 
-                        } catch (IllegalAccessException ex) {
+                            } catch (IllegalAccessException ex) {
 
-                            Logger.getLogger(CaseTestEditor.class.getName()).log(Level.SEVERE, null, ex);
+                                Logger.getLogger(CaseTestEditor.class.getName()).log(Level.SEVERE, null, ex);
 
-                        } catch (NoSuchMethodException ex) {
+                            } catch (NoSuchMethodException ex) {
 
-                            Logger.getLogger(CaseTestEditor.class.getName()).log(Level.SEVERE, null, ex);
+                                Logger.getLogger(CaseTestEditor.class.getName()).log(Level.SEVERE, null, ex);
 
-                        } catch (IllegalArgumentException ex) {
+                            } catch (IllegalArgumentException ex) {
 
-                            Logger.getLogger(CaseTestEditor.class.getName()).log(Level.SEVERE, null, ex);
+                                Logger.getLogger(CaseTestEditor.class.getName()).log(Level.SEVERE, null, ex);
 
-                        } catch (InvocationTargetException ex) {
+                            } catch (InvocationTargetException ex) {
 
-                            Logger.getLogger(CaseTestEditor.class.getName()).log(Level.SEVERE, null, ex);
+                                Logger.getLogger(CaseTestEditor.class.getName()).log(Level.SEVERE, null, ex);
+                            }
                         }
-                    }
 
+                    }
                 }
             }
+
+        } else {
         }
 
 
@@ -2943,7 +2830,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
         ayudaMetodos.pack();
         ayudaMetodos.setLocationRelativeTo(null);
         ayudaMetodos.setVisible(true);
-        
+
     }//GEN-LAST:event_ayudaMetodoMouseClicked
 
     private void ayudaVariableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ayudaVariableMouseClicked
@@ -2954,7 +2841,6 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
         ayudaVariables.setVisible(true);
 
     }//GEN-LAST:event_ayudaVariableMouseClicked
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox assertCondiciones;
     private javax.swing.JTextField assertMensaje;
@@ -3217,8 +3103,8 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
                 argumento.setGenerarXstream(false);
             }
 
-           // if(tablaArgumentos.getValueAt(contSimple - 1, 1).toString().startsWith("var")){
-            if(tablaArgumentos.getValueAt(contSimple - 1, 1).toString().startsWith("resultado")){
+            // if(tablaArgumentos.getValueAt(contSimple - 1, 1).toString().startsWith("var")){
+            if (tablaArgumentos.getValueAt(contSimple - 1, 1).toString().startsWith("resultado")) {
                 argumento.setValor(tablaArgumentos.getValueAt(contSimple - 1, 1).toString());
                 argumento.setGenerarXstream(false);
             }

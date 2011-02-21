@@ -161,7 +161,8 @@ public class InstanceListForm extends javax.swing.JDialog {
 
     private javax.swing.JButton cancelarSeleccion;
 
-    private com.teg.dominio.ColeccionInstancia coleccionInstancia;
+    ColeccionInstancia coleccionInstancia;
+
 
     public InstanceListForm(java.awt.Frame parent, boolean modal, Object instance, String dataPath, WidgetObjectLoading listObject, Class argumento, Inicio inicio, int coleccionId) {
         
@@ -203,11 +204,13 @@ public class InstanceListForm extends javax.swing.JDialog {
 
         this.listWidget = listObject;
 
-        this.clase = argumento;
+        this.clase = clasePrimitiva;
 
         this.coleccionId = coleccionId;
 
-        setLista(clase);
+        this.casoPrueba = inicio.getNombreCasoPrueba();
+
+        setLista(argumento);
 
         initComponentesString();
 
@@ -227,7 +230,9 @@ public class InstanceListForm extends javax.swing.JDialog {
 
         this.inicio = inicio;
 
-        this.coleccionId = coleccionId;      
+        this.coleccionId = coleccionId;
+
+        this.casoPrueba = inicio.getNombreCasoPrueba();
 
         setLista(clase);
 
@@ -236,7 +241,7 @@ public class InstanceListForm extends javax.swing.JDialog {
     }
 
     InstanceListForm(java.awt.Frame parent, boolean modal,
-            ColeccionInstancia coleccion ,ArrayList<Class> clasesColeccion,
+           ArrayList<Class> clasesColeccion,
             ArrayList<Class> obtenerGenericos, ArrayList<Class> obtenerClasesJars,
             String path, WidgetObjectLoading listWidget, Inicio inicio, int coleccionId) {
 
@@ -247,13 +252,15 @@ public class InstanceListForm extends javax.swing.JDialog {
 
         this.path = path;
 
-        this.coleccionInstancia = coleccion;
+        
 
         this.listWidget = listWidget;
 
         this.clasesGenericos = obtenerGenericos;
 
         this.clasesColeccion = clasesColeccion;
+
+        this.casoPrueba = inicio.getNombreCasoPrueba();
 
         this.inicio = inicio;
 
@@ -1044,6 +1051,7 @@ public class InstanceListForm extends javax.swing.JDialog {
 
             Class coleccionInstance = (Class) listaSeleccionColeccion.getSelectedValue();
 
+
             clase = (Class) listaSeleccionObjeto.getSelectedValue();
 
             
@@ -1219,7 +1227,14 @@ public class InstanceListForm extends javax.swing.JDialog {
 
          }
 
-         listWidget.setColeccion(coleccion);
+
+         coleccionInstancia = new ColeccionInstancia();
+
+         coleccionInstancia.setColeccionInstancia(coleccion);
+
+         coleccionInstancia.setTipoDatoColeccion(clase.getName());
+
+         listWidget.setColeccionInstancia(coleccionInstancia);
 
          this.dispose();
 
@@ -1296,11 +1311,6 @@ public class InstanceListForm extends javax.swing.JDialog {
 
     }
 
-    private void setTipoDatoColeccion(Class claseTipo){
-
-        coleccionInstancia.setTipoDatoColeccion(claseTipo.getName());
-
-    }
 
     private void aceptarSeleccionActionPerformed(java.awt.event.ActionEvent evt) {
 
@@ -1310,7 +1320,7 @@ public class InstanceListForm extends javax.swing.JDialog {
 
        buttonCrearOtro.setEnabled(true);
 
-       setTipoDatoColeccion(clase);
+ 
 
         if (verificarDato(clase) == true){
 
@@ -1417,27 +1427,7 @@ public class InstanceListForm extends javax.swing.JDialog {
 
     }
 
-    private String argumentoColeccion(Class clase) {
-        String claseColeccion = "";
-        Class[] interfaces = clase.getInterfaces();
 
-        for (Class class1 : interfaces) {
-
-            if (class1.getName().equals("java.util.Map")
-
-                    || class1.getName().equals("java.util.Set")
-
-                    || class1.getName().equals("java.util.List")
-
-                    || class1.getName().equals("java.util.Queue")) {
-
-                claseColeccion = class1.getName();
-
-            }
-        }
-
-        return claseColeccion;
-    }
 
     private void obtenerListaColeccion(Class generico) {
 
@@ -1613,10 +1603,7 @@ public class InstanceListForm extends javax.swing.JDialog {
         }
     }
   
-    public void getColeccion() {
-
-        listWidget.setColeccion(coleccion);
-    }
+    
 
     public void instanciaCampos(Object claseInstancia) throws InstantiationException, IllegalAccessException, NoSuchMethodException, IllegalArgumentException, InvocationTargetException {
 
@@ -1773,7 +1760,13 @@ public class InstanceListForm extends javax.swing.JDialog {
 
         coleccion.add(textField.getText());
 
-        listWidget.setColeccion(coleccion);
+        coleccionInstancia = new ColeccionInstancia();
+
+        coleccionInstancia.setColeccionInstancia(coleccion);
+
+        coleccionInstancia.setTipoDatoColeccion(clase.getName());
+
+        listWidget.setColeccionInstancia(coleccionInstancia);
 
 
 
@@ -1783,6 +1776,14 @@ public class InstanceListForm extends javax.swing.JDialog {
     private void buttonGuardarActionPerformed(java.awt.event.ActionEvent evt) {
 
         coleccion.add(metawidget.getToInspect());
+
+        coleccionInstancia = new ColeccionInstancia();
+
+        coleccionInstancia.setColeccionInstancia(coleccion);
+
+        coleccionInstancia.setTipoDatoColeccion(clase.getName());
+
+        listWidget.setColeccionInstancia(coleccionInstancia);
 
         this.crearXML(coleccion, casoPrueba);
 

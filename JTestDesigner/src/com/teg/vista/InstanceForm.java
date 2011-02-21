@@ -6,6 +6,7 @@
 package com.teg.vista;
 
 
+import com.teg.dominio.VariableInstancia;
 import com.teg.logica.ClassLoading;
 
 import com.teg.logica.WidgetObjectLoading;
@@ -127,7 +128,10 @@ public class InstanceForm extends javax.swing.JDialog {
     private JButton aceptarSeleccion;
 
     private JButton cancelarSeleccion;
+    
     private SwingDialog dialogoColeccion;
+
+    VariableInstancia variableInstancia;
 
     /** Creates new form InstanceForm */
     public InstanceForm(java.awt.Frame parent, boolean modal,Object instance, String dataPath, WidgetObjectLoading listObject, Inicio inicio, int objId) {
@@ -170,6 +174,8 @@ public class InstanceForm extends javax.swing.JDialog {
         this.objId = objId;
 
         this.claseJars = clasesJars;
+
+        this.casoPrueba = inicio.getNombreCasoPrueba();
 
         initComponentsAbstract();
 
@@ -437,15 +443,7 @@ public class InstanceForm extends javax.swing.JDialog {
          lista.setListData(claseJars.toArray());
      }
 
-    public void getObject() {
-
-        ArrayList<Object> objects = new ArrayList<Object>();
-
-        objects.add(metawidget.getToInspect());
-
-        listWidget.setObject(objects);
-
-    }
+    
 
      private void aceptarSeleccionActionPerformed(java.awt.event.ActionEvent evt){
         try {
@@ -487,12 +485,9 @@ public class InstanceForm extends javax.swing.JDialog {
 
          dialogoColeccion = new com.teg.util.SwingDialog();
 
-        int opcion = dialogoColeccion.advertenciaDialog("Se perderan todos los objetos guardados, Desea continuar ?", this);
+        int opcion = dialogoColeccion.advertenciaDialog("Se perdera el objeto generado, Desea Continuar?", this);
 
         if (opcion == 0){
-
-
-            listWidget.setObject(null);
 
             aceptarSeleccion.setEnabled(true);
 
@@ -518,11 +513,12 @@ public class InstanceForm extends javax.swing.JDialog {
 
         Object instance = metawidget.getToInspect();
 
-        ArrayList<Object> objects = new ArrayList<Object>();
+        variableInstancia = new VariableInstancia();
+        
+        variableInstancia.setInstancia(instance);
 
-        objects.add(metawidget.getToInspect());
 
-        listWidget.setObject(objects);
+        listWidget.setVariableInstancia(variableInstancia);
 
         Class claseJar = this.loadClass(instance.getClass());
 
@@ -601,15 +597,20 @@ public class InstanceForm extends javax.swing.JDialog {
 
         raiz.addContent(entidad);
 
-        Field[] campos = claseInstancia.getClass().getDeclaredFields();
+        java.util.List<Field> campos = new java.util.ArrayList<Field>();
+
+        campos = Arrays.asList(claseInstancia.getClass().getDeclaredFields());
 
         for (Field field : campos) {
 
             boolean flag = false;
 
+            java.util.List<Method> metodosClase = new java.util.ArrayList<Method>();
+
+            metodosClase = Arrays.asList(claseInstancia.getClass().getDeclaredMethods());
+
             if (!field.getType().isPrimitive() && verificarDato(field.getType()) == false) {
 
-                Method[] metodosClase = claseInstancia.getClass().getDeclaredMethods();
 
                 for (Method method : metodosClase) {
 
@@ -634,7 +635,7 @@ public class InstanceForm extends javax.swing.JDialog {
         }
     }
 
-    @SuppressWarnings("ManualArrayToCollectionCopy")
+
     public org.jdom.Element getEntity(Class clase) {
 
         org.jdom.Element entidad = new org.jdom.Element("entity");
@@ -645,11 +646,11 @@ public class InstanceForm extends javax.swing.JDialog {
 
         entidad.addContent("\n \t");
 
-       
 
-      Field[] fields = clase.getDeclaredFields();
+        java.util.List<Field> fields = new java.util.ArrayList<Field>();
 
-       
+        fields = getAllFields(fields, clase);
+
 
         //Field[] fields = clase.getDeclaredFields();
 
@@ -699,6 +700,38 @@ public class InstanceForm extends javax.swing.JDialog {
         return entidad;
     }
 
+
+    public java.util.List<Field> getAllFields(java.util.List<Field> fields, Class<?> clase) {
+
+
+        if (clase.getDeclaredFields() != null) {
+            fields.addAll(Arrays.asList(clase.getDeclaredFields()));
+        }
+
+
+    if (clase.getSuperclass() != null) {
+
+        fields = getAllFields(fields, clase.getSuperclass());
+    }
+
+    return fields;
+}
+
+    public java.util.ArrayList<Method> getAllMethods (java.util.ArrayList<Method> methods, Class<?> clase){
+
+       methods.addAll(Arrays.asList(clase.getDeclaredMethods()));
+
+       for (Method method : clase.getMethods()){
+
+           if (methods.contains(method) == false){
+               methods.add(method);
+           }
+       }
+
+
+       return methods;
+    }
+
     public Object getInstance(Class clase) throws InstantiationException, IllegalAccessException, NoSuchMethodException, IllegalArgumentException, InvocationTargetException, JDOMException, IOException {
 
         org.jdom.Element raiz = new org.jdom.Element("inspection-result");
@@ -711,19 +744,22 @@ public class InstanceForm extends javax.swing.JDialog {
 
         Object claseInstancia = clase.newInstance();
 
-        Field[] campos = clase.getDeclaredFields();
+        java.util.List<Field> campos = new java.util.ArrayList<Field>();
+
+        campos = getAllFields(campos, clase);
 
         for (Field field : campos) {
 
             boolean flag = false;
 
-            Method[] metodosHeredadados = clase.getMethods();
+             java.util.ArrayList<Method> metodosClase = new java.util.ArrayList<Method>();
+
+            metodosClase = getAllMethods(metodosClase, clase);
+
+            //Method[] metodosHeredadados = clase.getMethods();
 
             if (!field.getType().isPrimitive() && verificarDato(field.getType()) == false) {
 
-                Method[] metodosClase = clase.getDeclaredMethods();
-
-             
                 for (Method method : metodosClase) {
 
                     if (method.getParameterTypes().length == 1
@@ -743,7 +779,7 @@ public class InstanceForm extends javax.swing.JDialog {
             }
         }
 
-        
+
 
 
 
