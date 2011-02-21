@@ -10,6 +10,7 @@
  */
 package com.teg.vista;
 
+import com.teg.dominio.ArregloInstancia;
 import com.teg.logica.WidgetObjectLoading;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
@@ -65,6 +66,7 @@ public class InstanceArrayForm extends javax.swing.JDialog {
     private String pathFile;
     private String casoPrueba;
     private int arregloId;
+    ArregloInstancia arregloInstancia;
 
     /** Creates new form InstanceArrayForm */
     public InstanceArrayForm(java.awt.Frame parent, boolean modal) {
@@ -77,7 +79,7 @@ public class InstanceArrayForm extends javax.swing.JDialog {
 
         super(parent, modal);
 
-        pathFile = path;
+        this.pathFile = path;
         this.widget = listWidget;
         this.claseComponente = arrayComponente;
         this.inicio = inicio;
@@ -92,10 +94,10 @@ public class InstanceArrayForm extends javax.swing.JDialog {
 
         super(parent, modal);
 
-        widget = listWidget;
-        objectInspect = object;
+        this.widget = listWidget;
+        this.objectInspect = object;
 
-        pathFile = path;
+        this.pathFile = path;
         this.inicio = inicio;
         this.casoPrueba = inicio.getNombreCasoPrueba();
         this.arregloId = arregloId;
@@ -299,10 +301,7 @@ public class InstanceArrayForm extends javax.swing.JDialog {
 
     }
 
-    public void getArreglo() {
-        //Object[] arreglo = listaObjetos.toArray();
-        widget.setArreglo(listaObjetos);
-    }
+    
 
     private void instanciaCampos(Object claseInstancia) throws InstantiationException, IllegalAccessException, NoSuchMethodException, IllegalArgumentException, InvocationTargetException {
 
@@ -392,11 +391,12 @@ public class InstanceArrayForm extends javax.swing.JDialog {
         listaObjetos.add(metawidget.getToInspect());
      
         //Object[] arreglo = listaObjetos.toArray();
-        System.out.println(objectInspect.getClass().getName());
-        
-        ArrayList dest = new ArrayList();
-        
-        System.out.println("arreglo clase: " + dest.getClass().getName());
+       arregloInstancia = new ArregloInstancia();
+
+       arregloInstancia.setArreglo(listaObjetos.toArray());
+       arregloInstancia.setClaseComponente(objectInspect.getClass().getName());
+
+       widget.setArregloInstancia(arregloInstancia);
 
         this.crearXML(listaObjetos.toArray(), casoPrueba, objectInspect.getClass().getName());
 
@@ -431,10 +431,14 @@ public class InstanceArrayForm extends javax.swing.JDialog {
     }
 
     private void buttonGuardarStringActionPerformed(java.awt.event.ActionEvent evt) {
+
+        arregloInstancia = new ArregloInstancia();
+
         if (claseComponente.getName().equals("java.lang.Integer")
                 || claseComponente.getName().equals("int")) {
             Integer integer = new Integer(Integer.parseInt(valorString.getText()));
             listaObjetos.add(integer);
+
         } else {
             if (claseComponente.getName().equals("java.lang.Float")
                     || claseComponente.getName().equals("float")) {
@@ -488,7 +492,13 @@ public class InstanceArrayForm extends javax.swing.JDialog {
         //Object[] arreglo = listaObjetos.toArray();
 
 
-        widget.setArreglo(listaObjetos);
+
+        arregloInstancia.setArreglo(listaObjetos.toArray());
+        arregloInstancia.setClaseComponente(claseComponente.getName());
+
+        widget.setArregloInstancia(arregloInstancia);
+
+
         this.dispose();
     }
 

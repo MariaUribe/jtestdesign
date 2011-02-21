@@ -5,9 +5,11 @@
 
 package com.teg.logica;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Map;
+import com.teg.dominio.ArregloInstancia;
+import com.teg.dominio.ColeccionInstancia;
+import com.teg.dominio.MapaInstancia;
+import com.teg.dominio.VariableInstancia;
+
 
 
         /**
@@ -16,64 +18,20 @@ import java.util.Map;
  */
 public class WidgetObjectLoading {
 
-    private ArrayList<Object> object;
-    private Collection coleccion;
-    private Map mapa;
     private boolean guardado;
-    private ArrayList<Object> arreglo;
-
-
-    /**
-     * @return the object
-     */
-    public ArrayList<Object> getObject() {
-        return object;
-    }
-
-    /**
-     * @param object the object to set
-     */
-    public void setObject(ArrayList<Object> object) {
-        this.object = object;
-    }
-
-   public WidgetObjectLoading()
-    {
-
-    }
-
-    /**
-     * @return the coleccion
-     */
-    public Collection getColeccion() {
-        return coleccion;
-    }
-
-    /**
-     * @param coleccion the coleccion to set
-     */
-    public void setColeccion(Collection coleccion) {
-        this.coleccion = coleccion;
-    }
-
-    /**
-     * @return the mapa
-     */
-    public Map getMapa() {
-        return mapa;
-    }
-
-    /**
-     * @param mapa the mapa to set
-     */
-    public void setMapa(Map mapa) {
-        this.mapa = mapa;
-    }
+    
+    private VariableInstancia variableInstancia;
+    
+    private ColeccionInstancia coleccionInstancia;
+    
+    private MapaInstancia mapaInstancia;
+    
+    private ArregloInstancia arregloInstancia;
 
     /**
      * @return the guardado
      */
-    public boolean getGuardado() {
+    public boolean isGuardado() {
         return guardado;
     }
 
@@ -85,18 +43,64 @@ public class WidgetObjectLoading {
     }
 
     /**
-     * @return the arreglo
+     * @return the variableInstancia
      */
-    public ArrayList<Object> getArreglo() {
-        return arreglo;
+    public VariableInstancia getVariableInstancia() {
+        return variableInstancia;
     }
 
     /**
-     * @param arreglo the arreglo to set
+     * @param variableInstancia the variableInstancia to set
      */
-    public void setArreglo(ArrayList<Object> arreglo) {
-        this.arreglo = arreglo;
+    public void setVariableInstancia(VariableInstancia variableInstancia) {
+        this.variableInstancia = variableInstancia;
     }
+
+    /**
+     * @return the coleccionInstancia
+     */
+    public ColeccionInstancia getColeccionInstancia() {
+        return coleccionInstancia;
+    }
+
+    /**
+     * @param coleccionInstancia the coleccionInstancia to set
+     */
+    public void setColeccionInstancia(ColeccionInstancia coleccionInstancia) {
+        this.coleccionInstancia = coleccionInstancia;
+    }
+
+    /**
+     * @return the mapaInstancia
+     */
+    public MapaInstancia getMapaInstancia() {
+        return mapaInstancia;
+    }
+
+    /**
+     * @param mapaInstancia the mapaInstancia to set
+     */
+    public void setMapaInstancia(MapaInstancia mapaInstancia) {
+        this.mapaInstancia = mapaInstancia;
+    }
+
+    /**
+     * @return the arregloInstancia
+     */
+    public ArregloInstancia getArregloInstancia() {
+        return arregloInstancia;
+    }
+
+    /**
+     * @param arregloInstancia the arregloInstancia to set
+     */
+    public void setArregloInstancia(ArregloInstancia arregloInstancia) {
+        this.arregloInstancia = arregloInstancia;
+    }
+
+
+
+   
 
     
     

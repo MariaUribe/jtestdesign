@@ -108,6 +108,7 @@ public class InstanceMapForm extends javax.swing.JDialog {
     private WidgetObjectLoading listWidget = new WidgetObjectLoading();
     private SwingMetawidget metawidget;
     private SwingMetawidget secondMetawidget;
+    private MapaInstancia mapaInstancia;
     private static Map mapa;
     private int caso = 0;
     private javax.swing.JPanel panelSeleccion;
@@ -130,7 +131,6 @@ public class InstanceMapForm extends javax.swing.JDialog {
     private ArrayList<Class> clasesJars;
     private Class claseKey;
     private Class claseValue;
-    private MapaInstancia mapaInstancia;
     private ArrayList<Class> clasesColeccion;
     private Inicio inicio;
     private javax.swing.JList listaSeleccionMapa;
@@ -145,7 +145,7 @@ public class InstanceMapForm extends javax.swing.JDialog {
         initComponents();
     }
 
-    InstanceMapForm(java.awt.Frame parent, boolean modal, ArrayList<Class> obtenerClasesJars, WidgetObjectLoading listObject, Class argument, Inicio inicio, int mapaId, MapaInstancia mapInstancia) {
+    InstanceMapForm(java.awt.Frame parent, boolean modal, ArrayList<Class> obtenerClasesJars, WidgetObjectLoading listObject, Class argument, Inicio inicio, int mapaId) {
 
         super(parent, modal);
 
@@ -155,9 +155,7 @@ public class InstanceMapForm extends javax.swing.JDialog {
 
         this.listWidget = listObject;
 
-        mapaInstancia = mapInstancia;
-
-        casoPrueba = inicio.getNombreCasoPrueba();
+        this.casoPrueba = inicio.getNombreCasoPrueba();
 
         obtenerMapa(argument);
 
@@ -197,56 +195,6 @@ public class InstanceMapForm extends javax.swing.JDialog {
 
         }
 
-
-
-
-
-    }
-
-    private void llenarListaSeleccion() {
-
-        ArrayList<Class> clasesLista = (ArrayList<Class>) clasesJars.clone();
-
-        clasesLista.add(java.lang.Byte.class);
-
-        clasesLista.add(java.lang.Integer.class);
-
-        clasesLista.add(java.lang.String.class);
-
-        clasesLista.add(java.lang.Short.class);
-
-        clasesLista.add(java.lang.Double.class);
-
-        clasesLista.add(java.lang.Float.class);
-
-        clasesLista.add(java.lang.Boolean.class);
-
-        clasesLista.add(java.lang.Character.class);
-
-        listaSeleccionKey.setListData(clasesLista.toArray());
-
-        listaSeleccionValue.setListData(clasesLista.toArray());
-
-    }
-
-    private boolean verificarDato(Class clase) {
-
-        boolean verificado = false;
-        if (clase.getName().equals("java.lang.Integer")
-                || clase.getName().equals("java.lang.Float")
-                || clase.getName().equals("java.lang.Double")
-                || clase.getName().equals("java.lang.Long")
-                || clase.getName().equals("java.lang.Short")
-                || clase.getName().equals("java.lang.Byte")
-                || clase.getName().equals("java.lang.Character")
-                || clase.getName().equals("java.lang.String")
-                || clase.getName().equals("java.lang.Boolean")
-                || clase.isPrimitive() == true) {
-
-            verificado = true;
-        }
-
-        return verificado;
     }
 
     public InstanceMapForm(java.awt.Frame parent, boolean modal, ArrayList<Class> classInstances, String path, WidgetObjectLoading listWidget, Class argument, int mapaId) throws InstantiationException {
@@ -262,6 +210,8 @@ public class InstanceMapForm extends javax.swing.JDialog {
         this.path = path;
 
         this.listWidget = listWidget;
+
+        this.casoPrueba = inicio.getNombreCasoPrueba();
 
         this.mapaId = mapaId;
 
@@ -445,13 +395,52 @@ public class InstanceMapForm extends javax.swing.JDialog {
 
     }
 
-    public void getMapaTipos() {
+    private void llenarListaSeleccion() {
 
-        mapaInstancia.setClaseKey(claseKey);
+        ArrayList<Class> clasesLista = (ArrayList<Class>) clasesJars.clone();
 
-        mapaInstancia.setClaseValue(claseValue);
+        clasesLista.add(java.lang.Byte.class);
+
+        clasesLista.add(java.lang.Integer.class);
+
+        clasesLista.add(java.lang.String.class);
+
+        clasesLista.add(java.lang.Short.class);
+
+        clasesLista.add(java.lang.Double.class);
+
+        clasesLista.add(java.lang.Float.class);
+
+        clasesLista.add(java.lang.Boolean.class);
+
+        clasesLista.add(java.lang.Character.class);
+
+        listaSeleccionKey.setListData(clasesLista.toArray());
+
+        listaSeleccionValue.setListData(clasesLista.toArray());
 
     }
+
+    private boolean verificarDato(Class clase) {
+
+        boolean verificado = false;
+        if (clase.getName().equals("java.lang.Integer")
+                || clase.getName().equals("java.lang.Float")
+                || clase.getName().equals("java.lang.Double")
+                || clase.getName().equals("java.lang.Long")
+                || clase.getName().equals("java.lang.Short")
+                || clase.getName().equals("java.lang.Byte")
+                || clase.getName().equals("java.lang.Character")
+                || clase.getName().equals("java.lang.String")
+                || clase.getName().equals("java.lang.Boolean")
+                || clase.isPrimitive() == true) {
+
+            verificado = true;
+        }
+
+        return verificado;
+    }
+
 
     private void addKeyField() {
 
@@ -470,11 +459,6 @@ public class InstanceMapForm extends javax.swing.JDialog {
         tabPanel.validate();
 
 
-    }
-
-    public void getMapa() {
-
-        listWidget.setMapa(mapa);
     }
 
     private void addValueField() {
@@ -1359,8 +1343,12 @@ public class InstanceMapForm extends javax.swing.JDialog {
 
         } else {
 
-            if (verificarDato(instanceInspect.get(0)) == true
-                    && verificarDato(instanceInspect.get(1)) == true) {
+            claseKey = instanceInspect.get(0);
+
+            claseValue = instanceInspect.get(1);
+
+            if (verificarDato(claseKey) == true
+                    && verificarDato(claseValue) == true) {
                 caso = 1;
 
                 addKeyField();
@@ -1369,14 +1357,14 @@ public class InstanceMapForm extends javax.swing.JDialog {
 
             } else {
 
-                if (verificarDato(instanceInspect.get(0)) == false
-                        && verificarDato(instanceInspect.get(1)) == true) {
+                if (verificarDato(claseKey) == false
+                        && verificarDato(claseValue) == true) {
 
                     try {
 
                         caso = 2;
 
-                        Object object = getInstance(instanceInspect.get(0));
+                        Object object = getInstance(claseKey);
 
                         InspectObject(object, panelKey);
 
@@ -1411,18 +1399,18 @@ public class InstanceMapForm extends javax.swing.JDialog {
 
                         Logger.getLogger(InstanceMapForm.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                } else if (verificarDato(instanceInspect.get(0)) == false
-                        && verificarDato(instanceInspect.get(1)) == false) {
+                } else if (verificarDato(claseKey) == false
+                        && verificarDato(claseValue) == false) {
 
-                    if (instanceInspect.get(0).getName().equals(instanceInspect.get(1).getName())) {
+                    if (claseKey.getName().equals(claseValue.getName())) {
 
                         try {
 
                             caso = 3;
 
-                            Object object = getInstance(instanceInspect.get(0));
+                            Object object = getInstance(claseKey);
 
-                            Object secondObject = getNuevoObjeto(instanceInspect.get(1));
+                            Object secondObject = getNuevoObjeto(claseValue);
 
                             InspectObject(object, panelKey);
 
@@ -1462,7 +1450,7 @@ public class InstanceMapForm extends javax.swing.JDialog {
 
                             caso = 4;
 
-                            ArrayList<Object> instancias = getDobleInstance(instanceInspect.get(0), instanceInspect.get(1));
+                            ArrayList<Object> instancias = getDobleInstance(claseKey, claseValue);
 
                             InspectObject(instancias.get(0), panelKey);
 
@@ -1502,14 +1490,14 @@ public class InstanceMapForm extends javax.swing.JDialog {
 
                 } else {
 
-                    if (verificarDato(instanceInspect.get(0)) == true
-                            && verificarDato(instanceInspect.get(1)) == false) {
+                    if (verificarDato(claseKey) == true
+                            && verificarDato(claseValue) == false) {
 
                         try {
 
                             caso = 5;
 
-                            Object object = getInstance(instanceInspect.get(1));
+                            Object object = getInstance(claseValue);
 
                             InspectObject(object, panelValue);
 
@@ -1561,11 +1549,7 @@ public class InstanceMapForm extends javax.swing.JDialog {
 
         claseKey = (Class) listaSeleccionKey.getSelectedValue();
 
-        claseValue = (Class) listaSeleccionValue.getSelectedValue();
-
-        mapaInstancia.setClaseKey(claseKey);
-
-        mapaInstancia.setClaseValue(claseValue);
+        claseValue = (Class) listaSeleccionValue.getSelectedValue();       
 
         buttonCrearOtro.setEnabled(true);
 
@@ -1810,7 +1794,15 @@ public class InstanceMapForm extends javax.swing.JDialog {
             }
         }
 
-        listWidget.setMapa(mapa);
+        mapaInstancia = new MapaInstancia();
+
+        mapaInstancia.setClaseKey(claseKey);
+
+        mapaInstancia.setClaseValue(claseValue);
+
+        mapaInstancia.setMapa(mapa);
+
+        listWidget.setMapaInstancia(mapaInstancia);
 
         this.crearXML(mapa, casoPrueba);
 
@@ -2159,7 +2151,15 @@ public class InstanceMapForm extends javax.swing.JDialog {
             }
         }
 
-        listWidget.setMapa(mapa);
+        mapaInstancia = new MapaInstancia();
+
+        mapaInstancia.setMapa(mapa);
+
+        mapaInstancia.setClaseKey(instanceInspect.get(0));
+
+        mapaInstancia.setClaseValue(instanceInspect.get(1));
+        
+        listWidget.setMapaInstancia(mapaInstancia);
 
         this.dispose();
 
