@@ -51,6 +51,13 @@ public class ${claseTemplate.nombreClase} {
     private ${arg.tipo} ${arg.valor};
     </#if>
     </#list>
+    <#if metodo.assertLinea??>
+        <#assign generarXstreamAssert = metodo.assertLinea.generarXstream />
+        <#assign esComplejoAssert = metodo.assertLinea.complejo />
+    <#if esComplejoAssert && generarXstreamAssert>
+    private ${metodo.assertLinea.tipoDatoAssert} ${metodo.assertLinea.valorAssert};
+    </#if>
+    </#if>
 </#list>
 </#list>
 <#if hasMock>
@@ -68,14 +75,31 @@ public class ${claseTemplate.nombreClase} {
     <#list clasesNoRepetidas as clase>
         ${clase.simpleNombre?uncap_first} = new ${clase.nombre}();
     </#list>
+
 <#assign miCount = 0 />
+<#assign miCountAssert = 0 />
 <#assign imprimir = false />
+<#assign imprimirAssert = false />
 <#list casoPrueba.escenariosPrueba as esc>
 <#list esc.metodos as metodo>
+    <#if metodo.assertLinea??>
+        <#assign generarXstreamAssert = metodo.assertLinea.generarXstream />
+        <#assign esComplejoAssert = metodo.assertLinea.complejo />
+    </#if>
+    <#if esComplejoAssert && generarXstreamAssert>
+        <#assign miCountAssert = miCountAssert + 1 />
+        <#if miCountAssert==1 ><#assign imprimirAssert = true />
+        try {
+            XStream xstreamAssert = new XStream(new DomDriver());
+        </#if>
+        <#assign rutaAssert = codeManager.getRuta(casoPrueba, metodo.assertLinea.valorAssert) />
+            InputStream is${miCountAssert} = new FileInputStream("${rutaAssert}");
+            ${metodo.assertLinea.valorAssert} = (${metodo.assertLinea.tipoDatoAssert}) xstreamAssert.fromXML(is${miCountAssert});
+    </#if>
+
     <#list metodo.argumentos as arg>
     <#assign generarXstream = arg.generarXstream />
     <#assign esComplejo = arg.complejo />
-    <#assign nombreClase = arg.tipo />
         <#if esComplejo && generarXstream>
         <#assign miCount = miCount + 1 />
         <#if miCount==1 ><#assign imprimir = true />
@@ -90,7 +114,7 @@ public class ${claseTemplate.nombreClase} {
     </#list>
 </#list>
 </#list>
-    <#if imprimir>
+    <#if imprimir || imprimirAssert>
         } catch (FileNotFoundException ex) {
             Logger.getLogger(${claseTemplate.nombreClase}.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -136,7 +160,7 @@ public class ${claseTemplate.nombreClase} {
 
     <#assign ordenMetodos = codeManager.generarPrueba(casoPrueba, escenario) />
     <#list ordenMetodos as metodo>
-        <#if metodo.assertLinea??>${metodo.retorno.retornoNombreSimple} ${metodo.retorno.nombreVariable} = </#if>${metodo.clase.simpleNombre?uncap_first}.${metodo.getNombre()}(<#list metodo.argumentos as arg>${arg.valor}<#if arg_has_next>, </#if></#list>);
+        <#if metodo.assertLinea??>${metodo.retorno.retorno} ${metodo.retorno.nombreVariable} = </#if>${metodo.clase.simpleNombre?uncap_first}.${metodo.getNombre()}(<#list metodo.argumentos as arg>${arg.valor}<#if arg_has_next>, </#if></#list>);
         <#if metodo.assertLinea??>Assert.${metodo.assertLinea.condicion}(${metodo.assertLinea.variable},<#if metodo.assertLinea.valorAssert??> <#assign esEnvolvente = codeManager.esClaseEnvolvente(metodo.retorno.retorno) /> <#if esEnvolvente>new ${metodo.retorno.retorno}(${metodo.assertLinea.valorAssert}),<#else>${metodo.assertLinea.valorAssert},</#if></#if> "${metodo.assertLinea.mensaje}");</#if>
 
     </#list>

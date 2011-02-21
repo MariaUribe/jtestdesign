@@ -161,10 +161,12 @@ public class InstanceListForm extends javax.swing.JDialog {
 
     private javax.swing.JButton cancelarSeleccion;
 
+    private boolean vieneDelAssert;
+
     ColeccionInstancia coleccionInstancia;
 
 
-    public InstanceListForm(java.awt.Frame parent, boolean modal, Object instance, String dataPath, WidgetObjectLoading listObject, Class argumento, Inicio inicio, int coleccionId) {
+    public InstanceListForm(java.awt.Frame parent, boolean modal, Object instance, String dataPath, WidgetObjectLoading listObject, Class argumento, Inicio inicio, int coleccionId, boolean vieneDelAssert) {
         
         super(parent, modal);
 
@@ -186,6 +188,8 @@ public class InstanceListForm extends javax.swing.JDialog {
 
         this.coleccionId = coleccionId;
 
+        this.vieneDelAssert = vieneDelAssert;
+
         initComponentsCollection();
 
     }
@@ -198,7 +202,7 @@ public class InstanceListForm extends javax.swing.JDialog {
         initComponents();
     }
 
-    InstanceListForm(java.awt.Frame parent, boolean modal,Class clasePrimitiva, WidgetObjectLoading listObject, Class argumento, int coleccionId) {
+    InstanceListForm(java.awt.Frame parent, boolean modal,Class clasePrimitiva, WidgetObjectLoading listObject, Class argumento, int coleccionId, boolean vieneDelAssert) {
 
         super(parent, modal);
 
@@ -210,13 +214,15 @@ public class InstanceListForm extends javax.swing.JDialog {
 
         this.casoPrueba = inicio.getNombreCasoPrueba();
 
+        this.vieneDelAssert = vieneDelAssert;
+
         setLista(argumento);
 
         initComponentesString();
 
     }
 
-    InstanceListForm(java.awt.Frame parent, boolean modal, ArrayList<Class> clasesJar, String path, WidgetObjectLoading listWidget, Class argument, Inicio inicio, int coleccionId) {
+    InstanceListForm(java.awt.Frame parent, boolean modal, ArrayList<Class> clasesJar, String path, WidgetObjectLoading listWidget, Class argument, Inicio inicio, int coleccionId, boolean vieneDelAssert) {
 
         super(parent, modal);
 
@@ -234,6 +240,8 @@ public class InstanceListForm extends javax.swing.JDialog {
 
         this.casoPrueba = inicio.getNombreCasoPrueba();
 
+        this.vieneDelAssert = vieneDelAssert;
+
         setLista(clase);
 
         initComponentesGeneric();
@@ -243,7 +251,7 @@ public class InstanceListForm extends javax.swing.JDialog {
     InstanceListForm(java.awt.Frame parent, boolean modal,
            ArrayList<Class> clasesColeccion,
             ArrayList<Class> obtenerGenericos, ArrayList<Class> obtenerClasesJars,
-            String path, WidgetObjectLoading listWidget, Inicio inicio, int coleccionId) {
+            String path, WidgetObjectLoading listWidget, Inicio inicio, int coleccionId, boolean vieneDelAssert) {
 
 
         super(parent, modal);
@@ -265,6 +273,8 @@ public class InstanceListForm extends javax.swing.JDialog {
         this.inicio = inicio;
 
         this.coleccionId = coleccionId;
+
+        this.vieneDelAssert = vieneDelAssert;
 
         if (clasesGenericos.isEmpty() == true){
 

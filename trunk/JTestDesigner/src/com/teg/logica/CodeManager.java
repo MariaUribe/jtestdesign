@@ -24,21 +24,26 @@ public class CodeManager {
      */
     public CodeManager() {
     }
-    
+
     public boolean esClaseEnvolvente(String tipoDato) {
         boolean esEnvolvente = false;
         String[] datoArray = tipoDato.split("\\.");
-        String java = datoArray[0];
-        String lang = datoArray[1];
-        String nombre = datoArray[2];
 
-        java.util.Date fecha = new Date();
+        if (datoArray.length > 1) {
+            String java = datoArray[0];
+            String lang = datoArray[1];
+            String nombre = datoArray[2];
 
-        if (java.equals("java") && lang.equals("lang")) {
-            if (nombre.equals("Integer") || nombre.equals("Byte") || nombre.equals("Float")
-                    || nombre.equals("Character") || nombre.equals("Long") || nombre.equals("Short")
-                    || nombre.equals("Double") || nombre.equals("Boolean") || nombre.equals("Void") || nombre.equals("Void")) {
-                esEnvolvente = true;
+            java.util.Date fecha = new Date();
+
+            if (java.equals("java") && lang.equals("lang")) {
+                if (nombre.equals("Integer") || nombre.equals("Byte") || nombre.equals("Float")
+                        || nombre.equals("Character") || nombre.equals("Long") || nombre.equals("Short")
+                        || nombre.equals("Double") || nombre.equals("Boolean") || nombre.equals("Void") || nombre.equals("Void")) {
+                    esEnvolvente = true;
+                }
+            } else {
+                esEnvolvente = false;
             }
         } else {
             esEnvolvente = false;
@@ -332,7 +337,7 @@ public class CodeManager {
         if (method.getDeclaringClass().getName().equals(metodo.getClase().getNombre())) {
             System.out.println("");
             // si tienen el mismo nombre y los argumentos son iguales
-            if (method.getName().equals(metodo.getNombre())){
+            if (method.getName().equals(metodo.getNombre())) {
                 System.out.println("SI tienen el mismo nombre!!: " + method.getName() + " y " + metodo.getNombre());
             } else {
                 System.out.println("NO tienen el mismo nombre!!: " + method.getName() + " y " + metodo.getNombre());
@@ -340,13 +345,13 @@ public class CodeManager {
 
 
 
-            if (sonArgumentosIguales(method, metodo)){
+            if (sonArgumentosIguales(method, metodo)) {
                 System.out.println("SI son argumentos iguales!: " + method.getName() + " y " + metodo.getNombre());
             } else {
                 System.out.println("NO son argumentos iguales!: " + method.getName() + " y " + metodo.getNombre());
             }
 
-            
+
             if ((method.getName().equals(metodo.getNombre())) && (sonArgumentosIguales(method, metodo))) {
                 System.out.println("SI tienen el mismo nombre y argumentos iguales: " + method.getName() + " y " + metodo.getNombre());
                 sonIguales = Boolean.TRUE;

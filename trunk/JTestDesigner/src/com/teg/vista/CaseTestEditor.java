@@ -22,6 +22,7 @@ import com.teg.dominio.MapaInstancia;
 import com.teg.dominio.Metodo;
 
 import com.teg.dominio.VariableInstancia;
+import com.teg.logica.CodeManager;
 
 import com.teg.logica.WidgetObjectLoading;
 
@@ -140,6 +141,10 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
     private Integer contColeccion = 1;
     private Integer contArreglo = 1;
     private Integer contMapa = 1;
+    private Integer contObjectAssert = 1;
+    private Integer contColeccionAssert = 1;
+    private Integer contArregloAssert = 1;
+    private Integer contMapaAssert = 1;
     private SwingDialog dialogo = new SwingDialog();
 
     /** Creates new form CaseTestEditor */
@@ -268,9 +273,6 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
         if (metodoRetorno.isPrimitive()) {
 
-            //assertVariables.setSelectedItem("resultado" + countVar);
-
-
             assertVariables.addItem("resultado" + countVar);
 
         } else {
@@ -278,20 +280,16 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
             assertVariables.addItem("resultado" + countVar);
 
             for (Method method : metodoRetorno.getDeclaredMethods()) {
-                if (Modifier.isPublic(method.getModifiers()) && method.getReturnType() != null
-                        && method.getParameterTypes().length != 0) {
+                if (Modifier.isPublic(method.getModifiers()) && !method.getReturnType().getName().equals("void")
+                        && method.getParameterTypes().length == 0) {
                     assertVariables.addItem("resultado" + countVar + "."
-                            + method.getName());
+                            + method.getName() + "()");
                 }
             }
-
-
-
         }
 
-
-
         assertVariables.repaint();
+
     }
 
     public Method getMetodoGuardado(String nombre) {
@@ -1241,7 +1239,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
                                     InstanceListForm editorInstance = new InstanceListForm(inicio, true,
                                             getClasesColeccion(argument), obtenerGenericos(metodo, pos), obtenerClasesJars(),
-                                            inicio.getDirectorioCasoPrueba().getPath(), listWidget, inicio, coleccionId);
+                                            inicio.getDirectorioCasoPrueba().getPath(), listWidget, inicio, coleccionId, false);
 
                                     editorInstance.setVisible(true);
 
@@ -1258,7 +1256,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
                                         InstanceForm editorInstance = new InstanceForm(inicio, true,
                                                 obtenerClasesDeInterfaz(argument), inicio.getDirectorioCasoPrueba().getPath(),
-                                                listWidget, inicio, objId);
+                                                listWidget, inicio, objId, false);
 
                                         editorInstance.setVisible(true);
                                     }
@@ -1268,7 +1266,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
                                     InstanceForm editorInstance = new InstanceForm(inicio, true,
                                             obtenerClasesDeClaseAbstracta(argument),
-                                            inicio.getDirectorioCasoPrueba().getPath(), listWidget, inicio, objId);
+                                            inicio.getDirectorioCasoPrueba().getPath(), listWidget, inicio, objId, false);
 
                                     editorInstance.setVisible(true);
 
@@ -1321,7 +1319,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
                                                             }
                                                         }
 
-                                                        InstanceListForm editorList = new InstanceListForm(inicio, true, claseInstance, inicio.getDirectorioCasoPrueba().getPath(), listWidget, argument, inicio, coleccionId);
+                                                        InstanceListForm editorList = new InstanceListForm(inicio, true, claseInstance, inicio.getDirectorioCasoPrueba().getPath(), listWidget, argument, inicio, coleccionId, false);
 
                                                         editorList.Visible();
 
@@ -1361,7 +1359,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
                                                     if (classInstances.get(0).isPrimitive()
                                                             || verificarDato(classInstances.get(0)) == true) {
 
-                                                        InstanceListForm editorList = new InstanceListForm(inicio, true, classInstances.get(0), listWidget, argument, coleccionId);
+                                                        InstanceListForm editorList = new InstanceListForm(inicio, true, classInstances.get(0), listWidget, argument, coleccionId, false);
 
                                                         editorList.setVisible(true);
 
@@ -1376,7 +1374,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
                                                     if (java.util.Map.class.isAssignableFrom(argument) == false) {
 
-                                                        InstanceListForm selector = new InstanceListForm(inicio, true, obtenerClasesJars(), inicio.getDirectorioCasoPrueba().getPath(), listWidget, argument, inicio, coleccionId);
+                                                        InstanceListForm selector = new InstanceListForm(inicio, true, obtenerClasesJars(), inicio.getDirectorioCasoPrueba().getPath(), listWidget, argument, inicio, coleccionId, false);
 
                                                         selector.setVisible(true);
 
@@ -1469,7 +1467,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
                                                 Object clase = getInstance(argument);
 
-                                                InstanceForm editorInstance = new InstanceForm(inicio, true, clase, inicio.getDirectorioCasoPrueba().getPath(), listWidget, inicio, objId);
+                                                InstanceForm editorInstance = new InstanceForm(inicio, true, clase, inicio.getDirectorioCasoPrueba().getPath(), listWidget, inicio, objId, false);
 
                                                 editorInstance.Visible();
 
@@ -1624,6 +1622,8 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
         assertMensaje = new javax.swing.JTextField();
         lbAssertMensaje = new javax.swing.JLabel();
         ayudaAssert = new javax.swing.JLabel();
+        lbAssertVariables1 = new javax.swing.JLabel();
+        tipoDeDatoResultado = new javax.swing.JLabel();
         guardarBt = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
@@ -1683,20 +1683,20 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 308, Short.MAX_VALUE)
-                    .addComponent(ayudaVariable, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
+                    .addComponent(ayudaVariable))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(ayudaVariable)
-                .addGap(20, 20, 20))
+                .addContainerGap())
         );
 
         panelMetodoInfo.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
@@ -1734,23 +1734,26 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
                 .addGap(28, 28, 28)
                 .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(labelObjetoRetorno)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 244, Short.MAX_VALUE)
+                .addComponent(labelObjetoRetorno, javax.swing.GroupLayout.DEFAULT_SIZE, 317, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addComponent(ayudaArgumento)
                 .addContainerGap())
         );
         panelTablaArgumentosLayout.setVerticalGroup(
             panelTablaArgumentosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelTablaArgumentosLayout.createSequentialGroup()
-                .addGroup(panelTablaArgumentosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 138, Short.MAX_VALUE)
                 .addGroup(panelTablaArgumentosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(ayudaArgumento)
-                    .addGroup(panelTablaArgumentosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel6)
-                        .addComponent(labelObjetoRetorno)))
+                    .addGroup(panelTablaArgumentosLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(ayudaArgumento))
+                    .addGroup(panelTablaArgumentosLayout.createSequentialGroup()
+                        .addGroup(panelTablaArgumentosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel2))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 147, Short.MAX_VALUE)
+                        .addGroup(panelTablaArgumentosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel6)
+                            .addComponent(labelObjetoRetorno))))
                 .addContainerGap())
         );
 
@@ -1760,7 +1763,25 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
         lbAssertVariables.setText("Resultado Método: ");
 
-        assertVariables.setEditable(true);
+        assertVariables.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                assertVariablesMouseClicked(evt);
+            }
+        });
+        assertVariables.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
+            public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
+            }
+            public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
+                assertVariablesPopupMenuWillBecomeInvisible(evt);
+            }
+            public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
+            }
+        });
+        assertVariables.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                assertVariablesItemStateChanged(evt);
+            }
+        });
         assertVariables.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 assertVariablesActionPerformed(evt);
@@ -1795,6 +1816,11 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
                 resultadoAssertMouseClicked(evt);
             }
         });
+        resultadoAssert.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                resultadoAssertActionPerformed(evt);
+            }
+        });
 
         assertMensaje.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1812,69 +1838,77 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
             }
         });
 
+        lbAssertVariables1.setText("Tipo de Dato Resultado:");
+
+        tipoDeDatoResultado.setText("Object");
+
         javax.swing.GroupLayout panelAssertLayout = new javax.swing.GroupLayout(panelAssert);
         panelAssert.setLayout(panelAssertLayout);
         panelAssertLayout.setHorizontalGroup(
             panelAssertLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelAssertLayout.createSequentialGroup()
-                .addContainerGap(426, Short.MAX_VALUE)
-                .addComponent(ayudaAssert)
-                .addContainerGap())
             .addGroup(panelAssertLayout.createSequentialGroup()
-                .addGap(48, 48, 48)
+                .addGap(39, 39, 39)
                 .addGroup(panelAssertLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelAssertLayout.createSequentialGroup()
+                        .addComponent(lbAssertMensaje)
+                        .addGap(18, 18, 18)
+                        .addComponent(assertMensaje, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE))
+                    .addGroup(panelAssertLayout.createSequentialGroup()
+                        .addComponent(lbAssertVariables, javax.swing.GroupLayout.DEFAULT_SIZE, 151, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
+                        .addComponent(assertVariables, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panelAssertLayout.createSequentialGroup()
+                        .addGroup(panelAssertLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(lbResultadoAssert, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lbAssertCondiciones, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lbAssertVariables1, javax.swing.GroupLayout.Alignment.LEADING))
+                        .addGap(18, 18, 18)
                         .addGroup(panelAssertLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(resultadoAssert, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(assertCondiciones, 0, 241, Short.MAX_VALUE)
                             .addGroup(panelAssertLayout.createSequentialGroup()
-                                .addComponent(lbResultadoAssert, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(resultadoAssert, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(panelAssertLayout.createSequentialGroup()
-                                .addComponent(lbAssertMensaje)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(assertMensaje, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 1, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(panelAssertLayout.createSequentialGroup()
-                        .addComponent(lbAssertCondiciones, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(assertCondiciones, 0, 241, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 2, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(panelAssertLayout.createSequentialGroup()
-                        .addComponent(lbAssertVariables)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(assertVariables, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(57, 57, 57))
+                                .addGap(9, 9, 9)
+                                .addComponent(tipoDeDatoResultado, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addGap(79, 79, 79))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelAssertLayout.createSequentialGroup()
+                .addContainerGap(476, Short.MAX_VALUE)
+                .addComponent(ayudaAssert)
+                .addContainerGap())
         );
-
-        panelAssertLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {lbAssertCondiciones, lbAssertMensaje, lbAssertVariables, lbResultadoAssert});
 
         panelAssertLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {assertCondiciones, assertMensaje, assertVariables, resultadoAssert});
 
+        panelAssertLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {lbAssertCondiciones, lbAssertMensaje, lbAssertVariables, lbAssertVariables1, lbResultadoAssert});
+
         panelAssertLayout.setVerticalGroup(
             panelAssertLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelAssertLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(panelAssertLayout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(panelAssertLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(assertVariables, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbAssertVariables, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lbAssertVariables, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(assertVariables, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelAssertLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lbAssertVariables1, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tipoDeDatoResultado))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelAssertLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lbAssertCondiciones, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(assertCondiciones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelAssertLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(resultadoAssert, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbResultadoAssert, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lbResultadoAssert, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(resultadoAssert, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelAssertLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(assertMensaje, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbAssertMensaje, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(lbAssertMensaje, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(assertMensaje, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(ayudaAssert)
                 .addContainerGap())
         );
 
-        panelAssertLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {assertCondiciones, assertMensaje, assertVariables, lbAssertCondiciones, lbAssertMensaje, lbAssertVariables, lbResultadoAssert, resultadoAssert});
+        panelAssertLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {assertCondiciones, assertMensaje, assertVariables, lbAssertCondiciones, lbAssertMensaje, lbAssertVariables, lbAssertVariables1, lbResultadoAssert, resultadoAssert, tipoDeDatoResultado});
 
         guardarBt.setText("Nuevo Metodo");
         guardarBt.addActionListener(new java.awt.event.ActionListener() {
@@ -1891,8 +1925,9 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addGroup(panelMetodoInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(panelTablaArgumentos, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(panelAssert, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(guardarBt))
+                    .addGroup(panelMetodoInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(guardarBt)
+                        .addComponent(panelAssert, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         panelMetodoInfoLayout.setVerticalGroup(
@@ -1945,13 +1980,13 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel4Layout.createSequentialGroup()
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
+                            .addContainerGap())
+                        .addGroup(jPanel4Layout.createSequentialGroup()
                             .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGap(276, 276, 276)
                             .addComponent(jLabel3)
-                            .addGap(30, 30, 30))
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 308, Short.MAX_VALUE)
-                            .addContainerGap()))
+                            .addGap(30, 30, 30)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                         .addComponent(ayudaMetodo)
                         .addContainerGap())))
@@ -1960,10 +1995,10 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addGap(14, 14, 14)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(ayudaMetodo)
-                .addGap(134, 134, 134)
+                .addGap(118, 118, 118)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel3)
                     .addComponent(jLabel4)))
@@ -2001,7 +2036,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 308, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -2009,7 +2044,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(8, 8, 8)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(33, Short.MAX_VALUE))
         );
 
         jLabel5.setText("Nombre Escenario de Prueba :");
@@ -2032,12 +2067,12 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
         panelInicial.setLayout(panelInicialLayout);
         panelInicialLayout.setHorizontalGroup(
             panelInicialLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelInicialLayout.createSequentialGroup()
-                .addGap(30, 30, 30)
-                .addGroup(panelInicialLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+            .addGroup(panelInicialLayout.createSequentialGroup()
+                .addGap(32, 32, 32)
+                .addGroup(panelInicialLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelInicialLayout.createSequentialGroup()
                         .addComponent(volver)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 427, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 472, Short.MAX_VALUE)
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(newTestEscenario, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -2046,41 +2081,40 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
                     .addGroup(panelInicialLayout.createSequentialGroup()
                         .addGroup(panelInicialLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jPanel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(18, 18, 18)
-                        .addGroup(panelInicialLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(panelInicialLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(panelInicialLayout.createSequentialGroup()
                                 .addComponent(jLabel5)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(nombreEscenario, javax.swing.GroupLayout.DEFAULT_SIZE, 345, Short.MAX_VALUE))
-                            .addComponent(panelMetodoInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addGap(40, 40, 40))
+                                .addComponent(nombreEscenario))
+                            .addComponent(panelMetodoInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 581, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(26, Short.MAX_VALUE))
         );
         panelInicialLayout.setVerticalGroup(
             panelInicialLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelInicialLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap()
                 .addGroup(panelInicialLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelInicialLayout.createSequentialGroup()
-                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(panelInicialLayout.createSequentialGroup()
                         .addGroup(panelInicialLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(nombreEscenario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel5))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(panelMetodoInfo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addGap(18, 18, 18)
-                .addGroup(panelInicialLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelInicialLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(newTestEscenario)
-                        .addComponent(jButton1)
-                        .addComponent(siguiente))
-                    .addComponent(volver))
+                        .addComponent(panelMetodoInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(panelInicialLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(volver)
+                    .addComponent(newTestEscenario)
+                    .addComponent(jButton1)
+                    .addComponent(siguiente))
                 .addGap(75, 75, 75))
         );
 
@@ -2293,8 +2327,6 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
                     }
                 }
 
-
-
                 if (isIn == true) {
 
                     cargarTablaArgumentos(metodoNombre);
@@ -2310,6 +2342,16 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
                     actualNameMethod = metodoNombre;
                 }
             }
+
+            if (assertVariables.getSelectedItem() != null) {
+                Method method = getActualMethod();
+                Class retorno = method.getReturnType();
+                String opcionAssert[] = assertVariables.getSelectedItem().toString().split("\\.");
+                Class assertion = getClaseEvaluar(retorno, opcionAssert);
+
+                this.tipoDeDatoResultado.setText(assertion.getName());
+            }
+
         }
     }//GEN-LAST:event_listaMetodosMouseClicked
 
@@ -2486,7 +2528,9 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
         } else {
             if (opcion.length == 2) {
 
-                String metodoNombre = opcion[1];
+                String metodoNombreArreglo = opcion[1];
+
+                String metodoNombre = metodoNombreArreglo.replace("()", "");
 
                 Method metodoAEvaluar = null;
 
@@ -2506,62 +2550,51 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
     }
 
     private void resultadoAssertMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_resultadoAssertMouseClicked
+
         Method method = getActualMethod();
-
         Class retorno = method.getReturnType();
-
         String opcionAssert[] = assertVariables.getSelectedItem().toString().split("\\.");
-
         Class assertion = getClaseEvaluar(retorno, opcionAssert);
 
         if (!assertion.isPrimitive() && verificarDato(assertion) == false) {
 
             ArrayList<Class> classInstances;
-
             ArrayList<Object> objectInstances;
-
             listWidget = new WidgetObjectLoading();
 
             if (assertion.isInterface()) {
                 if (argumentoEsColeccion(assertion) == true && argumentoEsMapa(assertion) == false) {
 
-
-                    InstanceListForm editorInstance = new InstanceListForm(inicio, true, getClasesColeccion(assertion), obtenerGenericos(assertion), obtenerClasesJars(), inicio.getDirectorioCasoPrueba().getPath(), listWidget, inicio, coleccionId);
-
+                    InstanceListForm editorInstance = new InstanceListForm(inicio, true, getClasesColeccion(assertion), obtenerGenericos(assertion), obtenerClasesJars(), inicio.getDirectorioCasoPrueba().getPath(), listWidget, inicio, coleccionId, true);
                     editorInstance.setVisible(true);
-
-
 
                 } else {
 
                     if (argumentoEsMapa(assertion) == true) {
 
                         InstanceMapForm editorInstance = new InstanceMapForm(inicio, true, getClasesColeccion(assertion), obtenerGenericos(assertion), obtenerClasesJars(), inicio.getDirectorioCasoPrueba().getPath(), listWidget, inicio, mapaId);
-
                         editorInstance.setVisible(true);
+
                     } else {
 
-                        InstanceForm editorInstance = new InstanceForm(inicio, true, obtenerClasesDeInterfaz(assertion), inicio.getDirectorioCasoPrueba().getPath(), listWidget, inicio, objId);
-
+                        InstanceForm editorInstance = new InstanceForm(inicio, true, obtenerClasesDeInterfaz(assertion), inicio.getDirectorioCasoPrueba().getPath(), listWidget, inicio, objId, true);
                         editorInstance.setVisible(true);
+
                     }
                 }
             } else {
                 if (Modifier.isAbstract(assertion.getModifiers()) == true) {
 
-                    InstanceForm editorInstance = new InstanceForm(inicio, true, obtenerClasesDeClaseAbstracta(assertion), inicio.getDirectorioCasoPrueba().getPath(), listWidget, inicio, objId);
+                    InstanceForm editorInstance = new InstanceForm(inicio, true, obtenerClasesDeClaseAbstracta(assertion), inicio.getDirectorioCasoPrueba().getPath(), listWidget, inicio, objId, true);
 
                     editorInstance.setVisible(true);
 
                 } else {
 
-
                     if (argumentoEsColeccion(assertion) == true) {
 
                         classInstances = obtenerGenericos(assertion);
-
                         objectInstances = new ArrayList<Object>();
-
 
                         if (classInstances.size() == 2) {
 
@@ -2570,18 +2603,14 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
                                 editorMap.setVisible(true);
 
-
                             } catch (InstantiationException ex) {
 
                                 Logger.getLogger(CaseTestEditor.class.getName()).log(Level.SEVERE, null, ex);
                             }
 
-
-
                         } else {
 
                             if (classInstances.size() == 1) {
-
 
                                 if (!classInstances.get(0).isPrimitive()
                                         && verificarDato(classInstances.get(0)) == false) {
@@ -2589,9 +2618,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
                                         Object claseInstance = getInstance(classInstances.get(0));
 
-
                                         if (listWidget.getColeccionInstancia() != null) {
-
 
                                             listWidget.setColeccionInstancia(null);
                                         } else {
@@ -2602,7 +2629,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
                                             }
                                         }
 
-                                        InstanceListForm editorList = new InstanceListForm(inicio, true, claseInstance, inicio.getDirectorioCasoPrueba().getPath(), listWidget, assertion, inicio, coleccionId);
+                                        InstanceListForm editorList = new InstanceListForm(inicio, true, claseInstance, inicio.getDirectorioCasoPrueba().getPath(), listWidget, assertion, inicio, coleccionId, true);
 
                                         editorList.Visible();
 
@@ -2639,7 +2666,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
                                     if (classInstances.get(0).isPrimitive()
                                             || verificarDato(classInstances.get(0)) == true) {
 
-                                        InstanceListForm editorList = new InstanceListForm(inicio, true, classInstances.get(0), listWidget, assertion, coleccionId);
+                                        InstanceListForm editorList = new InstanceListForm(inicio, true, classInstances.get(0), listWidget, assertion, coleccionId, true);
 
                                         editorList.setVisible(true);
                                     }
@@ -2648,38 +2675,22 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
                                 if (classInstances.isEmpty()) {
 
-
-
                                     if (java.util.Map.class.isAssignableFrom(assertion) == false) {
 
-                                        InstanceListForm selector = new InstanceListForm(inicio, true, obtenerClasesJars(), inicio.getDirectorioCasoPrueba().getPath(), listWidget, assertion, inicio, coleccionId);
+                                        InstanceListForm selector = new InstanceListForm(inicio, true, obtenerClasesJars(), inicio.getDirectorioCasoPrueba().getPath(), listWidget, assertion, inicio, coleccionId, true);
 
                                         selector.setVisible(true);
 
-
-
-
-
                                     } else {
                                         if (argumentoEsMapa(assertion) == true) {
-
-
                                             InstanceMapForm selector = new InstanceMapForm(inicio, true, obtenerClasesJars(), listWidget, assertion, inicio, mapaId);
 
                                             selector.setVisible(true);
-
-
                                         }
                                     }
-
-
-
-
                                 }
                             }
-
                         }
-
 
                     } else {
 
@@ -2693,7 +2704,6 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
                                 editorArray.setVisible(true);
 
-
                             } else {
                                 if (!arrayComponente.isPrimitive()
                                         && verificarDato(arrayComponente) == false) {
@@ -2701,9 +2711,6 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
                                         Object object = getInstance(arrayComponente);
 
                                         InstanceArrayForm editorArray = new InstanceArrayForm(inicio, true, object, inicio.getDirectorioCasoPrueba().getPath(), listWidget, inicio, arregloId);
-
-
-
 
                                     } catch (InstantiationException ex) {
 
@@ -2736,7 +2743,6 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
                                 }
                             }
 
-
                         } else {
 
                             try {
@@ -2747,9 +2753,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
                                 Object claseInstance = getInstance(assertion);
 
-
-
-                                InstanceForm editorInstance = new InstanceForm(inicio, true, claseInstance, inicio.getDirectorioCasoPrueba().getPath(), listWidget, inicio, objId);
+                                InstanceForm editorInstance = new InstanceForm(inicio, true, claseInstance, inicio.getDirectorioCasoPrueba().getPath(), listWidget, inicio, objId, true);
 
                                 editorInstance.Visible();
 
@@ -2790,13 +2794,13 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
         } else {
         }
 
+        String tipoDeDato = tipoDeDatoResultado.getText();
+        CodeManager codeManager = new CodeManager();
+        boolean esEnvolvente = codeManager.esClaseEnvolvente(tipoDeDato);
 
-
-
-
-
-
-
+        if (!tipoDeDato.equals("java.lang.String") && !tipoDeDato.equals("char") && !esEnvolvente) {
+            resultadoAssert.setText("Objeto resultado creado");
+        }
 
     }//GEN-LAST:event_resultadoAssertMouseClicked
 
@@ -2841,6 +2845,27 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
         ayudaVariables.setVisible(true);
 
     }//GEN-LAST:event_ayudaVariableMouseClicked
+
+    private void resultadoAssertActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resultadoAssertActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_resultadoAssertActionPerformed
+
+    private void assertVariablesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_assertVariablesMouseClicked
+    }//GEN-LAST:event_assertVariablesMouseClicked
+
+    private void assertVariablesItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_assertVariablesItemStateChanged
+    }//GEN-LAST:event_assertVariablesItemStateChanged
+
+    private void assertVariablesPopupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_assertVariablesPopupMenuWillBecomeInvisible
+
+        Method method = getActualMethod();
+        Class retorno = method.getReturnType();
+        String opcionAssert[] = assertVariables.getSelectedItem().toString().split("\\.");
+        Class assertion = getClaseEvaluar(retorno, opcionAssert);
+
+        this.tipoDeDatoResultado.setText(assertion.getName());
+
+    }//GEN-LAST:event_assertVariablesPopupMenuWillBecomeInvisible
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox assertCondiciones;
     private javax.swing.JTextField assertMensaje;
@@ -2867,6 +2892,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
     private javax.swing.JLabel lbAssertCondiciones;
     private javax.swing.JLabel lbAssertMensaje;
     private javax.swing.JLabel lbAssertVariables;
+    private javax.swing.JLabel lbAssertVariables1;
     private javax.swing.JLabel lbResultadoAssert;
     private javax.swing.JList listaMetodos;
     private javax.swing.JButton newTestEscenario;
@@ -2880,6 +2906,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
     private javax.swing.JButton siguiente;
     private javax.swing.JTable tablaMetodosRegistrados;
     private javax.swing.JTable tablaVariables;
+    private javax.swing.JLabel tipoDeDatoResultado;
     private javax.swing.JButton volver;
     // End of variables declaration//GEN-END:variables
 
@@ -2956,7 +2983,15 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
     }
 
     public AssertTest getActualAssert(Method method) {
+
+        Integer contSimple = 1;
         AssertTest assertion = null;
+        String tipoDeDatoAssert = tipoDeDatoResultado.getText();
+        String valorComplejo = "";
+
+        Class retorno = method.getReturnType();
+        String opcionAssert[] = assertVariables.getSelectedItem().toString().split("\\.");
+        Class claseAssert = getClaseEvaluar(retorno, opcionAssert);
 
         if (!method.getReturnType().getName().equals("void")) {
             if (this.assertVariables.getSelectedItem() != null) {
@@ -2966,11 +3001,88 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
                 if (assertCondiciones.getSelectedItem().toString().equals("Igual")
                         || assertCondiciones.getSelectedItem().equals("No Igual")) {
-                    assertion.setValorAssert(resultadoAssert.getText());
-                    //
+                    
+                    assertion.setTipoDatoAssert(tipoDeDatoAssert);
+
+                    if (tipoDeDatoAssert.equals("java.lang.String")) {
+
+                        assertion.setValorAssert("\"" + resultadoAssert.getText() + "\"");
+
+                    } else if (tipoDeDatoAssert.equals("char")) {
+
+                        assertion.setValorAssert("\'" + resultadoAssert.getText() + "\'");
+
+                    } else if (!claseAssert.isPrimitive()) {
+                        String[] arregloCampos = claseAssert.getName().split("\\.");
+                        String primerCampo = arregloCampos[0];
+
+                        if (primerCampo.equals("java")) {
+                            boolean isCollection;
+                            boolean isMap;
+                            try {
+                                Class myClass = Class.forName(claseAssert.getName());
+                                isCollection = Collection.class.isAssignableFrom(myClass);
+                                isMap = Map.class.isAssignableFrom(myClass);
+
+                                if (isCollection) {
+                                    assertion.setValorAssert("resultadoColeccion" + contColeccionAssert);
+                                    assertion.setComplejo(true);
+                                    assertion.setArreglo(false);
+                                    assertion.setMapa(false);
+                                    assertion.setGenerarXstream(true);
+
+                                } else if (isMap) {
+                                    assertion.setValorAssert("resultadoMapa" + contMapaAssert);
+                                    assertion.setComplejo(true);
+                                    assertion.setArreglo(false);
+                                    assertion.setMapa(true);
+                                    assertion.setGenerarXstream(true);
+
+                                } else {
+                                    assertion.setValorAssert(resultadoAssert.getText());
+                                    assertion.setComplejo(false);
+                                    assertion.setMapa(false);
+                                    assertion.setGenerarXstream(false);
+                                }
+                            } catch (ClassNotFoundException ex) {
+                                Logger.getLogger(CaseTestEditor.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        } else {
+                            if (claseAssert.isArray()) {
+                                valorComplejo = "resultadoArreglo" + contArregloAssert;
+                                assertion.setValorAssert(valorComplejo);
+                                assertion.setComplejo(true);
+                                assertion.setGenerarXstream(true);
+
+                            } else {
+                                valorComplejo = "resultadoObject" + contObjectAssert;
+                                assertion.setValorAssert(valorComplejo);
+                                assertion.setComplejo(true);
+                                assertion.setArreglo(false);
+                                assertion.setMapa(false);
+                                assertion.setGenerarXstream(true);
+                            }
+                        }
+                    } else {
+                        assertion.setValorAssert(resultadoAssert.getText());
+                        assertion.setComplejo(false);
+                        assertion.setGenerarXstream(false);
+                    }
+
+                    if (resultadoAssert.getText().startsWith("resultado")) {
+                        assertion.setValorAssert(resultadoAssert.getText());
+                        assertion.setGenerarXstream(false);
+                    }
+
+                    contSimple++;
+                    contObjectAssert++;
+                    contColeccionAssert++;
+                    contMapaAssert++;
+                    contArregloAssert++;
                 }
             }
         }
+
         return assertion;
     }
 
@@ -2982,37 +3094,63 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
         metodo = xmlManager.agregarMetodoALista(metodosGuardados, method, cont, argumentos, condicionAssert);
 
+
+
         return metodo;
+
+
     }
 
     public String eliminaCaracteres(String s_cadena, String s_caracteres) {
         String nueva_cadena = "";
         Character caracter = null;
+
+
         boolean valido = true;
 
         /* Va recorriendo la cadena s_cadena y copia a la cadena que va a regresar,
         sólo los caracteres que no estén en la cadena s_caracteres */
-        for (int i = 0; i < s_cadena.length(); i++) {
+
+
+        for (int i = 0; i
+                < s_cadena.length(); i++) {
             valido = true;
-            for (int j = 0; j < s_caracteres.length(); j++) {
+
+
+            for (int j = 0; j
+                    < s_caracteres.length(); j++) {
                 caracter = s_caracteres.charAt(j);
+
+
 
                 if (s_cadena.charAt(i) == caracter) {
                     valido = false;
+
+
                     break;
+
+
                 }
             }
             if (valido) {
                 nueva_cadena += s_cadena.charAt(i);
+
+
             }
         }
 
         return nueva_cadena;
+
+
     }
 
     public String classNameArray(String tipo) {
         String nuevaCadena = this.eliminaCaracteres(tipo.substring(2), ";");
+
+
         return nuevaCadena;
+
+
     }
 
     public ArrayList<Argumento> getArgumentos(Method method) {
@@ -3023,40 +3161,62 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
         ArrayList<Argumento> argumentos = new ArrayList<Argumento>();
         Class[] parametros = method.getParameterTypes();
 
+
+
         for (Class clazz : parametros) {
 
             Argumento argumento = new Argumento();
             argumento.setNombre("arg" + contSimple);
 
+
+
             if (clazz.isArray()) {
                 String clase = this.classNameArray(clazz.getName());
                 argumento.setTipo(clase + "[]");
                 argumento.setArreglo(true);
+
+
             } else {
                 argumento.setTipo(clazz.getName());
                 argumento.setArreglo(false);
+
+
             }
 
             if (clazz.getSimpleName().equals("String")) {
                 argumento.setValor("\"" + tablaArgumentos.getValueAt(contSimple - 1, 1).toString() + "\"");
                 argumento.setComplejo(false);
 
+
+
             } else if (clazz.getSimpleName().equals("char")) {
                 argumento.setValor("\'" + tablaArgumentos.getValueAt(contSimple - 1, 1).toString() + "\'");
                 argumento.setComplejo(false);
+
+
 
             } else if (!clazz.isPrimitive()) {
                 String[] arregloCampos = clazz.getName().split("\\.");
                 String primerCampo = arregloCampos[0];
 
                 // quede aqui
+
+
                 if (primerCampo.equals("java")) {
                     boolean isCollection;
+
+
                     boolean isMap;
+
+
                     try {
                         Class myClass = Class.forName(argumento.getTipo());
                         isCollection = Collection.class.isAssignableFrom(myClass);
                         isMap = Map.class.isAssignableFrom(myClass);
+
+
+
+
 
                         if (isCollection) {
                             argumento.setValor("coleccion" + contColeccion);
@@ -3080,6 +3240,8 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
                     } catch (ClassNotFoundException ex) {
                         Logger.getLogger(CaseTestEditor.class.getName()).log(Level.SEVERE, null, ex);
                     }
+
+
                 } else {
                     //if startswitd 'var tablaArgumentos.getValueAt(contSimple - 1, 1).toString()
                     if (clazz.isArray()) {
@@ -3088,6 +3250,8 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
                         argumento.setComplejo(true);
                         argumento.setGenerarXstream(true);
 
+
+
                     } else {
                         valorComplejo = "object" + contObject;
                         argumento.setValor(valorComplejo);
@@ -3095,18 +3259,24 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
                         argumento.setArreglo(false);
                         argumento.setMapa(false);
                         argumento.setGenerarXstream(true);
+
+
                     }
                 }
             } else {
                 argumento.setValor(tablaArgumentos.getValueAt(contSimple - 1, 1).toString());
                 argumento.setComplejo(false);
                 argumento.setGenerarXstream(false);
+
+
             }
 
             // if(tablaArgumentos.getValueAt(contSimple - 1, 1).toString().startsWith("var")){
             if (tablaArgumentos.getValueAt(contSimple - 1, 1).toString().startsWith("resultado")) {
                 argumento.setValor(tablaArgumentos.getValueAt(contSimple - 1, 1).toString());
                 argumento.setGenerarXstream(false);
+
+
             }
 
             System.out.println("ARGUMENTO ACTUAL, tipo: " + argumento.getTipo()
@@ -3115,25 +3285,42 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
             argumentos.add(argumento);
 
             contSimple++;
+
             contObject++;
+
             contColeccion++;
+
             contMapa++;
+
             contArreglo++;
+
         }
+
+
         return argumentos;
+
+
     }
 
     public File getMethodHTML(ArrayList<File> archivos, String className) {
 
         File archivo = null;
 
+
+
         for (File file : archivos) {
             if (file.getName().equals(className + ".html")) {
                 archivo = file;
+
+
                 return archivo;
+
+
             }
         }
         return archivo;
+
+
     }
 
     public void javaDocPanel(String className, String methodName, ArrayList<File> archivos) {
@@ -3142,24 +3329,38 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
         BufferedReader reader = null;
 
+
+
         try {
             reader = new BufferedReader(new FileReader(file.getPath()));
             StringBuilder sb = new StringBuilder();
             String line;
 
+
+
             while ((line = reader.readLine()) != null) {
                 sb.append(line);
+
+
             }
 
             Pattern pattern = Pattern.compile("<H3>" + methodName + "</H3>.*<!-- ========= END OF CLASS DATA ========= --><HR>");
             Matcher matcherExterno = pattern.matcher(sb.toString());
 
+
+
             while (matcherExterno.find()) {
                 String javadocMetodo = matcherExterno.group().substring(0, matcherExterno.group().indexOf("<HR>"));
+
+
+
             }
+
         } catch (IOException ex) {
             Logger.getLogger(CaseTestEditor.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+
     }
 
     public CasoPrueba crearCasoPrueba(String nombreCasoPrueba, ArrayList<EscenarioPrueba> escenarios) {
@@ -3168,7 +3369,11 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
         //casoPrueba.setNombrePaquete("com.test.prueba");
         casoPrueba.setEscenariosPrueba(escenarios);
 
+
+
         return casoPrueba;
+
+
     }
 
     /**
@@ -3176,6 +3381,8 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
      */
     public ArrayList<EscenarioPrueba> getEscenariosPrueba() {
         return escenariosPrueba;
+
+
     }
 
     /**
@@ -3183,5 +3390,6 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
      */
     public void setEscenariosPrueba(ArrayList<EscenarioPrueba> escenariosPrueba) {
         this.escenariosPrueba = escenariosPrueba;
+
     }
 }
