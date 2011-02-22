@@ -136,6 +136,7 @@ public class InstanceMapForm extends javax.swing.JDialog {
     private javax.swing.JList listaSeleccionMapa;
     private SwingDialog dialogoColeccion;
     private String casoPrueba;
+    private boolean vieneDelAssert;
 
     /** Creates new form InstanceMapForm */
     public InstanceMapForm(java.awt.Frame parent, boolean modal) {
@@ -145,7 +146,7 @@ public class InstanceMapForm extends javax.swing.JDialog {
         initComponents();
     }
 
-    InstanceMapForm(java.awt.Frame parent, boolean modal, ArrayList<Class> obtenerClasesJars, WidgetObjectLoading listObject, Class argument, Inicio inicio, int mapaId) {
+    InstanceMapForm(java.awt.Frame parent, boolean modal, ArrayList<Class> obtenerClasesJars, WidgetObjectLoading listObject, Class argument, Inicio inicio, int mapaId, boolean vieneDelAssert) {
 
         super(parent, modal);
 
@@ -157,6 +158,8 @@ public class InstanceMapForm extends javax.swing.JDialog {
 
         this.casoPrueba = inicio.getNombreCasoPrueba();
 
+        this.vieneDelAssert = vieneDelAssert;
+
         obtenerMapa(argument);
 
         initComponentesGeneric();
@@ -165,7 +168,7 @@ public class InstanceMapForm extends javax.swing.JDialog {
 
     InstanceMapForm(java.awt.Frame parent, boolean modal, ArrayList<Class> clasesColeccion,
             ArrayList<Class> obtenerGenericos, ArrayList<Class> obtenerClasesJars,
-            String path, WidgetObjectLoading listWidget, Inicio inicio, int mapaId) {
+            String path, WidgetObjectLoading listWidget, Inicio inicio, int mapaId, boolean vieneDelAssert) {
 
         super(parent, modal);
 
@@ -184,6 +187,8 @@ public class InstanceMapForm extends javax.swing.JDialog {
         this.mapaId = mapaId;
 
         this.casoPrueba = inicio.getNombreCasoPrueba();
+
+        this.vieneDelAssert = vieneDelAssert;
         
         if (instanceInspect.isEmpty() == true) {
 
@@ -197,7 +202,7 @@ public class InstanceMapForm extends javax.swing.JDialog {
 
     }
 
-    public InstanceMapForm(java.awt.Frame parent, boolean modal, ArrayList<Class> classInstances, String path, WidgetObjectLoading listWidget, Class argument, int mapaId) throws InstantiationException {
+    public InstanceMapForm(java.awt.Frame parent, boolean modal, ArrayList<Class> classInstances, String path, WidgetObjectLoading listWidget, Class argument, int mapaId, boolean vieneDelAssert) throws InstantiationException {
 
         super(parent, modal);
 
@@ -214,6 +219,8 @@ public class InstanceMapForm extends javax.swing.JDialog {
         this.casoPrueba = inicio.getNombreCasoPrueba();
 
         this.mapaId = mapaId;
+
+        this.vieneDelAssert = vieneDelAssert;
 
         clase = argument;
 
@@ -1825,9 +1832,16 @@ public class InstanceMapForm extends javax.swing.JDialog {
 
             FileOutputStream fos;
 
-            fos = new FileOutputStream(metadata.getPath()
-                    + System.getProperty("file.separator")
-                    + "mapa" + mapaId + ".xml");
+            if (vieneDelAssert) {
+                fos = new FileOutputStream(metadata.getPath()
+                        + System.getProperty("file.separator")
+                        + "resultadoMapa" + mapaId + ".xml");
+            } else {
+                fos = new FileOutputStream(metadata.getPath()
+                        + System.getProperty("file.separator")
+                        + "mapa" + mapaId + ".xml");
+            }
+
 
             XStream xstream = new XStream(new DomDriver());
 
