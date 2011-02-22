@@ -1133,6 +1133,8 @@ public class InstanceMapForm extends javax.swing.JDialog {
             buttonGuardar.setEnabled(false);
 
             aceptarSeleccion.setEnabled(true);
+
+            
         }
 
 

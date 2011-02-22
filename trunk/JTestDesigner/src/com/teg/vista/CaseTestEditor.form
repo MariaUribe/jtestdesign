@@ -167,7 +167,7 @@
                       <Table columnCount="3" rowCount="0">
                         <Column editable="false" title="Variable" type="java.lang.Object"/>
                         <Column editable="false" title="Metodo" type="java.lang.Object"/>
-                        <Column editable="false" title="Tipo Retorno" type="java.lang.Object"/>
+                        <Column editable="false" title="Tipo Dato" type="java.lang.Object"/>
                       </Table>
                     </Property>
                     <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">

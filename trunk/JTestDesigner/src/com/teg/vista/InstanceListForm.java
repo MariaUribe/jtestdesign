@@ -73,6 +73,9 @@ import javax.swing.JList;
 import javax.swing.JTabbedPane;
 
 import org.jdesktop.beansbinding.AutoBinding.UpdateStrategy;
+import org.jdom.Attribute;
+import org.jdom.Document;
+import org.jdom.Element;
 
 import org.jdom.JDOMException;
 
@@ -1848,33 +1851,35 @@ public class InstanceListForm extends javax.swing.JDialog {
         }
     }
 
-    public org.jdom.Element getEntity(Class clase) {
+    public Element getEntity(Class clase) {
 
-        org.jdom.Element entidad = new org.jdom.Element("entity");
+        Element entidad = new Element("entity");
 
-        org.jdom.Attribute tipoEntidad = new org.jdom.Attribute("type", clase.getName());
+        Attribute tipoEntidad = new Attribute("type", clase.getName());
 
         entidad.setAttribute(tipoEntidad);
 
         entidad.addContent("\n \t");
 
-        Field[] fields = clase.getDeclaredFields();
+        java.util.List<Field> fields = new java.util.ArrayList<Field>();
+
+        fields = getAllFields(fields, clase);
 
         for (Field field : fields) {
 
-            org.jdom.Element prop = new org.jdom.Element("property");
+            Element prop = new Element("property");
 
-            org.jdom.Attribute atr = new org.jdom.Attribute("name", field.getName());
+            Attribute atr = new Attribute("name", field.getName());
 
-            org.jdom.Attribute atrSeccion = new org.jdom.Attribute("section", clase.getSimpleName());
+            Attribute atrSeccion = new Attribute("section", clase.getSimpleName());
 
-            ArrayList<org.jdom.Attribute> listaAtributosProperty = new ArrayList<org.jdom.Attribute>();
+            ArrayList<Attribute> listaAtributosProperty = new ArrayList<Attribute>();
 
             if (!field.getType().isPrimitive() && verificarDato(field.getType()) == false) {
 
-                org.jdom.Attribute atr2 = new org.jdom.Attribute("section", clase.getSimpleName());
+                Attribute atr2 = new Attribute("section", clase.getSimpleName());
 
-                org.jdom.Attribute atr3 = new org.jdom.Attribute("type", field.getType().getName());
+                Attribute atr3 = new Attribute("type", field.getType().getName());
 
                 listaAtributosProperty.add(atr);
 
@@ -1906,27 +1911,64 @@ public class InstanceListForm extends javax.swing.JDialog {
         return entidad;
     }
 
+    public java.util.List<Field> getAllFields(java.util.List<Field> fields, Class<?> clase) {
+
+
+        if (clase.getDeclaredFields() != null) {
+            fields.addAll(java.util.Arrays.asList(clase.getDeclaredFields()));
+        }
+
+
+        if (clase.getSuperclass() != null) {
+
+            fields = getAllFields(fields, clase.getSuperclass());
+        }
+
+        return fields;
+    }
+
+    public java.util.ArrayList<Method> getAllMethods(java.util.ArrayList<Method> methods, Class<?> clase) {
+
+        methods.addAll(java.util.Arrays.asList(clase.getDeclaredMethods()));
+
+        for (Method method : clase.getMethods()) {
+
+            if (methods.contains(method) == false) {
+                methods.add(method);
+            }
+        }
+
+
+        return methods;
+    }
+
     public Object getInstance(Class clase) throws InstantiationException, IllegalAccessException, NoSuchMethodException, IllegalArgumentException, InvocationTargetException, JDOMException, IOException {
 
-        org.jdom.Element raiz = new org.jdom.Element("inspection-result");
+        Element raiz = new Element("inspection-result");
 
         raiz.addContent("\n");
 
-        org.jdom.Element entidad = getEntity(clase);
+        Element entidad = getEntity(clase);
 
         raiz.addContent(entidad);
 
         Object claseInstancia = clase.newInstance();
 
-        Field[] campos = clase.getDeclaredFields();
+        java.util.List<Field> campos = new java.util.ArrayList<Field>();
+
+        campos = getAllFields(campos, clase);
 
         for (Field field : campos) {
 
             boolean flag = false;
 
+            java.util.ArrayList<Method> metodosClase = new java.util.ArrayList<Method>();
+
+            metodosClase = getAllMethods(metodosClase, clase);
+
             if (!field.getType().isPrimitive() && verificarDato(field.getType()) == false) {
 
-                Method[] metodosClase = clase.getDeclaredMethods();
+
 
                 for (Method method : metodosClase) {
 
@@ -1947,7 +1989,7 @@ public class InstanceListForm extends javax.swing.JDialog {
             }
         }
 
-        docXml = new org.jdom.Document(raiz);
+        docXml = new Document(raiz);
 
         crearMetawidgetMetadata(docXml);
 
