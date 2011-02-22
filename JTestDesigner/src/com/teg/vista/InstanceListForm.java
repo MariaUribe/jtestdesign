@@ -1982,9 +1982,15 @@ public class InstanceListForm extends javax.swing.JDialog {
 
             FileOutputStream fos;
 
-            fos = new FileOutputStream(metadata.getPath()
-                    + System.getProperty("file.separator")
-                    + "coleccion" + coleccionId + ".xml");
+            if(vieneDelAssert){
+                fos = new FileOutputStream(metadata.getPath()
+                        + System.getProperty("file.separator")
+                        + "resultadoColeccion" + coleccionId + ".xml");
+            } else {
+                fos = new FileOutputStream(metadata.getPath()
+                        + System.getProperty("file.separator")
+                        + "coleccion" + coleccionId + ".xml");
+            }
 
             XStream xstream = new XStream(new DomDriver());
             

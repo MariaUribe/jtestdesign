@@ -1249,7 +1249,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
                                         InstanceMapForm editorInstance = new InstanceMapForm(inicio, true, getClasesColeccion(argument),
                                                 obtenerGenericos(metodo, pos), obtenerClasesJars(),
-                                                inicio.getDirectorioCasoPrueba().getPath(), listWidget, inicio, mapaId);
+                                                inicio.getDirectorioCasoPrueba().getPath(), listWidget, inicio, mapaId, false);
 
                                         editorInstance.setVisible(true);
                                     } else {
@@ -1282,7 +1282,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
                                         if (classInstances.size() == 2) {
 
                                             try {
-                                                InstanceMapForm editorMap = new InstanceMapForm(inicio, true, classInstances, inicio.getDirectorioCasoPrueba().getPath(), listWidget, argument, mapaId);
+                                                InstanceMapForm editorMap = new InstanceMapForm(inicio, true, classInstances, inicio.getDirectorioCasoPrueba().getPath(), listWidget, argument, mapaId, false);
 
                                                 editorMap.setVisible(true);
 
@@ -1381,7 +1381,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
                                                     } else {
                                                         if (argumentoEsMapa(argument) == true) {
 
-                                                            InstanceMapForm selector = new InstanceMapForm(inicio, true, obtenerClasesJars(), listWidget, argument, inicio, mapaId);
+                                                            InstanceMapForm selector = new InstanceMapForm(inicio, true, obtenerClasesJars(), listWidget, argument, inicio, mapaId, false);
 
                                                             selector.setVisible(true);
 
@@ -1407,7 +1407,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
                                             if (arrayComponente.isPrimitive()
                                                     || verificarDato(arrayComponente) == true) {
-                                                InstanceArrayForm editorArray = new InstanceArrayForm(inicio, true, arrayComponente, inicio.getDirectorioCasoPrueba().getPath(), listWidget, inicio, arregloId);
+                                                InstanceArrayForm editorArray = new InstanceArrayForm(inicio, true, arrayComponente, inicio.getDirectorioCasoPrueba().getPath(), listWidget, inicio, arregloId, false);
 
                                                 editorArray.setVisible(true);
 
@@ -1418,7 +1418,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
                                                     try {
                                                         Object object = getInstance(arrayComponente);
 
-                                                        InstanceArrayForm editorArray = new InstanceArrayForm(inicio, true, object, inicio.getDirectorioCasoPrueba().getPath(), listWidget, inicio, arregloId);
+                                                        InstanceArrayForm editorArray = new InstanceArrayForm(inicio, true, object, inicio.getDirectorioCasoPrueba().getPath(), listWidget, inicio, arregloId, false);
 
                                                         editorArray.VisibleObject();
 
@@ -2572,7 +2572,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
                     if (argumentoEsMapa(assertion) == true) {
 
-                        InstanceMapForm editorInstance = new InstanceMapForm(inicio, true, getClasesColeccion(assertion), obtenerGenericos(assertion), obtenerClasesJars(), inicio.getDirectorioCasoPrueba().getPath(), listWidget, inicio, mapaId);
+                        InstanceMapForm editorInstance = new InstanceMapForm(inicio, true, getClasesColeccion(assertion), obtenerGenericos(assertion), obtenerClasesJars(), inicio.getDirectorioCasoPrueba().getPath(), listWidget, inicio, mapaId, true);
                         editorInstance.setVisible(true);
 
                     } else {
@@ -2599,7 +2599,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
                         if (classInstances.size() == 2) {
 
                             try {
-                                InstanceMapForm editorMap = new InstanceMapForm(inicio, true, classInstances, inicio.getDirectorioCasoPrueba().getPath(), listWidget, assertion, mapaId);
+                                InstanceMapForm editorMap = new InstanceMapForm(inicio, true, classInstances, inicio.getDirectorioCasoPrueba().getPath(), listWidget, assertion, mapaId, true);
 
                                 editorMap.setVisible(true);
 
@@ -2683,7 +2683,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
                                     } else {
                                         if (argumentoEsMapa(assertion) == true) {
-                                            InstanceMapForm selector = new InstanceMapForm(inicio, true, obtenerClasesJars(), listWidget, assertion, inicio, mapaId);
+                                            InstanceMapForm selector = new InstanceMapForm(inicio, true, obtenerClasesJars(), listWidget, assertion, inicio, mapaId, true);
 
                                             selector.setVisible(true);
                                         }
@@ -2700,7 +2700,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
                             if (arrayComponente.isPrimitive()
                                     || verificarDato(arrayComponente) == true) {
-                                InstanceArrayForm editorArray = new InstanceArrayForm(inicio, true, arrayComponente, inicio.getDirectorioCasoPrueba().getPath(), listWidget, inicio, arregloId);
+                                InstanceArrayForm editorArray = new InstanceArrayForm(inicio, true, arrayComponente, inicio.getDirectorioCasoPrueba().getPath(), listWidget, inicio, arregloId, true);
 
                                 editorArray.setVisible(true);
 
@@ -2710,7 +2710,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
                                     try {
                                         Object object = getInstance(arrayComponente);
 
-                                        InstanceArrayForm editorArray = new InstanceArrayForm(inicio, true, object, inicio.getDirectorioCasoPrueba().getPath(), listWidget, inicio, arregloId);
+                                        InstanceArrayForm editorArray = new InstanceArrayForm(inicio, true, object, inicio.getDirectorioCasoPrueba().getPath(), listWidget, inicio, arregloId, true);
 
                                     } catch (InstantiationException ex) {
 

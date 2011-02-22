@@ -66,6 +66,7 @@ public class InstanceArrayForm extends javax.swing.JDialog {
     private String pathFile;
     private String casoPrueba;
     private int arregloId;
+    private boolean vieneDelAssert;
     ArregloInstancia arregloInstancia;
 
     /** Creates new form InstanceArrayForm */
@@ -75,7 +76,7 @@ public class InstanceArrayForm extends javax.swing.JDialog {
         initComponents();
     }
 
-    InstanceArrayForm(java.awt.Frame parent, boolean modal, Class arrayComponente, String path, WidgetObjectLoading listWidget, Inicio inicio, int arregloId) {
+    InstanceArrayForm(java.awt.Frame parent, boolean modal, Class arrayComponente, String path, WidgetObjectLoading listWidget, Inicio inicio, int arregloId, boolean vieneDelAssert) {
 
         super(parent, modal);
 
@@ -85,27 +86,26 @@ public class InstanceArrayForm extends javax.swing.JDialog {
         this.inicio = inicio;
         this.casoPrueba = inicio.getNombreCasoPrueba();
         this.arregloId = arregloId;
+        this.vieneDelAssert = vieneDelAssert;
 
         initComponentsText();
 
     }
 
-    InstanceArrayForm(java.awt.Frame parent, boolean modal, Object object, String path, WidgetObjectLoading listWidget, Inicio inicio, int arregloId) {
+    InstanceArrayForm(java.awt.Frame parent, boolean modal, Object object, String path, WidgetObjectLoading listWidget, Inicio inicio, int arregloId, boolean vieneDelAssert) {
 
         super(parent, modal);
 
         this.widget = listWidget;
         this.objectInspect = object;
-
         this.pathFile = path;
         this.inicio = inicio;
         this.casoPrueba = inicio.getNombreCasoPrueba();
         this.arregloId = arregloId;
+        this.vieneDelAssert = vieneDelAssert;
         initComponentsObject();
 
-
     }
-
 
     public void VisibleObject() {
         InspectObject(objectInspect);
