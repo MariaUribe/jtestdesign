@@ -176,11 +176,11 @@ public class InstanceListForm extends javax.swing.JDialog {
 
         listWidget = listObject;
 
-        clase = argumento;
+        clase = instance.getClass();
 
         
 
-        setLista(clase);
+        setLista(argumento);
 
         this.inicio = inicio;
 
@@ -843,7 +843,7 @@ public class InstanceListForm extends javax.swing.JDialog {
         buttonGuardar.addActionListener(new java.awt.event.ActionListener() {
 
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonGuardarActionPerformed(evt);
+                buttonGuardarGenericoActionPerformed(evt);
             }
         });
 
@@ -852,7 +852,7 @@ public class InstanceListForm extends javax.swing.JDialog {
         buttonCrearOtro.addActionListener(new java.awt.event.ActionListener() {
 
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonCrearOtroActionPerformed(evt);
+                buttonCrearOtroGenericoActionPerformed(evt);
             }
         });
 
@@ -1242,7 +1242,7 @@ public class InstanceListForm extends javax.swing.JDialog {
 
          coleccionInstancia.setColeccionInstancia(coleccion);
 
-         coleccionInstancia.setTipoDatoColeccion(clase.getName());
+         coleccionInstancia.setTipoDatoColeccion(clase.getSimpleName());
 
          listWidget.setColeccionInstancia(coleccionInstancia);
 
@@ -1404,6 +1404,10 @@ public class InstanceListForm extends javax.swing.JDialog {
             buttonGuardar.setEnabled(false);
 
             buttonCrearOtro.setEnabled(false);
+
+            objectContainer.removeAll();
+
+            cancelarSeleccion.setEnabled(false);
         }
     }
 
@@ -1774,7 +1778,7 @@ public class InstanceListForm extends javax.swing.JDialog {
 
         coleccionInstancia.setColeccionInstancia(coleccion);
 
-        coleccionInstancia.setTipoDatoColeccion(clase.getName());
+        coleccionInstancia.setTipoDatoColeccion(clase.getSimpleName());
 
         listWidget.setColeccionInstancia(coleccionInstancia);
 
@@ -1791,7 +1795,9 @@ public class InstanceListForm extends javax.swing.JDialog {
 
         coleccionInstancia.setColeccionInstancia(coleccion);
 
-        coleccionInstancia.setTipoDatoColeccion(clase.getName());
+        
+
+        coleccionInstancia.setTipoDatoColeccion(clase.getSimpleName());
 
         listWidget.setColeccionInstancia(coleccionInstancia);
 
