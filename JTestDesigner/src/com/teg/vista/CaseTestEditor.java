@@ -29,9 +29,13 @@ import com.teg.logica.WidgetObjectLoading;
 import com.teg.logica.XmlManager;
 
 import com.teg.util.SwingDialog;
+
 import com.teg.vista.ayuda.AyudaArgumentos;
+
 import com.teg.vista.ayuda.AyudaAssert;
+
 import com.teg.vista.ayuda.AyudaMetodos;
+
 import com.teg.vista.ayuda.AyudaVariables;
 
 import java.awt.Color;
@@ -117,34 +121,63 @@ import javax.swing.table.TableCellEditor;
 public class CaseTestEditor extends javax.swing.JInternalFrame {
 
     private ArrayList<Method> metodos = new ArrayList<Method>();
+
     private ArrayList<DefaultCellEditor> editores = new ArrayList<DefaultCellEditor>();
+
     private ArrayList<Metodo> metodosGuardados = new ArrayList<Metodo>();
+
     private ArrayList<VariableInstancia> variablesGuardadas = new ArrayList<VariableInstancia>();
+
     private ArrayList<ColeccionInstancia> coleccionesGuardadas = new ArrayList<ColeccionInstancia>();
+
     private Object[] arregloGuardado;
+
     private ArrayList<MapaInstancia> mapasGuardados = new ArrayList<MapaInstancia>();
+
     private ArrayList<ArregloInstancia> arreglosGuardados = new ArrayList<ArregloInstancia>();
+
     private ArrayList<File> archivosJavaDoc = new ArrayList<File>();
+
     private ArrayList<EscenarioPrueba> escenariosPrueba = new ArrayList<EscenarioPrueba>();
+
     private WidgetObjectLoading listWidget;
+
     private static int varId = 0;
+
     private static int objId = 0;
+
     private static int coleccionId = 0;
+
     private static int mapaId = 0;
+
     private static int arregloId = 0;
+
     private Class tipoVarRetorno;
+
     private String actualNameMethod;
+
     private JTable tablaArgumentos;
+
     private Inicio inicio;
+
     private Document docXml;
+
     private Integer contObject = 1;
+
     private Integer contColeccion = 1;
+
     private Integer contArreglo = 1;
+
     private Integer contMapa = 1;
+
     private Integer contObjectAssert = 1;
+
     private Integer contColeccionAssert = 1;
+
     private Integer contArregloAssert = 1;
+
     private Integer contMapaAssert = 1;
+
     private SwingDialog dialogo = new SwingDialog();
 
     /** Creates new form CaseTestEditor */
@@ -360,6 +393,54 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
                 }
             }
         }
+
+        java.util.List<Class> clasesGenericas = new java.util.ArrayList<Class>();
+
+        clasesGenericas = obtenerGenericos(argument);
+
+        if (!coleccionesGuardadas.isEmpty()){
+
+            for (ColeccionInstancia coleccionInstancia : coleccionesGuardadas){
+
+                if (coleccionInstancia.getColeccionInstancia().getClass().getName().equals(argument.getName()) &&
+                    coleccionInstancia.getTipoDatoColeccion().equals(clasesGenericas.get(0).getSimpleName())){
+
+                    combo.addItem(coleccionInstancia.getNombreColeccion());                  
+                }
+
+            }
+
+        }
+
+        if (!mapasGuardados.isEmpty()){
+
+            for (MapaInstancia mapaInstancia : mapasGuardados){
+
+                if (mapaInstancia.getMapa().getClass().getName().equals(argument.getName()) &&
+                        mapaInstancia.getClaseKey().equals(clasesGenericas.get(0)) &&
+                        mapaInstancia.getClaseValue().equals(clasesGenericas.get(1))){
+
+
+                    combo.addItem(mapaInstancia.getNombreMapa());
+                }
+            }
+
+        }
+
+
+        if (!arreglosGuardados.isEmpty()){
+
+            for (ArregloInstancia arregloInstancia : arreglosGuardados){
+
+                if (argument.isArray() &&
+                    argument.getComponentType().getName().equals(arregloInstancia.getClaseComponente())){
+
+                    combo.addItem(arregloInstancia.getNombreArreglo());
+                }
+            }
+
+        }
+
     }
 
     public void deshabilitarMetodos() {
@@ -547,7 +628,9 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
         entidad.addContent("\n \t");
 
-        Field[] fields = clase.getDeclaredFields();
+        java.util.List<Field> fields = new java.util.ArrayList<Field>();
+
+        fields = getAllFields(fields, clase);
 
         for (Field field : fields) {
 
@@ -595,16 +678,13 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
         return entidad;
     }
 
-    @SuppressWarnings("ManualArrayToCollectionCopy")
-    public static java.util.List<Field> getAllFields(java.util.List<Field> fields, Class<?> clase) {
+    public java.util.List<Field> getAllFields(java.util.List<Field> fields, Class<?> clase) {
 
-        for (Field field : clase.getDeclaredFields()) {
 
-            fields.add(field);
+        if (clase.getDeclaredFields() != null) {
+            fields.addAll(java.util.Arrays.asList(clase.getDeclaredFields()));
         }
 
-        if (!fields.isEmpty()) {
-        }
 
         if (clase.getSuperclass() != null) {
 
@@ -612,6 +692,21 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
         }
 
         return fields;
+    }
+
+    public java.util.ArrayList<Method> getAllMethods(java.util.ArrayList<Method> methods, Class<?> clase) {
+
+        methods.addAll(java.util.Arrays.asList(clase.getDeclaredMethods()));
+
+        for (Method method : clase.getMethods()) {
+
+            if (methods.contains(method) == false) {
+                methods.add(method);
+            }
+        }
+
+
+        return methods;
     }
 
     public Object getInstance(Class clase) throws InstantiationException, IllegalAccessException, NoSuchMethodException, IllegalArgumentException, InvocationTargetException, JDOMException, IOException {
@@ -626,15 +721,21 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
         Object claseInstancia = clase.newInstance();
 
-        Field[] campos = clase.getDeclaredFields();
+        java.util.List<Field> campos = new java.util.ArrayList<Field>();
+
+        campos = getAllFields(campos, clase);
 
         for (Field field : campos) {
 
             boolean flag = false;
 
+            java.util.ArrayList<Method> metodosClase = new java.util.ArrayList<Method>();
+
+            metodosClase = getAllMethods(metodosClase, clase);
+
             if (!field.getType().isPrimitive() && verificarDato(field.getType()) == false) {
 
-                Method[] metodosClase = clase.getDeclaredMethods();
+                
 
                 for (Method method : metodosClase) {
 
@@ -1206,8 +1307,6 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
                         String item = "";
 
-
-
                         JComboBox cb = new JComboBox();
 
                         cb = (JComboBox) e.getSource();
@@ -1243,6 +1342,8 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
                                     editorInstance.setVisible(true);
 
+                                    addInstanceCollection();
+
                                 } else {
 
                                     if (argumentoEsMapa(argument) == true) {
@@ -1252,6 +1353,8 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
                                                 inicio.getDirectorioCasoPrueba().getPath(), listWidget, inicio, mapaId, false);
 
                                         editorInstance.setVisible(true);
+
+                                        addInstanceMap();
                                     } else {
 
                                         InstanceForm editorInstance = new InstanceForm(inicio, true,
@@ -1259,6 +1362,8 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
                                                 listWidget, inicio, objId, false);
 
                                         editorInstance.setVisible(true);
+
+                                        addInstanceVariable();
                                     }
                                 }
                             } else {
@@ -1269,6 +1374,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
                                             inicio.getDirectorioCasoPrueba().getPath(), listWidget, inicio, objId, false);
 
                                     editorInstance.setVisible(true);
+                                    addInstanceVariable();
 
                                 } else {
 
@@ -1378,6 +1484,8 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
                                                         selector.setVisible(true);
 
+                                                        addInstanceCollection();
+
                                                     } else {
                                                         if (argumentoEsMapa(argument) == true) {
 
@@ -1412,10 +1520,13 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
                                                 editorArray.setVisible(true);
 
                                                 addInstanceArreglo();
+
                                             } else {
                                                 if (!arrayComponente.isPrimitive()
                                                         && verificarDato(arrayComponente) == false) {
+
                                                     try {
+
                                                         Object object = getInstance(arrayComponente);
 
                                                         InstanceArrayForm editorArray = new InstanceArrayForm(inicio, true, object, inicio.getDirectorioCasoPrueba().getPath(), listWidget, inicio, arregloId, false);
@@ -1472,7 +1583,6 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
                                                 editorInstance.Visible();
 
                                                 addInstanceVariable();
-
 
 
                                             } catch (JDOMException ex) {
@@ -1651,7 +1761,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
             },
             new String [] {
-                "Variable", "Metodo", "Tipo Retorno"
+                "Variable", "Metodo", "Tipo Dato"
             }
         ) {
             boolean[] canEdit = new boolean [] {
