@@ -90,11 +90,11 @@ public class ${claseTemplate.nombreClase} {
         <#assign miCountAssert = miCountAssert + 1 />
         <#if miCountAssert==1 ><#assign imprimirAssert = true />
         try {
-            XStream xstreamAssert = new XStream(new DomDriver());
+            XStream xstream = new XStream(new DomDriver());
         </#if>
         <#assign rutaAssert = codeManager.getRuta(casoPrueba, metodo.assertLinea.valorAssert) />
-            InputStream is${miCountAssert} = new FileInputStream("${rutaAssert}");
-            ${metodo.assertLinea.valorAssert} = (${metodo.assertLinea.tipoDatoAssert}) xstreamAssert.fromXML(is${miCountAssert});
+            InputStream inputStream${miCountAssert} = new FileInputStream("${rutaAssert}");
+            ${metodo.assertLinea.valorAssert} = (${metodo.assertLinea.tipoDatoAssert}) xstream.fromXML(inputStream${miCountAssert});
     </#if>
 
     <#list metodo.argumentos as arg>
@@ -102,7 +102,7 @@ public class ${claseTemplate.nombreClase} {
     <#assign esComplejo = arg.complejo />
         <#if esComplejo && generarXstream>
         <#assign miCount = miCount + 1 />
-        <#if miCount==1 ><#assign imprimir = true />
+        <#if miCount==1 && miCountAssert==0 ><#assign imprimir = true />
         try {
             XStream xstream = new XStream(new DomDriver());
         </#if>
