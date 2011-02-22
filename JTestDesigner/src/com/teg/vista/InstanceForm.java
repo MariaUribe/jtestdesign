@@ -43,6 +43,8 @@ import java.lang.reflect.Method;
 
 
 import java.net.MalformedURLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -55,6 +57,7 @@ import javax.swing.JList;
 import javax.swing.JTabbedPane;
 
 import org.jdesktop.beansbinding.AutoBinding.UpdateStrategy;
+import org.jdesktop.beansbinding.Converter;
 import org.jdom.JDOMException;
 
 import org.metawidget.inspector.composite.CompositeInspector;
@@ -167,8 +170,27 @@ public class InstanceForm extends javax.swing.JDialog {
 
     public void InspectObject(Object instance) {
         // asociamor al metawidget la instancia que va a manejar el "binding" de propiedades
-        metawidget.addWidgetProcessor(new BeansBindingProcessor(
-                new BeansBindingProcessorConfig().setUpdateStrategy(UpdateStrategy.READ_WRITE)));
+       metawidget.addWidgetProcessor(new BeansBindingProcessor(
+               new BeansBindingProcessorConfig().setUpdateStrategy(UpdateStrategy.READ_WRITE).
+               setConverter(java.util.Date.class, String.class, new Converter<java.util.Date, String>() {
+
+           private SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+
+           @Override
+           public String convertForward(java.util.Date value) {
+               return formatter.format(value);
+           }
+
+           @Override
+           public java.util.Date convertReverse(String value) {
+
+               try {
+                   return formatter.parse(value);
+               } catch (ParseException ex) {
+                   return null;
+               }
+           }
+       })));
 
         CompositeInspectorConfig inspectorConfig = null;
 
