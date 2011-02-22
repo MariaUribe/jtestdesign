@@ -1271,6 +1271,8 @@ public class InstanceListForm extends javax.swing.JDialog {
 
          listWidget.setColeccionInstancia(coleccionInstancia);
 
+         this.crearXML(coleccionInstancia.getColeccionInstancia(), casoPrueba);
+
          this.dispose();
 
      }
@@ -1812,7 +1814,7 @@ public class InstanceListForm extends javax.swing.JDialog {
 
         listWidget.setColeccionInstancia(coleccionInstancia);
 
-
+        this.crearXML(coleccionInstancia.getColeccionInstancia(), casoPrueba);
 
         this.dispose();
     }
@@ -1830,8 +1832,8 @@ public class InstanceListForm extends javax.swing.JDialog {
         coleccionInstancia.setTipoDatoColeccion(clase.getSimpleName());
 
         listWidget.setColeccionInstancia(coleccionInstancia);
-
-        this.crearXML(coleccion, casoPrueba);
+       
+        this.crearXML(coleccionInstancia.getColeccionInstancia(), casoPrueba);
 
         this.dispose();
 
@@ -2045,6 +2047,7 @@ public class InstanceListForm extends javax.swing.JDialog {
     }
 
     public void crearXML(Collection coleccion, String casoPrueba) {
+        System.out.println("entro en crear XML");
         try {
             coleccionId++;
             File casoPruebaFile = new File(System.getProperty("user.home")
