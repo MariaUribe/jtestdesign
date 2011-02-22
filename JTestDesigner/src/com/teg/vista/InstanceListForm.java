@@ -51,6 +51,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 
 import java.lang.reflect.Method;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 import java.util.ArrayList;
 
@@ -73,6 +75,7 @@ import javax.swing.JList;
 import javax.swing.JTabbedPane;
 
 import org.jdesktop.beansbinding.AutoBinding.UpdateStrategy;
+import org.jdesktop.beansbinding.Converter;
 import org.jdom.Attribute;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -349,8 +352,27 @@ public class InstanceListForm extends javax.swing.JDialog {
         metawidget = new SwingMetawidget();
 
         // asociamor al metawidget la instancia que va a manejar el "binding" de propiedades
-        metawidget.addWidgetProcessor(new BeansBindingProcessor(
-                new BeansBindingProcessorConfig().setUpdateStrategy(UpdateStrategy.READ_WRITE)));
+       metawidget.addWidgetProcessor(new BeansBindingProcessor(
+               new BeansBindingProcessorConfig().setUpdateStrategy(UpdateStrategy.READ_WRITE).
+               setConverter(java.util.Date.class, String.class, new Converter<java.util.Date, String>() {
+
+           private SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+
+           @Override
+           public String convertForward(java.util.Date value) {
+               return formatter.format(value);
+           }
+
+           @Override
+           public java.util.Date convertReverse(String value) {
+
+               try {
+                   return formatter.parse(value);
+               } catch (ParseException ex) {
+                   return null;
+               }
+           }
+       })));
 
         CompositeInspectorConfig inspectorConfig = null;
 
@@ -1668,18 +1690,23 @@ public class InstanceListForm extends javax.swing.JDialog {
 
         Object claseInstancia = clase.newInstance();
 
-        Field[] campos = clase.getDeclaredFields();
+         java.util.List<Field> campos = new java.util.ArrayList<Field>();
+
+        campos = getAllFields(campos, clase);
 
         for (Field field : campos) {
 
             boolean flag = false;
 
+            java.util.ArrayList<Method> metodosClase = new java.util.ArrayList<Method>();
+
+            metodosClase = getAllMethods(metodosClase, clase);
+
             if (!field.getType().isPrimitive()
 
                     && verificarDato(field.getType()) == false) {
 
-                Method[] metodosClase = clase.getDeclaredMethods();
-
+               
                 for (Method method : metodosClase) {
 
                     if (method.getParameterTypes().length == 1
