@@ -3266,6 +3266,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
     public ArrayList<Argumento> getArgumentos(Method method) {
 
         Integer contSimple = 1;
+        Integer contFila = 0;
 
         String valorComplejo = "";
         ArrayList<Argumento> argumentos = new ArrayList<Argumento>();
@@ -3282,12 +3283,14 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
             if (clazz.isArray()) {
                 String clase = this.classNameArray(clazz.getName());
+                System.out.println("Tipo de DATO: " + tablaArgumentos.getValueAt(contFila, 0).toString());
                 argumento.setTipo(clase + "[]");
                 argumento.setArreglo(true);
 
 
             } else {
                 argumento.setTipo(clazz.getName());
+                System.out.println("Tipo de DATO: " + tablaArgumentos.getValueAt(contFila, 0).toString());
                 argumento.setArreglo(false);
 
 
@@ -3396,6 +3399,8 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
             contSimple++;
 
+            contFila++;
+
             contObject++;
 
             contColeccion++;
@@ -3479,11 +3484,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
         //casoPrueba.setNombrePaquete("com.test.prueba");
         casoPrueba.setEscenariosPrueba(escenarios);
 
-
-
         return casoPrueba;
-
-
     }
 
     /**
