@@ -10,11 +10,13 @@
  */
 package com.teg.vista;
 
+import com.teg.dominio.Argumento;
 import com.teg.dominio.CasoPrueba;
 import com.teg.dominio.ClaseTest;
 import com.teg.dominio.EscenarioPrueba;
 import com.teg.dominio.Metodo;
 import com.teg.dominio.MockObject;
+import com.teg.dominio.Retorno;
 import com.teg.logica.XmlManager;
 import com.teg.util.EscenarioPersonalizado;
 import java.awt.Component;
@@ -139,7 +141,7 @@ public class DependenciesEditor extends javax.swing.JInternalFrame {
             Class parametro = paramArreglo[0];
 
             String metodo = metodoSetSelected.getName() + "(" + parametro.getName() + ")";
-            String objeto = parametro.getName() + " " + "jmock" + parametro.getSimpleName() + idMock;
+            String objeto = parametro.getName() + " " + parametro.getSimpleName() + idMock;
 
             String metodoObjeto = "<HTML><strong>Método: </strong>" + metodo + "<BR><BR><strong>Objeto: </strong>" + objeto + "<BR><BR></HTML>";
             String escenarios = "<HTML>Seleccione el escenario donde se introducirá el código:<BR></HTML>";
@@ -190,7 +192,7 @@ public class DependenciesEditor extends javax.swing.JInternalFrame {
         Component[] componentes = scrollPaneContent.getComponents();
 
         for (Component componente : componentes) {
-        Boolean escenarioHabilitado = Boolean.FALSE;
+            Boolean escenarioHabilitado = Boolean.FALSE;
 
             if (componente.getName().startsWith("escenarios")) {
                 JComboBox comboBox = (JComboBox) componente;
@@ -224,20 +226,33 @@ public class DependenciesEditor extends javax.swing.JInternalFrame {
 
         for (Method metodoSetSelected : metodosSetSeleccionados) {
 
-                Class[] paramArreglo = metodoSetSelected.getParameterTypes();
-                Class parametro = paramArreglo[0];
+            Class[] paramArreglo = metodoSetSelected.getParameterTypes();
+            Class parametro = paramArreglo[0];
 
-                String parametroCompleto = parametro.getName();
-                String parametroSimple = parametro.getSimpleName();
+            String parametroCompleto = parametro.getName();
+            String parametroSimple = parametro.getSimpleName();
 
-                ClaseTest clase = new ClaseTest(parametroCompleto, parametroSimple);
+            String claseName = metodoSetSelected.getDeclaringClass().getName();
+            String claseSimpleName = metodoSetSelected.getDeclaringClass().getSimpleName();
 
-                String nombreVar = "jmock" + parametro.getSimpleName() + idVariable;
+            //ClaseTest clase = new ClaseTest(parametroCompleto, parametroSimple);
+            ClaseTest clase = new ClaseTest(claseName, claseSimpleName);
 
-                Metodo metodoSet = new Metodo(metodoSetSelected.getName(), clase);
+            String nombreVar = claseSimpleName + idVariable;
 
-                MockObject mockObject = new MockObject(metodoSet, nombreVar, escenarios.get(cont).getEscenario(), codigos.get(cont), escenarios.get(cont).getEscenarioHabilitado());
-                mockObjects.add(mockObject);
+            Metodo metodoSet = new Metodo(metodoSetSelected.getName(), clase);
+            ArrayList<Argumento> argumentos = new ArrayList<Argumento>();
+            Class[] parameters = metodoSetSelected.getParameterTypes();
+
+            for (Class param : parameters) {
+                argumentos.add(new Argumento(param.getSimpleName() + idVariable, param.getName(), null, false, false, false));
+            }
+            metodoSet.setArgumentos(argumentos);
+            metodoSet.setNombre(metodoSetSelected.getName());
+            metodoSet.setRetorno(new Retorno(metodoSetSelected.getReturnType().getName(), metodoSetSelected.getReturnType().getSimpleName(), nombreVar));
+
+            MockObject mockObject = new MockObject(metodoSet, nombreVar, escenarios.get(cont).getEscenario(), codigos.get(cont), escenarios.get(cont).getEscenarioHabilitado());
+            mockObjects.add(mockObject);
 
             cont++;
             idVariable++;
@@ -245,7 +260,7 @@ public class DependenciesEditor extends javax.swing.JInternalFrame {
 
         Boolean flag = false;
         for (EscenarioPersonalizado escenario : escenarios) {
-            if(escenario.getEscenarioHabilitado()){
+            if (escenario.getEscenarioHabilitado()) {
                 flag = true;
                 break;
             }

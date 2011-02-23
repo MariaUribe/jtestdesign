@@ -63,7 +63,11 @@ public class ${claseTemplate.nombreClase} {
 <#if hasMock>
     private Mockery jmockContext;
 <#list casoPrueba.mockObjects as mockObject>
-    private ${mockObject.metodoSet.clase.nombre} ${mockObject.nombreVar};
+    private ${mockObject.metodoSet.clase.nombre} ${mockObject.nombreVar?uncap_first};
+    <#assign metodo = mockObject.metodoSet />
+    <#list metodo.argumentos as arg>
+    private ${arg.tipo} ${arg.nombre?uncap_first}; 
+    </#list>
 </#list>
 </#if>
 
@@ -122,7 +126,12 @@ public class ${claseTemplate.nombreClase} {
     <#if hasMock>
         jmockContext = new JUnit4Mockery();
     <#list casoPrueba.mockObjects as mockObject>
-        ${mockObject.nombreVar} = jmockContext.mock(${mockObject.metodoSet.clase.nombre}.class);
+        ${mockObject.nombreVar?uncap_first} = new ${mockObject.metodoSet.clase.nombre}();
+        <#assign metodo = mockObject.metodoSet />
+        <#list metodo.argumentos as arg>
+        ${arg.nombre?uncap_first} = jmockContext.mock(${arg.tipo}.class);
+        ${mockObject.nombreVar?uncap_first}.${mockObject.metodoSet.nombre}(${arg.nombre?uncap_first});
+        </#list>
     </#list>
     </#if>
     <#list casoPrueba.mockObjects as mockObject>

@@ -14,7 +14,6 @@ public class Argumento {
     private boolean mapa;
     private boolean generarXstream;
 
-
     /**
      *
      * @param nombre the nombre to set
