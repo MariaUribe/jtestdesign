@@ -51,7 +51,9 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 
 import java.lang.reflect.Method;
+
 import java.text.ParseException;
+
 import java.text.SimpleDateFormat;
 
 import java.util.ArrayList;
@@ -75,9 +77,13 @@ import javax.swing.JList;
 import javax.swing.JTabbedPane;
 
 import org.jdesktop.beansbinding.AutoBinding.UpdateStrategy;
+
 import org.jdesktop.beansbinding.Converter;
+
 import org.jdom.Attribute;
+
 import org.jdom.Document;
+
 import org.jdom.Element;
 
 import org.jdom.JDOMException;
@@ -259,14 +265,11 @@ public class InstanceListForm extends javax.swing.JDialog {
             ArrayList<Class> obtenerGenericos, ArrayList<Class> obtenerClasesJars,
             String path, WidgetObjectLoading listWidget, Inicio inicio, int coleccionId, boolean vieneDelAssert) {
 
-
         super(parent, modal);
 
         this.clasesJars = obtenerClasesJars;
 
-        this.path = path;
-
-        
+        this.path = path;        
 
         this.listWidget = listWidget;
 
@@ -287,9 +290,18 @@ public class InstanceListForm extends javax.swing.JDialog {
             initGenericEmpty();
 
         }else
+
         {
+            if (clasesGenericos.get(0).isInterface()
+                    || java.lang.reflect.Modifier.isAbstract(clasesGenericos.get(0).getModifiers())){
+
+                initGenericHerited();
+
+            }else{
 
             initGenericFull();
+
+            }
         }
 
 
@@ -403,7 +415,7 @@ public class InstanceListForm extends javax.swing.JDialog {
 
         metawidget.setInspector(new CompositeInspector(inspectorConfig));
 
-        metawidget.setPreferredSize(new java.awt.Dimension(450, 450));
+        metawidget.setPreferredSize(new java.awt.Dimension(700, 700));
 
         metawidget.setToInspect(instance);
 
@@ -717,6 +729,250 @@ public class InstanceListForm extends javax.swing.JDialog {
         setSize(500, 500);
     }
 
+    private void initHerited(){
+
+         tabPanel = new javax.swing.JTabbedPane();
+
+        panelSeleccion = new javax.swing.JPanel(false);
+
+        panelSeleccion.setLayout(new GridBagLayout());
+
+        panelSeleccion.setAutoscrolls(true);
+
+        GridBagConstraints c = new GridBagConstraints();
+
+        listaSeleccionObjeto = new javax.swing.JList();
+
+        listaSeleccionObjeto.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        listaSeleccionObjeto.setSize(new Dimension(100,100));
+
+        listaSeleccionObjeto.setMaximumSize(new Dimension(1000,1000));
+
+        listaSeleccionObjeto.setLayoutOrientation(JList.HORIZONTAL_WRAP);
+
+        listaSeleccionObjeto.setVisibleRowCount(-1);
+
+        javax.swing.JScrollPane listaObjetoScroller = new javax.swing.JScrollPane(listaSeleccionObjeto);
+
+        listaObjetoScroller.setPreferredSize(new Dimension(200, 300));
+
+        java.util.List<Class> clasesPadres = getClasesPadres(clasesGenericos.get(0));
+
+        listaSeleccionObjeto.setListData(clasesPadres.toArray());
+
+        c.gridx = 0;
+
+        c.gridy = 0;
+
+        c.insets = new Insets(10,20,0,5);
+
+        c.anchor = GridBagConstraints.CENTER;
+
+        panelSeleccion.add(listaObjetoScroller, c);
+
+
+    }
+
+
+    private void initGenericHerited(){
+
+        tabPanel = new javax.swing.JTabbedPane();
+
+        panelSeleccion = new javax.swing.JPanel(false);
+
+        panelSeleccion.setLayout(new GridBagLayout());
+
+        panelSeleccion.setAutoscrolls(true);
+
+        GridBagConstraints c = new GridBagConstraints();
+
+        listaSeleccionColeccion = new javax.swing.JList();
+
+        listaSeleccionColeccion.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        listaSeleccionColeccion.setSize(new Dimension(100,100));
+
+        listaSeleccionColeccion.setMaximumSize(new Dimension(1000,1000));
+
+        listaSeleccionColeccion.setLayoutOrientation(JList.HORIZONTAL_WRAP);
+
+        listaSeleccionColeccion.setVisibleRowCount(-1);
+
+        javax.swing.JScrollPane listaColeccionScroller = new javax.swing.JScrollPane(listaSeleccionColeccion);
+
+        listaColeccionScroller.setPreferredSize(new Dimension(200, 300));
+
+        llenarListaColeccionSeleccion(listaSeleccionColeccion);
+
+        c.gridx = 0;
+
+        c.gridy = 0;
+
+        c.insets = new Insets(10,20,0,5);
+
+        c.anchor = GridBagConstraints.CENTER;
+
+        panelSeleccion.add(listaColeccionScroller, c);
+
+        listaSeleccionObjeto = new javax.swing.JList();
+
+        listaSeleccionObjeto.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        listaSeleccionObjeto.setSize(new Dimension(100,100));
+
+        listaSeleccionObjeto.setMaximumSize(new Dimension(1000,1000));
+
+        listaSeleccionObjeto.setLayoutOrientation(JList.HORIZONTAL_WRAP);
+
+        listaSeleccionObjeto.setVisibleRowCount(-1);
+
+        javax.swing.JScrollPane listaObjetoScroller = new javax.swing.JScrollPane(listaSeleccionObjeto);
+
+        listaObjetoScroller.setPreferredSize(new Dimension(200, 300));
+
+        java.util.List<Class> clasesPadres = getClasesPadres(clasesGenericos.get(0));
+
+        listaSeleccionObjeto.setListData(clasesPadres.toArray());
+
+        c.gridx = 1;
+
+        c.gridy = 0;
+
+        c.insets = new Insets(10,20,0,5);
+
+        c.anchor = GridBagConstraints.CENTER;
+
+        panelSeleccion.add(listaObjetoScroller, c);
+
+
+        aceptarSeleccion = new javax.swing.JButton();
+
+        aceptarSeleccion.setText("Aceptar Seleccion..");
+
+        aceptarSeleccion.setFont(new Font("Calibri",Font.BOLD,12));
+
+        aceptarSeleccion.setSize(new Dimension(20,20));
+
+        aceptarSeleccion.addActionListener(new java.awt.event.ActionListener() {
+
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                aceptarSeleccionColeccionActionPerformed(evt);
+            }
+        });
+
+        c.gridx = 0;
+
+        c.gridy = 1;
+
+        c.anchor = GridBagConstraints.WEST;
+
+        panelSeleccion.add(aceptarSeleccion, c);
+
+        cancelarSeleccion = new javax.swing.JButton();
+
+        cancelarSeleccion.setText("Cancelar Seleccion..");
+
+        cancelarSeleccion.setSize(new Dimension(20,20));
+
+        cancelarSeleccion.setFont(new Font("Calibri",Font.BOLD,12));
+
+        cancelarSeleccion.addActionListener(new java.awt.event.ActionListener() {
+
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelarSeleccionActionPerformed(evt);
+            }
+        });
+
+        c.gridx = 2;
+
+        c.gridy = 1;
+
+        c.anchor = GridBagConstraints.EAST;
+
+        panelSeleccion.add(cancelarSeleccion, c );
+
+        objectContainer = new javax.swing.JPanel(false);
+
+        objectContainer.setLayout(new FlowLayout(FlowLayout.CENTER));
+
+        objectContainer.setAutoscrolls(true);
+
+        buttonPanel = new javax.swing.JPanel();
+
+        buttonCancelar = new javax.swing.JButton();
+
+        buttonGuardar = new javax.swing.JButton();
+
+        buttonGuardar.setEnabled(false);
+
+        buttonCrearOtro = new javax.swing.JButton();
+
+        buttonCrearOtro.setEnabled(false);
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
+
+        buttonPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        buttonCancelar.setText("Cancelar");
+
+        buttonCancelar.addActionListener(new java.awt.event.ActionListener() {
+
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonCancelarActionPerformed(evt);
+            }
+        });
+
+        buttonGuardar.setText("Guardar Coleccion");
+
+        buttonGuardar.addActionListener(new java.awt.event.ActionListener() {
+
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonGuardarGenericoActionPerformed(evt);
+            }
+        });
+
+        buttonCrearOtro.setText("Crear Otro Objeto");
+
+        buttonCrearOtro.addActionListener(new java.awt.event.ActionListener() {
+
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonCrearOtroGenericoActionPerformed(evt);
+            }
+        });
+
+        setLayout(new BorderLayout());
+
+        tabPanel.addTab("Seleccion", panelSeleccion);
+
+        tabPanel.setMnemonicAt(0, KeyEvent.VK_1);
+
+        tabPanel.addTab("Objeto",objectContainer);
+
+        tabPanel.setMnemonicAt(1, KeyEvent.VK_2);
+
+        tabPanel.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+
+        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+
+        buttonPanel.add(buttonGuardar);
+
+        buttonPanel.add(buttonCancelar);
+
+        buttonPanel.add(buttonCrearOtro);
+
+        getContentPane().add(buttonPanel, BorderLayout.SOUTH);
+
+        getContentPane().add(tabPanel, BorderLayout.CENTER);
+
+        setTitle("Editor de Colecciones");
+
+        setSize(700, 700);
+
+
+
+    }
+
     private void initGenericEmpty(){
 
          tabPanel = new javax.swing.JTabbedPane();
@@ -933,9 +1189,10 @@ public class InstanceListForm extends javax.swing.JDialog {
 
         listaSeleccionColeccion.setLayoutOrientation(JList.HORIZONTAL_WRAP);
 
-        listaSeleccionColeccion.setVisibleRowCount(-1);
+        listaSeleccionColeccion.setVisibleRowCount(-1);     
 
         listaSeleccionColeccion.setListData(clasesColeccion.toArray());
+        
 
         javax.swing.JScrollPane listaColeccionScroller = new javax.swing.JScrollPane(listaSeleccionColeccion);
 
@@ -1152,10 +1409,16 @@ public class InstanceListForm extends javax.swing.JDialog {
             
             Class coleccionInstance = (Class) listaSeleccionColeccion.getSelectedValue();
 
-            clase = clasesGenericos.get(0);
-            
+            if (clasesGenericos.get(0).isInterface() ||
+                    java.lang.reflect.Modifier.isAbstract(clasesGenericos.get(0).getModifiers())){
 
-           
+                clase = (Class) listaSeleccionObjeto.getSelectedValue();
+
+            }else{
+
+                clase = clasesGenericos.get(0);
+
+            }
 
             setLista(coleccionInstance);
 
@@ -1222,6 +1485,40 @@ public class InstanceListForm extends javax.swing.JDialog {
 
         aceptarSeleccion.setEnabled(false);
 
+    }
+
+    private java.util.List<Class> getClasesPadres(Class clase){
+
+        java.util.List<Class> clases = new java.util.ArrayList<Class>();
+
+        if (clase.isInterface()){
+        
+           for (Class class1 : clasesJars) {
+
+
+
+            if (clase.isAssignableFrom(class1) == true) {
+
+                clases.add(class1);
+
+            }
+        }
+        }else{
+            if (java.lang.reflect.Modifier.isAbstract(clase.getModifiers())){
+
+                for (Class class1 : clasesJars){
+
+                    if (class1.getSuperclass().equals(clase)){
+                        clases.add(class1);
+                    }
+                }
+
+                
+            }
+        }
+
+
+        return clases;
     }
 
      private void buttonCrearOtroGenericoActionPerformed(java.awt.event.ActionEvent evt) {

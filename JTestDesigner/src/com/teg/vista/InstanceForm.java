@@ -513,6 +513,8 @@ public class InstanceForm extends javax.swing.JDialog {
 
         Object instance = metawidget.getToInspect();
 
+        System.out.println(instance.getClass().getName());
+
         variableInstancia = new VariableInstancia();
 
         variableInstancia.setInstancia(instance);
