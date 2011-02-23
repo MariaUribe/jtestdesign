@@ -3307,18 +3307,14 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
 
             if (clazz.isArray()) {
-                String clase = this.classNameArray(clazz.getName());
-                System.out.println("Tipo de DATO: " + tablaArgumentos.getValueAt(contFila, 0).toString());
+                String clase = this.classNameArray(tablaArgumentos.getValueAt(contFila, 0).toString());
                 argumento.setTipo(clase + "[]");
                 argumento.setArreglo(true);
 
-
             } else {
-                argumento.setTipo(clazz.getName());
-                System.out.println("Tipo de DATO: " + tablaArgumentos.getValueAt(contFila, 0).toString());
+                String clase = tablaArgumentos.getValueAt(contFila, 0).toString();
+                argumento.setTipo(clase);
                 argumento.setArreglo(false);
-
-
             }
 
             if (clazz.getSimpleName().equals("String")) {

@@ -39,6 +39,7 @@ import javax.swing.text.EditorKit;
 import javax.swing.text.StyledEditorKit;
 
 import net.miginfocom.swing.MigLayout;
+import org.apache.commons.lang.StringUtils;
 
 /**
  *
@@ -140,15 +141,23 @@ public class DependenciesEditor extends javax.swing.JInternalFrame {
             Class[] paramArreglo = metodoSetSelected.getParameterTypes();
             Class parametro = paramArreglo[0];
 
-            String metodo = metodoSetSelected.getName() + "(" + parametro.getName() + ")";
-            String objeto = parametro.getName() + " " + parametro.getSimpleName() + idMock;
+            String claseSimpleName = metodoSetSelected.getDeclaringClass().getSimpleName();
+            String nombreVariable = claseSimpleName + idMock;
+            String nombreVar = StringUtils.uncapitalize(nombreVariable);
 
-            String metodoObjeto = "<HTML><strong>Método: </strong>" + metodo + "<BR><BR><strong>Objeto: </strong>" + objeto + "<BR><BR></HTML>";
-            String escenarios = "<HTML>Seleccione el escenario donde se introducirá el código:<BR></HTML>";
+            String metodo = metodoSetSelected.getName() + "(" + StringUtils.uncapitalize(parametro.getSimpleName()) + idMock + ")";
+            //String objeto = nombreVar;
+
+            String objetoMock = "<HTML><BR><strong>Objeto Mock: </strong>jmockContext</HTML>";
+            //String metodoObjeto = "<HTML><strong>Método: </strong>" + metodo + "<BR><BR><strong>Objeto Inyectado: </strong>" + objeto + "<BR><BR></HTML>";
+            String metodoObjeto = "<HTML><strong>Método: </strong>" + metodo + "</HTML>";
+            String escenarios = "<HTML><BR>Seleccione el escenario donde se introducirá el código:<BR></HTML>";
             String codigo = "<HTML><BR>Código:<BR><BR></HTML>";
-            String dependencia = "<HTML>Seleccione el manejo de dependencias:<BR></HTML>";
+            String dependencia = "<HTML><BR>Seleccione el manejo de dependencias:<BR></HTML>";
+            String objetosCreados = "<HTML>Lista de objetos creados en el caso de prueba:<BR></HTML>";
 
             MyComboBox myComboBox = new MyComboBox(idEscenario);
+            MyComboBoxObjetos myComboBoxObjetos = new MyComboBoxObjetos(this.getObjetosCreados(myComboBox.getSelectedItem().toString()));
             MyEditorPane myEditorPane = new MyEditorPane();
             MyRadioButton radioMock = new MyRadioButton("Inyección con JMock", idEscenario);
             radioMock.setSelected(true);
@@ -156,15 +165,22 @@ public class DependenciesEditor extends javax.swing.JInternalFrame {
             grupoRadios.add(radioMock);
             grupoRadios.add(radioOtro);
 
+            scrollPaneContent.add(new MyLabel(objetoMock, false));
             scrollPaneContent.add(new MyLabel(metodoObjeto, false));
+            scrollPaneContent.add(new MyLabel(objetosCreados, true));
+            scrollPaneContent.add(myComboBoxObjetos);
+
             scrollPaneContent.add(new MyLabel(dependencia, true));
             scrollPaneContent.add(radioMock);
             scrollPaneContent.add(radioOtro);
+
             scrollPaneContent.add(new MyLabel(escenarios, true));
             scrollPaneContent.add(myComboBox);
+            
             scrollPaneContent.add(new MyLabel(codigo, true));
             scrollPaneContent.add(new ScrollEditorPane(myEditorPane));
             scrollPaneContent.add(new MySpaceLabel());
+
             idEscenario++;
             idMock++;
         }
@@ -276,6 +292,30 @@ public class DependenciesEditor extends javax.swing.JInternalFrame {
         xmlManager.crearCasoPrueba(this.inicio.getNombreCasoPrueba(), casoPrueba.getEscenariosPrueba(), mockObjects);
     }
 
+    public ArrayList<String> getObjetosCreados(String escenarioDePrueba) {
+
+        ArrayList<EscenarioPrueba> escenarios = casoPrueba.getEscenariosPrueba();
+        ArrayList<String> objetosCreados = new ArrayList<String>();
+
+        for (EscenarioPrueba escenario : escenarios) {
+
+            if (escenario.getNombre().equals(escenarioDePrueba)) {
+                ArrayList<Metodo> metodos = escenario.getMetodos();
+
+                for (Metodo metodo : metodos) {
+                    ArrayList<Argumento> args = metodo.getArgumentos();
+
+                    if (args.size() > 0) {
+                        for (Argumento arg : args) {
+                            objetosCreados.add(arg.getTipo() + " " + arg.getValor());
+                        }
+                    }
+                }
+            }
+        }
+        return objetosCreados;
+    }
+
     private class MyLabel extends JLabel {
 
         public MyLabel(String texto, boolean negritas) {
@@ -301,6 +341,79 @@ public class DependenciesEditor extends javax.swing.JInternalFrame {
             setName("escenarios" + idEscenario);
             for (EscenarioPrueba escenario : escenarios) {
                 addItem(escenario.getNombre());
+            }
+            setPreferredSize(new Dimension(400, 20));
+            setVisible(true);
+
+            pack();
+
+            addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
+
+                public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
+                }
+
+                public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
+                    myComboBoxPopupMenuWillBecomeInvisible(evt);
+                }
+
+                public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
+                }
+            });
+        }
+
+        public void myComboBoxPopupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
+
+            ArrayList<String> objetosCreados = new ArrayList<String>();
+            Component[] componentes = scrollPaneContent.getComponents();
+
+            for (Component componente : componentes) {
+                if (componente.getName().startsWith("escenarios")) {
+                    objetosCreados = this.getObjetosCreados(getSelectedItem().toString());
+                }
+                if (componente.getName().equals("objetosCreados")) {
+                    if (!objetosCreados.isEmpty()) {
+                        MyComboBoxObjetos cb = (MyComboBoxObjetos) componente;
+                        cb.removeAllItems();
+                        for (String string : objetosCreados) {
+                            cb.addItem(string);
+                        }
+                    }
+                }
+            }
+        }
+
+        public ArrayList<String> getObjetosCreados(String escenarioDePrueba) {
+
+            ArrayList<EscenarioPrueba> escenarios = casoPrueba.getEscenariosPrueba();
+            ArrayList<String> objetosCreados = new ArrayList<String>();
+
+            for (EscenarioPrueba escenario : escenarios) {
+
+                if (escenario.getNombre().equals(escenarioDePrueba)) {
+                    ArrayList<Metodo> metodos = escenario.getMetodos();
+
+                    for (Metodo metodo : metodos) {
+                        ArrayList<Argumento> args = metodo.getArgumentos();
+
+                        if (args.size() > 0) {
+                            for (Argumento arg : args) {
+                                objetosCreados.add(arg.getTipo() + " " + arg.getValor());
+                            }
+                        }
+                    }
+                }
+            }
+            return objetosCreados;
+        }
+    }
+
+    private class MyComboBoxObjetos extends JComboBox {
+
+        public MyComboBoxObjetos(ArrayList<String> objetosCreados) {
+
+            setName("objetosCreados");
+            for (String objeto : objetosCreados) {
+                addItem(objeto);
             }
             setPreferredSize(new Dimension(400, 20));
             setVisible(true);
@@ -417,7 +530,7 @@ public class DependenciesEditor extends javax.swing.JInternalFrame {
         );
         contentPaneLayout.setVerticalGroup(
             contentPaneLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 645, Short.MAX_VALUE)
+            .add(0, 697, Short.MAX_VALUE)
         );
 
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
