@@ -45,6 +45,8 @@ import java.awt.Component;
 import java.awt.Dimension;
 
 import java.awt.Toolkit;
+import java.awt.event.FocusEvent;
+import java.awt.event.ItemEvent;
 
 import java.awt.event.MouseEvent;
 
@@ -91,6 +93,7 @@ import java.util.regex.Pattern;
 import javax.swing.BorderFactory;
 
 import javax.swing.DefaultCellEditor;
+import javax.swing.DefaultComboBoxModel;
 
 import javax.swing.JComboBox;
 
@@ -778,6 +781,12 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
             listWidget.getVariableInstancia().setNombreVariable("objeto" + objId);
 
+           
+
+            tablaArgumentos.setValueAt(listWidget.getVariableInstancia().getInstancia().getClass().getName(),
+                    tablaArgumentos.getSelectedRow(), 0);
+           
+
             variablesGuardadas.add(listWidget.getVariableInstancia());
 
             Vector objects = new Vector();
@@ -805,6 +814,9 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
             model = (DefaultTableModel) tablaVariables.getModel();
 
+            tablaArgumentos.setValueAt(listWidget.getArregloInstancia().getClaseComponente() + "[]",
+                    tablaArgumentos.getSelectedRow(), 0);
+
 
             listWidget.getArregloInstancia().setNombreArreglo("arreglo" + arregloId);
 
@@ -816,7 +828,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
             arreglos.add(this.getActualMethod().getName());
 
-            arreglos.add(listWidget.getArregloInstancia().getClaseComponente().getClass().getSimpleName());
+            arreglos.add(listWidget.getArregloInstancia().getClaseComponente());
 
             model.addRow(arreglos);
 
@@ -835,6 +847,11 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
             DefaultTableModel model = new DefaultTableModel();
 
             model = (DefaultTableModel) tablaVariables.getModel();
+
+            tablaArgumentos.setValueAt(listWidget.getMapaInstancia().getMapa().getClass().getSimpleName()
+                    + "<" + listWidget.getMapaInstancia().getClaseKey().getName() + "," +
+                    listWidget.getMapaInstancia().getClaseValue().getName() + ">", 
+                    tablaArgumentos.getSelectedRow(), 0);
 
 
             listWidget.getMapaInstancia().setNombreMapa("mapa" + mapaId);
@@ -864,6 +881,10 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
             DefaultTableModel model = new DefaultTableModel();
 
             model = (DefaultTableModel) tablaVariables.getModel();
+
+            tablaArgumentos.setValueAt(listWidget.getColeccionInstancia().getColeccionInstancia().getClass().getSimpleName() +
+                    "<" + listWidget.getColeccionInstancia().getTipoDatoColeccion() + ">"
+                    , tablaArgumentos.getSelectedRow(), 0);
 
             Method method = this.getActualMethod();
 
@@ -1374,6 +1395,8 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
                                             inicio.getDirectorioCasoPrueba().getPath(), listWidget, inicio, objId, false);
 
                                     editorInstance.setVisible(true);
+
+
                                     addInstanceVariable();
 
                                 } else {
@@ -1622,6 +1645,8 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
                     }
 
                     public void popupMenuCanceled(PopupMenuEvent e) {
+
+                        
                     }
                 });
 
