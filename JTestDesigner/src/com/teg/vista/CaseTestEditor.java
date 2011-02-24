@@ -685,7 +685,16 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
 
         if (clase.getDeclaredFields() != null) {
-            fields.addAll(java.util.Arrays.asList(clase.getDeclaredFields()));
+
+            for (Field field : clase.getDeclaredFields()) {
+                if (!java.lang.reflect.Modifier.isFinal(field.getModifiers())){
+
+                    fields.add(field);
+
+                }
+            }
+
+//            fields.addAll(java.util.Arrays.asList(clase.getDeclaredFields()));
         }
 
 
@@ -2466,7 +2475,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
                     cargarTablaArgumentos(metodoNombre);
 
-                    deshabilitarMetodosData();
+                    //deshabilitarMetodosData();
 
                 } else {
 

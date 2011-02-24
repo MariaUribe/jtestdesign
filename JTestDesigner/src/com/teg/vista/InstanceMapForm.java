@@ -2690,7 +2690,7 @@ public class InstanceMapForm extends javax.swing.JDialog {
 
         secondMetawidget.setInspector(new CompositeInspector(inspectorConfig));
 
-        secondMetawidget.setPreferredSize(new java.awt.Dimension(600,600));
+        secondMetawidget.setPreferredSize(new java.awt.Dimension(700,700));
 
         secondMetawidget.setToInspect(instance);
 
@@ -2743,7 +2743,7 @@ public class InstanceMapForm extends javax.swing.JDialog {
 
         metawidget.setInspector(new CompositeInspector(inspectorConfig));
 
-        metawidget.setPreferredSize(new java.awt.Dimension(600,600));
+        metawidget.setPreferredSize(new java.awt.Dimension(700,700));
 
         metawidget.setToInspect(instance);
 
