@@ -415,7 +415,7 @@ public class InstanceListForm extends javax.swing.JDialog {
 
         metawidget.setInspector(new CompositeInspector(inspectorConfig));
 
-        metawidget.setPreferredSize(new java.awt.Dimension(700, 700));
+        metawidget.setPreferredSize(new java.awt.Dimension(600, 600));
 
         metawidget.setToInspect(instance);
 

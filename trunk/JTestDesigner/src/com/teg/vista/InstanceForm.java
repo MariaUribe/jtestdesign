@@ -59,12 +59,14 @@ import javax.swing.JTabbedPane;
 import org.jdesktop.beansbinding.AutoBinding.UpdateStrategy;
 import org.jdesktop.beansbinding.Converter;
 import org.jdom.JDOMException;
+import org.metawidget.inspector.annotation.MetawidgetAnnotationInspector;
 
 import org.metawidget.inspector.composite.CompositeInspector;
 
 import org.metawidget.inspector.composite.CompositeInspectorConfig;
 
 import org.metawidget.inspector.iface.Inspector;
+import org.metawidget.inspector.java5.Java5Inspector;
 
 import org.metawidget.inspector.propertytype.PropertyTypeInspector;
 
@@ -205,7 +207,7 @@ public class InstanceForm extends javax.swing.JDialog {
 
             inspectorConfig = new CompositeInspectorConfig().setInspectors(
                     new Inspector[]{new PropertyTypeInspector(),
-                        new XmlInspector(xmlConfig)});
+                        new XmlInspector(xmlConfig), new Java5Inspector(), new MetawidgetAnnotationInspector()});
 
         } catch (FileNotFoundException ex) {
         }
@@ -220,11 +222,13 @@ public class InstanceForm extends javax.swing.JDialog {
         metawidget.setMetawidgetLayout(new TabbedPaneLayoutDecorator(layoutConfig));
 
         metawidget.setInspector(new CompositeInspector(inspectorConfig));
-        metawidget.setPreferredSize(new java.awt.Dimension(450, 450));
+        metawidget.setPreferredSize(new java.awt.Dimension(600, 600));
 
         metawidget.setToInspect(instance);
 
         objectContainer.add(metawidget);
+
+        objectContainer.repaint();
     }
 
     private void initComponentsAbstract() {
@@ -700,7 +704,13 @@ public class InstanceForm extends javax.swing.JDialog {
 
 
         if (clase.getDeclaredFields() != null) {
-            fields.addAll(Arrays.asList(clase.getDeclaredFields()));
+            for (Field field : clase.getDeclaredFields()) {
+
+                if (!java.lang.reflect.Modifier.isFinal(field.getModifiers())){
+
+                    fields.add(field);
+                }
+            }
         }
 
 
