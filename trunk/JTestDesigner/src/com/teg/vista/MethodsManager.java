@@ -362,8 +362,11 @@ public class MethodsManager extends javax.swing.JInternalFrame {
 
             String nameClass = classList.getSelectedValue().toString();
 
+            Class claseActual = null;
             for (Class clazz : clases) {
                 if (clazz.getName().equals(nameClass)) {
+
+                    claseActual = clazz;
 
                     methods = clazz.getDeclaredMethods();
                    
@@ -389,7 +392,7 @@ public class MethodsManager extends javax.swing.JInternalFrame {
 
                 if (!method.toString().contains(" native ")){
 
-                nombre = getNombreDefinido(method);
+                nombre = getNombreDefinido(method, claseActual);
 
                 nameMethods.add(nombre);
                 }
@@ -404,7 +407,7 @@ public class MethodsManager extends javax.swing.JInternalFrame {
 
 
                 if (!method.toString().contains(" native ")) {
-                    nombre = getNombreDefinido(method);
+                    nombre = getNombreDefinido(method, claseActual);
 
 
                     if (nameMethods.contains(nombre) == false) {
@@ -459,13 +462,7 @@ public class MethodsManager extends javax.swing.JInternalFrame {
 
         ArrayList<String> metodosDerecha = new ArrayList<String>();
 
-
         ArrayList<Method> metodosTodos = new ArrayList<Method>();
-
-
-
-
-       
 
         metodosDerecha = this.getMetodosDerecha();
 
@@ -473,45 +470,84 @@ public class MethodsManager extends javax.swing.JInternalFrame {
 
 
         for (Class clazz : clases) {
-            
-            metodosTodos.addAll(Arrays.asList(clazz.getDeclaredMethods()));
 
-            for (Method method : clazz.getMethods()){
+         for (String str : metodosDerecha){
 
-                if (metodosTodos.contains(method) == false){
-                    metodosTodos.add(method);
-                }
-            }
+             String claseImplementacion[] = str.split(" ");
 
+             if (claseImplementacion[0].equals(clazz.getName())){
+
+                 String metodoNombre = getMetodoNombre(str);
+
+                 for (Method method : clazz.getMethods()){
+
+                     if (metodoNombre.equals(method.getName())){
+
+                         int argCant = getArgumentosCantidad(str);
+
+                         if(argCant == method.getParameterTypes().length){
+                             metodos.add(method);
+                         }
+                     }
+                 }
+
+
+
+             }
+         }
            
         }
-
-        
-        for (String str : metodosDerecha){
-            
-           for (Method method : metodosTodos){
-               String[] nombre = str.split("\\(");
-
-               String claseDeclaracion = method.getDeclaringClass().getName();
-               
-               if (nombre[0].equals(method.getName()) == true && classList.getSelectedValue().toString().equals(claseDeclaracion)){
-                   metodos.add(method);
-               }
-               
-           }
-        }
-
-
-
-
-
 
         return metodos;
     }
 
-    private String getNombreDefinido(Method method){
+    private int getArgumentosCantidad(String metodo){
 
-        String metodo = method.getName();
+        int cantidad = 0;
+
+
+       
+        String[] cadena = metodo.split("\\(");
+
+        if (cadena[1] != ")" && cadena[1] != null){
+
+
+        String c = cadena[1];
+
+        if (!c.contains("\\,")){
+            cantidad = 1;
+        }
+        else{
+            String[] args = c.split("\\,");
+
+            cantidad = args.length;
+        }
+
+
+        
+
+        }
+        
+
+        
+        
+
+        return cantidad;
+
+
+    }
+
+    private String getMetodoNombre(String metodo){
+
+        String[] cadena = metodo.split("\\(");
+        String[] cadena2 = cadena[0].split(" ");
+
+        return cadena2[1];
+    }
+
+    private String getNombreDefinido(Method method, Class claseImplementacion){
+
+        String metodo = claseImplementacion.getName() +" "+ method.getName();
 
         String campos = "(";
 
