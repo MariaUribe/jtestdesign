@@ -858,9 +858,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
             model = (DefaultTableModel) tablaVariables.getModel();
 
             tablaArgumentos.setValueAt(listWidget.getMapaInstancia().getMapa().getClass().getName()
-                    + "<" + listWidget.getMapaInstancia().getClaseKey().getName() + "," +
-                    listWidget.getMapaInstancia().getClaseValue().getName() + ">", 
-                    tablaArgumentos.getSelectedRow(), 0);
+                    , tablaArgumentos.getSelectedRow(), 0);
 
 
             listWidget.getMapaInstancia().setNombreMapa("mapa" + mapaId);
@@ -891,8 +889,8 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
             model = (DefaultTableModel) tablaVariables.getModel();
 
-            tablaArgumentos.setValueAt(listWidget.getColeccionInstancia().getColeccionInstancia().getClass().getName() +
-                    "<" + listWidget.getColeccionInstancia().getTipoDatoColeccion() + ">"
+            tablaArgumentos.setValueAt(listWidget.getColeccionInstancia().getColeccionInstancia().getClass().getName()
+                    
                     , tablaArgumentos.getSelectedRow(), 0);
 
             Method method = this.getActualMethod();
