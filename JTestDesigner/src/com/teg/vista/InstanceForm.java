@@ -222,13 +222,13 @@ public class InstanceForm extends javax.swing.JDialog {
         metawidget.setMetawidgetLayout(new TabbedPaneLayoutDecorator(layoutConfig));
 
         metawidget.setInspector(new CompositeInspector(inspectorConfig));
-        metawidget.setPreferredSize(new java.awt.Dimension(600, 600));
+        metawidget.setPreferredSize(new java.awt.Dimension(700, 700));
 
         metawidget.setToInspect(instance);
 
         objectContainer.add(metawidget);
 
-        objectContainer.repaint();
+        
     }
 
     private void initComponentsAbstract() {
@@ -388,7 +388,7 @@ public class InstanceForm extends javax.swing.JDialog {
 
         setTitle("Editor de Objetos");
 
-        setSize(500, 500);
+        setSize(700, 700);
     }
 
     private void initComponents2() {
