@@ -857,7 +857,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
             model = (DefaultTableModel) tablaVariables.getModel();
 
-            tablaArgumentos.setValueAt(listWidget.getMapaInstancia().getMapa().getClass().getSimpleName()
+            tablaArgumentos.setValueAt(listWidget.getMapaInstancia().getMapa().getClass().getName()
                     + "<" + listWidget.getMapaInstancia().getClaseKey().getName() + "," +
                     listWidget.getMapaInstancia().getClaseValue().getName() + ">", 
                     tablaArgumentos.getSelectedRow(), 0);
@@ -873,8 +873,8 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
             mapas.add(this.getActualMethod().getName());
 
-            mapas.add("<" + listWidget.getMapaInstancia().getClaseKey().getSimpleName()
-                    + "," + listWidget.getMapaInstancia().getClaseValue().getSimpleName() + ">");
+            mapas.add("<" + listWidget.getMapaInstancia().getClaseKey().getName()
+                    + "," + listWidget.getMapaInstancia().getClaseValue().getName() + ">");
 
             model.addRow(mapas);
 
@@ -891,7 +891,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
             model = (DefaultTableModel) tablaVariables.getModel();
 
-            tablaArgumentos.setValueAt(listWidget.getColeccionInstancia().getColeccionInstancia().getClass().getSimpleName() +
+            tablaArgumentos.setValueAt(listWidget.getColeccionInstancia().getColeccionInstancia().getClass().getName() +
                     "<" + listWidget.getColeccionInstancia().getTipoDatoColeccion() + ">"
                     , tablaArgumentos.getSelectedRow(), 0);
 
