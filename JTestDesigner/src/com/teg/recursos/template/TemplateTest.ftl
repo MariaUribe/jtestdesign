@@ -75,7 +75,7 @@ public class ${claseTemplate.nombreClase} {
     }
 
     @BeforeClass
-    public void setUp(){
+    public void setUp() throws Exception {
     <#list clasesNoRepetidas as clase>
         ${clase.simpleNombre?uncap_first} = new ${clase.nombre}();
     </#list>
@@ -144,7 +144,7 @@ public class ${claseTemplate.nombreClase} {
     }
 
     @AfterClass
-    public void tearDown() {
+    public void tearDown() throws Exception {
     }
 
     <#list casoPrueba.escenariosPrueba as escenario>
