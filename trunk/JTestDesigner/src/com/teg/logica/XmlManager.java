@@ -125,7 +125,7 @@ public class XmlManager {
      * @param nombreCasoPrueba el nombre del caso de prueba a crear
      * @param metodos los metodos a setear al caso de prueba
      */
-    public CasoPrueba crearCasoPrueba(String nombreCasoPrueba, ArrayList<EscenarioPrueba> escenarios, ArrayList<MockObject> mockObjects) {
+    public CasoPrueba crearCasoPrueba(String nombreCasoPrueba, ArrayList<EscenarioPrueba> escenarios, ArrayList<MockObject> mockObjects, boolean hasMock) {
 
         CasoPrueba casoPrueba = new CasoPrueba(nombreCasoPrueba);
         CodeGenerator cg = new CodeGenerator();
@@ -139,9 +139,8 @@ public class XmlManager {
                 System.getProperty("file.separator") + "metadata" +
                 System.getProperty("file.separator"));
 
-        //casoPrueba.setNombrePaquete("com.test.prueba");
         casoPrueba.setEscenariosPrueba(escenarios);
-        casoPrueba.setMock(true);
+        casoPrueba.setMock(hasMock);
 
         if(!mockObjects.isEmpty()){
             casoPrueba.setMockObjects(mockObjects);

@@ -2346,7 +2346,7 @@ public class InstanceListForm extends javax.swing.JDialog {
     }
 
     public void crearXML(Collection coleccion, String casoPrueba) {
-        System.out.println("entro en crear XML");
+        
         try {
             coleccionId++;
             File casoPruebaFile = new File(System.getProperty("user.home")

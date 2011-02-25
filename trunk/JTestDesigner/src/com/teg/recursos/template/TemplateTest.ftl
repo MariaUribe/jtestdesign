@@ -12,9 +12,9 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 <#assign hasMock = casoPrueba.mock />
 <#if hasMock>
+
 import org.jmock.Mockery;
 import org.jmock.Expectations;
 import org.jmock.integration.junit4.JUnit4Mockery;
@@ -63,7 +63,6 @@ public class ${claseTemplate.nombreClase} {
 <#if hasMock>
     private Mockery jmockContext;
 <#list casoPrueba.mockObjects as mockObject>
-    private ${mockObject.metodoSet.clase.nombre} ${mockObject.nombreVar?uncap_first};
     <#assign metodo = mockObject.metodoSet />
     <#list metodo.argumentos as arg>
     private ${arg.tipo} ${arg.nombre?uncap_first}; 
@@ -89,7 +88,6 @@ public class ${claseTemplate.nombreClase} {
     <#if metodo.assertLinea??>
         <#assign generarXstreamAssert = metodo.assertLinea.generarXstream />
         <#assign esComplejoAssert = metodo.assertLinea.complejo />
-    </#if>
     <#if esComplejoAssert && generarXstreamAssert>
         <#assign miCountAssert = miCountAssert + 1 />
         <#if miCountAssert==1 ><#assign imprimirAssert = true />
@@ -99,6 +97,7 @@ public class ${claseTemplate.nombreClase} {
         <#assign rutaAssert = codeManager.getRuta(casoPrueba, metodo.assertLinea.valorAssert) />
             InputStream inputStream${miCountAssert} = new FileInputStream("${rutaAssert}");
             ${metodo.assertLinea.valorAssert} = (${metodo.assertLinea.tipoDatoAssert}) xstream.fromXML(inputStream${miCountAssert});
+    </#if>
     </#if>
 
     <#list metodo.argumentos as arg>
@@ -123,17 +122,20 @@ public class ${claseTemplate.nombreClase} {
             Logger.getLogger(${claseTemplate.nombreClase}.class.getName()).log(Level.SEVERE, null, ex);
         }
     </#if>
-    <#if hasMock>
+<#if hasMock>
         jmockContext = new JUnit4Mockery();
     <#list casoPrueba.mockObjects as mockObject>
-        ${mockObject.nombreVar?uncap_first} = new ${mockObject.metodoSet.clase.nombre}();
+    <#assign imprimirMock = mockObject.imprimirMock />
+    <#if imprimirMock>
         <#assign metodo = mockObject.metodoSet />
         <#list metodo.argumentos as arg>
         ${arg.nombre?uncap_first} = jmockContext.mock(${arg.tipo}.class);
         ${mockObject.nombreVar?uncap_first}.${mockObject.metodoSet.nombre}(${arg.nombre?uncap_first});
         </#list>
-    </#list>
     </#if>
+    </#list>
+</#if>
+
     <#list casoPrueba.mockObjects as mockObject>
     <#assign imprimirMock = mockObject.imprimirMock />
     <#if !imprimirMock>
@@ -145,6 +147,9 @@ public class ${claseTemplate.nombreClase} {
 
     @AfterClass
     public void tearDown() throws Exception {
+    <#list clasesNoRepetidas as clase>
+        ${clase.simpleNombre?uncap_first} = null;
+    </#list>
     }
 
     <#list casoPrueba.escenariosPrueba as escenario>
