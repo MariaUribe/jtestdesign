@@ -8,7 +8,6 @@ import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -169,19 +168,18 @@ public class Inicio extends javax.swing.JFrame {
     private void anadirJarAlClasspathActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_anadirJarAlClasspathActionPerformed
 
         JFileChooser fc = new JFileChooser();
+        fc.setMultiSelectionEnabled(true);
         fc.addChoosableFileFilter(new Extension());
         int returnVal = fc.showOpenDialog(Inicio.this);
 
         if (returnVal == JFileChooser.APPROVE_OPTION) {
 
-            File jarFile = fc.getSelectedFile();
-            String jarString = jarFile.getPath();
-            File jar = new File(jarString);
-            this.copyToLib(jar);
-            this.jarsRuta.add(jar);
+            File[] jarFiles = fc.getSelectedFiles();
+            for (File jar : jarFiles) {
+                this.copyToLib(jar);
+                this.jarsRuta.add(jar);
+            }
             this.setJarsRuta(jarsRuta);
-            //this.nombresJar.add(jar.getName());
-            //this.classManager.getJarLista().setListData(nombresJar.toArray());
         }
 
     }//GEN-LAST:event_anadirJarAlClasspathActionPerformed
@@ -190,10 +188,10 @@ public class Inicio extends javax.swing.JFrame {
 
         this.setVisible(false);
         this.dispose();
-        
+
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
-    public File getJava(String nombreCasoPrueba){
+    public File getJava(String nombreCasoPrueba) {
         File javaTest = null;
 
         File miCasoPrueba = new File(System.getProperty("user.home")
@@ -215,7 +213,7 @@ public class Inicio extends javax.swing.JFrame {
         File java = new File(paquete.getPath()
                 + System.getProperty("file.separator") + nombreCasoPrueba
                 + ".java");
-        
+
         javaTest = new File(java.getPath());
 
         return javaTest;
@@ -233,7 +231,7 @@ public class Inicio extends javax.swing.JFrame {
 
         String srcFile = jar.getPath();
         String dstFile = lib.getPath() + System.getProperty("file.separator") + jar.getName();
-        
+
         try {
             FileUtils.copyFile(new File(srcFile), new File(dstFile));
         } catch (IOException ex) {
@@ -455,7 +453,7 @@ public class Inicio extends javax.swing.JFrame {
         return clases;
     }
 
-    public ArrayList<Class> obtenerClasesJars(){
+    public ArrayList<Class> obtenerClasesJars() {
 
         ArrayList<Class> clases = classManager.obtenerClasesJar();
 

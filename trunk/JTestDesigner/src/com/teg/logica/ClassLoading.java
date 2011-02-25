@@ -57,12 +57,11 @@ public class ClassLoading {
         for (int i = 0; i < clases.size(); i++) {
             int pointIndex = clases.get(i).toString().lastIndexOf(".");
             String nombreClase = (String) clases.get(i).toString().subSequence(0, pointIndex);
-
-            clazz = loader.loadClass(nombreClase);
+            try {
+                clazz = loader.loadClass(nombreClase);
+            } catch (Exception e) {
+            }
             clasesJar.add(clazz);
-//            this.printMembers(clazz.getDeclaredConstructors(), "Constuctors");
-//            this.printMembers(clazz.getDeclaredFields(), "Fields");
-//            this.printMembers(clazz.getDeclaredMethods(), "Methods");
         }
         return clasesJar;
     }
