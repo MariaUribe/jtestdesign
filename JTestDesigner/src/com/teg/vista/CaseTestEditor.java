@@ -3304,14 +3304,10 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
         ArrayList<Argumento> argumentos = new ArrayList<Argumento>();
         Class[] parametros = method.getParameterTypes();
 
-
-
         for (Class clazz : parametros) {
 
             Argumento argumento = new Argumento();
             argumento.setNombre("arg" + contSimple);
-
-
 
             if (clazz.isArray()) {
                 String clase = this.classNameArray(tablaArgumentos.getValueAt(contFila, 0).toString());
@@ -3340,24 +3336,15 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
                 String[] arregloCampos = clazz.getName().split("\\.");
                 String primerCampo = arregloCampos[0];
 
-                // quede aqui
-
-
                 if (primerCampo.equals("java")) {
+
                     boolean isCollection;
-
-
                     boolean isMap;
-
 
                     try {
                         Class myClass = Class.forName(argumento.getTipo());
                         isCollection = Collection.class.isAssignableFrom(myClass);
                         isMap = Map.class.isAssignableFrom(myClass);
-
-
-
-
 
                         if (isCollection) {
                             argumento.setValor("coleccion" + contColeccion);
@@ -3365,6 +3352,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
                             argumento.setArreglo(false);
                             argumento.setMapa(false);
                             argumento.setGenerarXstream(true);
+                            contColeccion++;
 
                         } else if (isMap) {
                             argumento.setValor("mapa" + contMapa);
@@ -3372,6 +3360,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
                             argumento.setArreglo(false);
                             argumento.setMapa(true);
                             argumento.setGenerarXstream(true);
+                            contMapa++;
 
                         } else {
                             argumento.setValor(tablaArgumentos.getValueAt(contSimple - 1, 1).toString());
@@ -3382,16 +3371,14 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
                         Logger.getLogger(CaseTestEditor.class.getName()).log(Level.SEVERE, null, ex);
                     }
 
-
                 } else {
-                    //if startswitd 'var tablaArgumentos.getValueAt(contSimple - 1, 1).toString()
+
                     if (clazz.isArray()) {
                         valorComplejo = "arreglo" + contArreglo;
                         argumento.setValor(valorComplejo);
                         argumento.setComplejo(true);
                         argumento.setGenerarXstream(true);
-
-
+                        contArreglo++;
 
                     } else {
                         valorComplejo = "object" + contObject;
@@ -3400,7 +3387,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
                         argumento.setArreglo(false);
                         argumento.setMapa(false);
                         argumento.setGenerarXstream(true);
-
+                        contObject++;
 
                     }
                 }
@@ -3409,61 +3396,37 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
                 argumento.setComplejo(false);
                 argumento.setGenerarXstream(false);
 
-
             }
 
-            // if(tablaArgumentos.getValueAt(contSimple - 1, 1).toString().startsWith("var")){
             if (tablaArgumentos.getValueAt(contSimple - 1, 1).toString().startsWith("resultado")) {
                 argumento.setValor(tablaArgumentos.getValueAt(contSimple - 1, 1).toString());
                 argumento.setGenerarXstream(false);
-
-
             }
 
-            System.out.println("ARGUMENTO ACTUAL, tipo: " + argumento.getTipo()
-                    + " valor: " + argumento.getValor()
-                    + " complejo?: " + argumento.isComplejo());
+//            System.out.println("ARGUMENTO ACTUAL, tipo: " + argumento.getTipo()
+//                    + " valor: " + argumento.getValor()
+//                    + " complejo?: " + argumento.isComplejo());
             argumentos.add(argumento);
 
             contSimple++;
-
             contFila++;
-
-            contObject++;
-
-            contColeccion++;
-
-            contMapa++;
-
-            contArreglo++;
-
+            
         }
 
-
         return argumentos;
-
-
-    }
+}
 
     public File getMethodHTML(ArrayList<File> archivos, String className) {
 
         File archivo = null;
 
-
-
         for (File file : archivos) {
             if (file.getName().equals(className + ".html")) {
                 archivo = file;
-
-
                 return archivo;
-
-
             }
         }
         return archivo;
-
-
     }
 
     public void javaDocPanel(String className, String methodName, ArrayList<File> archivos) {

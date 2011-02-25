@@ -19,6 +19,7 @@ import com.teg.dominio.MockObject;
 import com.teg.dominio.Retorno;
 import com.teg.logica.XmlManager;
 import com.teg.util.EscenarioPersonalizado;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -28,13 +29,15 @@ import java.util.ArrayList;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 import javax.swing.*;
 import javax.swing.JEditorPane;
+import javax.swing.border.Border;
+import javax.swing.table.DefaultTableColumnModel;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 import javax.swing.text.EditorKit;
 import javax.swing.text.StyledEditorKit;
 
@@ -127,7 +130,7 @@ public class DependenciesEditor extends javax.swing.JInternalFrame {
         titulo.add(dependencias);
 
         JPanel botonPanel = new JPanel();
-        botonPanel.setPreferredSize(new Dimension(650, 300));
+        botonPanel.setPreferredSize(new Dimension(700, 50));
         botonPanel.setLayout(flowLayout);
         botonPanel.add(atras);
         botonPanel.add(finalizar);
@@ -141,34 +144,84 @@ public class DependenciesEditor extends javax.swing.JInternalFrame {
             Class[] paramArreglo = metodoSetSelected.getParameterTypes();
             Class parametro = paramArreglo[0];
 
-            String claseSimpleName = metodoSetSelected.getDeclaringClass().getSimpleName();
-            String nombreVariable = claseSimpleName + idMock;
-            String nombreVar = StringUtils.uncapitalize(nombreVariable);
+            //String claseSimpleName = metodoSetSelected.getDeclaringClass().getName();
+            //String nombreVariable = claseSimpleName + idMock;
+            //String nombreVar = StringUtils.uncapitalize(nombreVariable);
 
-            String metodo = metodoSetSelected.getName() + "(" + StringUtils.uncapitalize(parametro.getSimpleName()) + idMock + ")";
-            //String objeto = nombreVar;
+            String claseNombre = metodoSetSelected.getDeclaringClass().getName();
+            String metodo = metodoSetSelected.getName() + "(" + parametro.getName() + " " + StringUtils.uncapitalize(parametro.getSimpleName()) + ")";
 
             String objetoMock = "<HTML><BR><strong>Objeto Mock: </strong>jmockContext</HTML>";
-            //String metodoObjeto = "<HTML><strong>Método: </strong>" + metodo + "<BR><BR><strong>Objeto Inyectado: </strong>" + objeto + "<BR><BR></HTML>";
+            String clase = "<HTML><strong>Clase: </strong>" + claseNombre + "</HTML>";
             String metodoObjeto = "<HTML><strong>Método: </strong>" + metodo + "</HTML>";
-            String escenarios = "<HTML><BR>Seleccione el escenario donde se introducirá el código:<BR></HTML>";
-            String codigo = "<HTML><BR>Código:<BR><BR></HTML>";
-            String dependencia = "<HTML><BR>Seleccione el manejo de dependencias:<BR></HTML>";
             String objetosCreados = "<HTML>Lista de objetos creados en el caso de prueba:<BR></HTML>";
 
+            String dependencia = "<HTML><BR>Seleccione el manejo de dependencias:<BR></HTML>";
+
+            String escenarios = "<HTML><BR>Seleccione el escenario donde se introducirá el código:<BR></HTML>";
+
+            String codigo = "<HTML><BR>Código:<BR><BR></HTML>";
+
+
             MyComboBox myComboBox = new MyComboBox(idEscenario);
-            MyComboBoxObjetos myComboBoxObjetos = new MyComboBoxObjetos(this.getObjetosCreados(myComboBox.getSelectedItem().toString()));
-            MyEditorPane myEditorPane = new MyEditorPane();
+            ArrayList<String> objetosCreadosList = this.getObjetosCreados(myComboBox.getSelectedItem().toString());
+            MyComboBoxObjetos myComboBoxObjetos = new MyComboBoxObjetos(objetosCreadosList);
+
+            DefaultTableModel modelo = new DefaultTableModel();
+            MyTable myTable = new MyTable(modelo);
+
+            modelo.addColumn("etiqueta columna 1");
+            modelo.addColumn("etiqueta columna 2");
+            modelo.setNumRows(objetosCreadosList.size());
+            modelo.setValueAt("nuevo valor1", 0, 0); // Cambia el valor de la fila 1, columna 1.
+            modelo.setValueAt("nuevo valor2", 0, 1); // Cambia el valor de la fila 1, columna 2.
+
+            JTableHeader tableHeader = new JTableHeader();
+            TableColumnModel tcm = new DefaultTableColumnModel();
+
+            TableColumn columnaTipo = new TableColumn();
+            columnaTipo.setHeaderValue("TIPO");
+            tcm.addColumn(columnaTipo);
+
+            TableColumn columnaValor = new TableColumn();
+            columnaValor.setHeaderValue("VALOR");
+            tcm.addColumn(columnaValor);
+
+            tableHeader.setColumnModel(tcm);
+            myTable.setTableHeader(tableHeader);
+
+//            for (int i = 0; i < objetosCreadosList.size(); i++) {
+//                //if (i == 0) {
+////                    myTable.setValueAt("Tipo", i, 0);
+////                    myTable.setValueAt("Valor", i, 1);
+//
+//                //} else {
+//                String[] lineaArg = objetosCreadosList.get(i).split(" ");
+//
+//                String argTipo = lineaArg[0].toString();
+//                String argValor = lineaArg[1].toString();
+//
+//                myTable.setValueAt(argTipo, i, 0);
+//                myTable.setValueAt(argValor, i, 1);
+//                // }
+//            }
+            JTableHeader header = myTable.getTableHeader();
+            header.setBackground(Color.yellow);
+
             MyRadioButton radioMock = new MyRadioButton("Inyección con JMock", idEscenario);
             radioMock.setSelected(true);
             MyRadioButton radioOtro = new MyRadioButton("Código Personalizado", idEscenario);
             grupoRadios.add(radioMock);
             grupoRadios.add(radioOtro);
 
+            MyEditorPane myEditorPane = new MyEditorPane();
+
             scrollPaneContent.add(new MyLabel(objetoMock, false));
+            scrollPaneContent.add(new MyLabel(clase, false));
             scrollPaneContent.add(new MyLabel(metodoObjeto, false));
             scrollPaneContent.add(new MyLabel(objetosCreados, true));
             scrollPaneContent.add(myComboBoxObjetos);
+            scrollPaneContent.add(myTable);
 
             scrollPaneContent.add(new MyLabel(dependencia, true));
             scrollPaneContent.add(radioMock);
@@ -176,7 +229,7 @@ public class DependenciesEditor extends javax.swing.JInternalFrame {
 
             scrollPaneContent.add(new MyLabel(escenarios, true));
             scrollPaneContent.add(myComboBox);
-            
+
             scrollPaneContent.add(new MyLabel(codigo, true));
             scrollPaneContent.add(new ScrollEditorPane(myEditorPane));
             scrollPaneContent.add(new MySpaceLabel());
@@ -199,25 +252,21 @@ public class DependenciesEditor extends javax.swing.JInternalFrame {
     }
 
     private void finalizarButtonActionPerformed() {
-        // generacion de codigo
 
-        //ArrayList<String> escenarios = new ArrayList<String>();
         ArrayList<EscenarioPersonalizado> escenarios = new ArrayList<EscenarioPersonalizado>();
         ArrayList<String> codigos = new ArrayList<String>();
 
         Component[] componentes = scrollPaneContent.getComponents();
 
         for (Component componente : componentes) {
-            Boolean escenarioHabilitado = Boolean.FALSE;
 
             if (componente.getName().startsWith("escenarios")) {
                 JComboBox comboBox = (JComboBox) componente;
+
                 if (componente.isEnabled()) {
-                    escenarioHabilitado = Boolean.TRUE;
-                    escenarios.add(new EscenarioPersonalizado(comboBox.getSelectedItem().toString(), escenarioHabilitado));
+                    escenarios.add(new EscenarioPersonalizado(comboBox.getSelectedItem().toString(), Boolean.TRUE));
                 } else {
-                    escenarioHabilitado = Boolean.FALSE;
-                    escenarios.add(new EscenarioPersonalizado(comboBox.getSelectedItem().toString(), escenarioHabilitado));
+                    escenarios.add(new EscenarioPersonalizado(comboBox.getSelectedItem().toString(), Boolean.FALSE));
                 }
             }
 
@@ -234,7 +283,6 @@ public class DependenciesEditor extends javax.swing.JInternalFrame {
                     }
                 }
             }
-
         }
 
         int cont = 0;
@@ -242,26 +290,21 @@ public class DependenciesEditor extends javax.swing.JInternalFrame {
 
         for (Method metodoSetSelected : metodosSetSeleccionados) {
 
-            Class[] paramArreglo = metodoSetSelected.getParameterTypes();
-            Class parametro = paramArreglo[0];
-
-            String parametroCompleto = parametro.getName();
-            String parametroSimple = parametro.getSimpleName();
+            //Class[] paramArreglo = metodoSetSelected.getParameterTypes();
 
             String claseName = metodoSetSelected.getDeclaringClass().getName();
             String claseSimpleName = metodoSetSelected.getDeclaringClass().getSimpleName();
 
-            //ClaseTest clase = new ClaseTest(parametroCompleto, parametroSimple);
             ClaseTest clase = new ClaseTest(claseName, claseSimpleName);
 
-            String nombreVar = claseSimpleName + idVariable;
+            String nombreVar = claseSimpleName;
 
             Metodo metodoSet = new Metodo(metodoSetSelected.getName(), clase);
             ArrayList<Argumento> argumentos = new ArrayList<Argumento>();
             Class[] parameters = metodoSetSelected.getParameterTypes();
 
             for (Class param : parameters) {
-                argumentos.add(new Argumento(param.getSimpleName() + idVariable, param.getName(), null, false, false, false));
+                argumentos.add(new Argumento(param.getSimpleName(), param.getName(), null, false, false, false));
             }
             metodoSet.setArgumentos(argumentos);
             metodoSet.setNombre(metodoSetSelected.getName());
@@ -276,20 +319,21 @@ public class DependenciesEditor extends javax.swing.JInternalFrame {
 
         Boolean flag = false;
         for (EscenarioPersonalizado escenario : escenarios) {
+
             if (escenario.getEscenarioHabilitado()) {
                 flag = true;
                 break;
             }
         }
 
-        boolean hasMock = flag;
+        Boolean hasMock = flag;
 
         casoPrueba.setMock(hasMock);
         casoPrueba.setMockObjects(mockObjects);
 
         XmlManager xmlManager = new XmlManager();
         xmlManager.setInicio(inicio);
-        xmlManager.crearCasoPrueba(this.inicio.getNombreCasoPrueba(), casoPrueba.getEscenariosPrueba(), mockObjects);
+        xmlManager.crearCasoPrueba(this.inicio.getNombreCasoPrueba(), casoPrueba.getEscenariosPrueba(), mockObjects, hasMock);
     }
 
     public ArrayList<String> getObjetosCreados(String escenarioDePrueba) {
@@ -501,9 +545,28 @@ public class DependenciesEditor extends javax.swing.JInternalFrame {
         public MyEditorPane() {
 
             setName("codigo");
-            setPreferredSize(new Dimension(480, 250));
+            setPreferredSize(new Dimension(480, 120));
             setContentType("text/x-java");
             setVisible(true);
+
+            pack();
+        }
+    }
+
+    private class MyTable extends JTable {
+
+        public MyTable(DefaultTableModel modelo) {
+            setName("tabla");
+            setPreferredSize(new Dimension(480, 100));
+            setVisible(true);
+
+            Border line = BorderFactory.createLineBorder(Color.black);
+            setBorder(line);
+            setSelectionMode(0);
+            setGridColor(Color.black);
+            setRowHeight(50);
+            setLocation(20, 40);
+            setModel(modelo);
 
             pack();
         }
@@ -526,7 +589,7 @@ public class DependenciesEditor extends javax.swing.JInternalFrame {
         contentPane.setLayout(contentPaneLayout);
         contentPaneLayout.setHorizontalGroup(
             contentPaneLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 628, Short.MAX_VALUE)
+            .add(0, 651, Short.MAX_VALUE)
         );
         contentPaneLayout.setVerticalGroup(
             contentPaneLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
