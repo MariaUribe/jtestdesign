@@ -1508,7 +1508,9 @@ public class InstanceListForm extends javax.swing.JDialog {
 
                 for (Class class1 : clasesJars){
 
-                    if (class1.getSuperclass().equals(clase)){
+                    Class superClase = class1.getSuperclass();
+
+                    if (superClase.getName().equals(clase.getName())){
                         clases.add(class1);
                     }
                 }
