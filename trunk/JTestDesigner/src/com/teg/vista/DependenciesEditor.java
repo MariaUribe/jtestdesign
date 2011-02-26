@@ -10,6 +10,7 @@
  */
 package com.teg.vista;
 
+import com.sun.tools.internal.xjc.model.CArrayInfo;
 import com.teg.dominio.Argumento;
 import com.teg.dominio.CasoPrueba;
 import com.teg.dominio.ClaseTest;
@@ -28,6 +29,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 import java.awt.FlowLayout;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -59,6 +61,7 @@ public class DependenciesEditor extends javax.swing.JInternalFrame {
     private Inicio inicio;
     private JPanel scrollPaneContent;
     private JScrollPane scrollPane;
+    private JPanel botonPanel = new JPanel();
     private java.util.List<ClassMember> metodosTodos;
 
     /** Creates new form DependenciesEditor */
@@ -133,11 +136,10 @@ public class DependenciesEditor extends javax.swing.JInternalFrame {
         titulo.setLayout(new FlowLayout());
         titulo.add(dependencias);
 
-        JPanel botonPanel = new JPanel();
-        botonPanel.setPreferredSize(new Dimension(700, 50));
-        botonPanel.setLayout(flowLayout);
-        botonPanel.add(atras);
-        botonPanel.add(finalizar);
+        getBotonPanel().setPreferredSize(new Dimension(700, 50));
+        getBotonPanel().setLayout(flowLayout);
+        getBotonPanel().add(atras);
+        getBotonPanel().add(finalizar);
 
         int idEscenario = 1;
         int idMock = 1;
@@ -148,17 +150,13 @@ public class DependenciesEditor extends javax.swing.JInternalFrame {
             Class[] paramArreglo = metodoSetSelected.getParameterTypes();
             Class parametro = paramArreglo[0];
 
-            //String claseSimpleName = metodoSetSelected.getDeclaringClass().getName();
-            //String nombreVariable = claseSimpleName + idMock;
-            //String nombreVar = StringUtils.uncapitalize(nombreVariable);
-
-            String claseNombre = metodoSetSelected.getDeclaringClass().getName();
+            String claseNombre = metodoSetSelected.getDeclaringClass().getName() + " " + StringUtils.uncapitalize(metodoSetSelected.getDeclaringClass().getSimpleName());
             String metodo = metodoSetSelected.getName() + "(" + parametro.getName() + " " + StringUtils.uncapitalize(parametro.getSimpleName()) + ")";
 
             String objetoMock = "<HTML><BR><strong>Objeto Mock: </strong>jmockContext</HTML>";
             String clase = "<HTML><strong>Clase: </strong>" + claseNombre + "</HTML>";
             String metodoObjeto = "<HTML><strong>Método: </strong>" + metodo + "</HTML>";
-            String objetosCreados = "<HTML>Lista de objetos creados en el caso de prueba:<BR></HTML>";
+            String objetosCreados = "<HTML><BR>Lista de objetos creados en el caso de prueba:<BR></HTML>";
 
             String dependencia = "<HTML><BR>Seleccione el manejo de dependencias:<BR></HTML>";
 
@@ -167,50 +165,14 @@ public class DependenciesEditor extends javax.swing.JInternalFrame {
             String codigo = "<HTML><BR>Código:<BR><BR></HTML>";
 
 
-            MyComboBox myComboBox = new MyComboBox(idEscenario);
+            MyComboBox myComboBox = new MyComboBox(idEscenario, this);
             ArrayList<String> objetosCreadosList = this.getObjetosCreados(myComboBox.getSelectedItem().toString());
-            MyComboBoxObjetos myComboBoxObjetos = new MyComboBoxObjetos(objetosCreadosList);
-
-            DefaultTableModel modelo = new DefaultTableModel();
-            MyTable myTable = new MyTable(modelo);
-
-            modelo.addColumn("etiqueta columna 1");
-            modelo.addColumn("etiqueta columna 2");
-            modelo.setNumRows(objetosCreadosList.size());
-            modelo.setValueAt("nuevo valor1", 0, 0); // Cambia el valor de la fila 1, columna 1.
-            modelo.setValueAt("nuevo valor2", 0, 1); // Cambia el valor de la fila 1, columna 2.
-
-            JTableHeader tableHeader = new JTableHeader();
-            TableColumnModel tcm = new DefaultTableColumnModel();
-
-            TableColumn columnaTipo = new TableColumn();
-            columnaTipo.setHeaderValue("TIPO");
-            tcm.addColumn(columnaTipo);
-
-            TableColumn columnaValor = new TableColumn();
-            columnaValor.setHeaderValue("VALOR");
-            tcm.addColumn(columnaValor);
-
-            tableHeader.setColumnModel(tcm);
-            myTable.setTableHeader(tableHeader);
-
-//            for (int i = 0; i < objetosCreadosList.size(); i++) {
-//                //if (i == 0) {
-////                    myTable.setValueAt("Tipo", i, 0);
-////                    myTable.setValueAt("Valor", i, 1);
-//
-//                //} else {
-//                String[] lineaArg = objetosCreadosList.get(i).split(" ");
-//
-//                String argTipo = lineaArg[0].toString();
-//                String argValor = lineaArg[1].toString();
-//
-//                myTable.setValueAt(argTipo, i, 0);
-//                myTable.setValueAt(argValor, i, 1);
-//                // }
-//            }
-            JTableHeader header = myTable.getTableHeader();
-            header.setBackground(Color.yellow);
+            
+            JPanel tablaPanel = new JPanel();
+            tablaPanel.setName("tablaPanel" + idEscenario);
+            JScrollPane scrollTable = this.llenarTabla(objetosCreadosList, idEscenario);
+            scrollTable.setName("scrollTabla" + idEscenario);
+            tablaPanel.add(scrollTable);
 
             MyRadioButton radioMock = new MyRadioButton("Inyección con JMock", idEscenario);
             radioMock.setSelected(true);
@@ -223,16 +185,17 @@ public class DependenciesEditor extends javax.swing.JInternalFrame {
             scrollPaneContent.add(new MyLabel(objetoMock, false));
             scrollPaneContent.add(new MyLabel(clase, false));
             scrollPaneContent.add(new MyLabel(metodoObjeto, false));
+
+            scrollPaneContent.add(new MyLabel(escenarios, true));
+            scrollPaneContent.add(myComboBox);
+
             scrollPaneContent.add(new MyLabel(objetosCreados, true));
-            scrollPaneContent.add(myComboBoxObjetos);
-            scrollPaneContent.add(myTable);
+            scrollPaneContent.add(tablaPanel);
 
             scrollPaneContent.add(new MyLabel(dependencia, true));
             scrollPaneContent.add(radioMock);
             scrollPaneContent.add(radioOtro);
 
-            scrollPaneContent.add(new MyLabel(escenarios, true));
-            scrollPaneContent.add(myComboBox);
 
             scrollPaneContent.add(new MyLabel(codigo, true));
             scrollPaneContent.add(new ScrollEditorPane(myEditorPane));
@@ -245,9 +208,66 @@ public class DependenciesEditor extends javax.swing.JInternalFrame {
         contentPane.add(titulo);
         this.setPreferredSize(new Dimension(650, 700));
         add(scrollPane, "grow");
-        contentPane.add(botonPanel);
+        contentPane.add(getBotonPanel());
 
         pack();
+    }
+
+    public JScrollPane llenarTabla(ArrayList<String> objetosCreadosList, int idEscenario) {
+
+        DefaultTableModel modelo = new DefaultTableModel();
+        MyTable myTable = new MyTable(modelo, idEscenario);
+        // myTable.setName("tabla");
+        myTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+
+        modelo.setRowCount(objetosCreadosList.size());
+
+        JScrollPane scrollTable = new JScrollPane(myTable);
+        scrollTable.setName("scrollTabla" + idEscenario);
+        scrollTable.setPreferredSize(new Dimension(430, 150));
+
+        JTableHeader tableHeader = new JTableHeader();
+        TableColumnModel tcm = new DefaultTableColumnModel();
+
+        TableColumn columnaTipo = new TableColumn();
+        columnaTipo.setHeaderValue("TIPO");
+        columnaTipo.setPreferredWidth(255);
+        columnaTipo.setWidth(255);
+        tcm.addColumn(columnaTipo);
+
+        TableColumn columnaValor = new TableColumn();
+        columnaValor.setHeaderValue("VALOR");
+        columnaValor.setPreferredWidth(255);
+        columnaValor.setWidth(255);
+        tcm.addColumn(columnaValor);
+
+        tableHeader.setColumnModel(tcm);
+        tableHeader.setBackground(Color.LIGHT_GRAY);
+        myTable.setTableHeader(tableHeader);
+
+        modelo.addColumn("Columna 1");
+        modelo.addColumn("Columna 2");
+
+        int vColIndex0 = 0;
+        int vColIndex1 = 1;
+        int width = 255;
+
+        TableColumn col0 = myTable.getColumnModel().getColumn(vColIndex0);
+        TableColumn col1 = myTable.getColumnModel().getColumn(vColIndex1);
+        col0.setPreferredWidth(width);
+        col1.setPreferredWidth(width);
+
+        for (int i = 0; i < objetosCreadosList.size(); i++) {
+            String[] lineaArg = objetosCreadosList.get(i).split(" ");
+            String argTipo = lineaArg[0].toString();
+            String argValor = lineaArg[1].toString();
+
+            modelo.setValueAt(argTipo, i, 0);
+            modelo.setValueAt(argValor, i, 1);
+
+        }
+
+        return scrollTable;
     }
 
     private void atrasButtonActionPerformed() {
@@ -293,8 +313,6 @@ public class DependenciesEditor extends javax.swing.JInternalFrame {
         int idVariable = 1;
 
         for (Method metodoSetSelected : metodosSetSeleccionados) {
-
-            //Class[] paramArreglo = metodoSetSelected.getParameterTypes();
 
             String claseName = metodoSetSelected.getDeclaringClass().getName();
             String claseSimpleName = metodoSetSelected.getDeclaringClass().getSimpleName();
@@ -364,6 +382,20 @@ public class DependenciesEditor extends javax.swing.JInternalFrame {
         return objetosCreados;
     }
 
+    /**
+     * @return the botonPanel
+     */
+    public JPanel getBotonPanel() {
+        return botonPanel;
+    }
+
+    /**
+     * @param botonPanel the botonPanel to set
+     */
+    public void setBotonPanel(JPanel botonPanel) {
+        this.botonPanel = botonPanel;
+    }
+
     private class MyLabel extends JLabel {
 
         public MyLabel(String texto, boolean negritas) {
@@ -382,7 +414,13 @@ public class DependenciesEditor extends javax.swing.JInternalFrame {
 
     private class MyComboBox extends JComboBox {
 
-        public MyComboBox(int idEscenario) {
+        private int idEscenario;
+        private DependenciesEditor dependencies;
+
+        public MyComboBox(int idEscenario, DependenciesEditor dependencies) {
+
+            this.idEscenario = idEscenario;
+            this.dependencies = dependencies;
 
             ArrayList<EscenarioPrueba> escenarios = casoPrueba.getEscenariosPrueba();
 
@@ -414,18 +452,26 @@ public class DependenciesEditor extends javax.swing.JInternalFrame {
             ArrayList<String> objetosCreados = new ArrayList<String>();
             Component[] componentes = scrollPaneContent.getComponents();
 
+            System.out.println("");
             for (Component componente : componentes) {
-                if (componente.getName().startsWith("escenarios")) {
+                if (componente.getName().equals("escenarios" + idEscenario)) {
+                    System.out.println("escenario: " + getSelectedItem().toString());
                     objetosCreados = this.getObjetosCreados(getSelectedItem().toString());
                 }
-                if (componente.getName().equals("objetosCreados")) {
-                    if (!objetosCreados.isEmpty()) {
-                        MyComboBoxObjetos cb = (MyComboBoxObjetos) componente;
-                        cb.removeAllItems();
-                        for (String string : objetosCreados) {
-                            cb.addItem(string);
-                        }
-                    }
+
+                if (componente.getName().equals("tablaPanel" + idEscenario)) {
+                    JPanel panel = (JPanel) componente;
+                    panel.removeAll();
+
+                    JScrollPane newScroll = this.llenarTabla(objetosCreados, idEscenario);
+                    panel.add(newScroll);
+                    panel.repaint();
+                    //dependencies.setPreferredSize(new Dimension(650, 700));
+                    //dependencies.getBotonPanel().setPreferredSize(new Dimension(700, 50));
+                    getBotonPanel().setPreferredSize(new Dimension(700, 100));
+                    getBotonPanel().repaint();
+
+                    //this.revalidate();
                 }
             }
         }
@@ -436,7 +482,6 @@ public class DependenciesEditor extends javax.swing.JInternalFrame {
             ArrayList<String> objetosCreados = new ArrayList<String>();
 
             for (EscenarioPrueba escenario : escenarios) {
-
                 if (escenario.getNombre().equals(escenarioDePrueba)) {
                     ArrayList<Metodo> metodos = escenario.getMetodos();
 
@@ -447,26 +492,69 @@ public class DependenciesEditor extends javax.swing.JInternalFrame {
                             for (Argumento arg : args) {
                                 objetosCreados.add(arg.getTipo() + " " + arg.getValor());
                             }
+                        } else {
+                            objetosCreados.add("No argumentos");
                         }
                     }
                 }
             }
             return objetosCreados;
         }
-    }
 
-    private class MyComboBoxObjetos extends JComboBox {
+        public JScrollPane llenarTabla(ArrayList<String> objetosCreadosList, int idEscenario) {
 
-        public MyComboBoxObjetos(ArrayList<String> objetosCreados) {
+            DefaultTableModel modelo = new DefaultTableModel();
+            MyTable myTable = new MyTable(modelo, idEscenario);
+            myTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
-            setName("objetosCreados");
-            for (String objeto : objetosCreados) {
-                addItem(objeto);
+            modelo.setRowCount(objetosCreadosList.size());
+
+            JTableHeader tableHeader = new JTableHeader();
+            TableColumnModel tcm = new DefaultTableColumnModel();
+
+            TableColumn columnaTipo = new TableColumn();
+            columnaTipo.setHeaderValue("TIPO");
+            columnaTipo.setPreferredWidth(255);
+            columnaTipo.setWidth(255);
+            tcm.addColumn(columnaTipo);
+
+            TableColumn columnaValor = new TableColumn();
+            columnaValor.setHeaderValue("VALOR");
+            columnaValor.setPreferredWidth(255);
+            columnaValor.setWidth(255);
+            tcm.addColumn(columnaValor);
+
+            tableHeader.setColumnModel(tcm);
+            tableHeader.setBackground(Color.LIGHT_GRAY);
+            myTable.setTableHeader(tableHeader);
+
+            modelo.addColumn("Columna 1");
+            modelo.addColumn("Columna 2");
+
+            int vColIndex0 = 0;
+            int vColIndex1 = 1;
+            int width = 255;
+
+            TableColumn col0 = myTable.getColumnModel().getColumn(vColIndex0);
+            TableColumn col1 = myTable.getColumnModel().getColumn(vColIndex1);
+            col0.setPreferredWidth(width);
+            col1.setPreferredWidth(width);
+
+            for (int i = 0; i < objetosCreadosList.size(); i++) {
+                String[] lineaArg = objetosCreadosList.get(i).split(" ");
+                String argTipo = lineaArg[0].toString();
+                String argValor = lineaArg[1].toString();
+
+                modelo.setValueAt(argTipo, i, 0);
+                modelo.setValueAt(argValor, i, 1);
+
             }
-            setPreferredSize(new Dimension(400, 20));
-            setVisible(true);
 
-            pack();
+            JScrollPane scrollTable = new JScrollPane(myTable);
+            scrollTable.setName("scrollTabla" + idEscenario);
+            scrollTable.setPreferredSize(new Dimension(430, 150));
+
+            return scrollTable;
         }
     }
 
@@ -559,18 +647,20 @@ public class DependenciesEditor extends javax.swing.JInternalFrame {
 
     private class MyTable extends JTable {
 
-        public MyTable(DefaultTableModel modelo) {
-            setName("tabla");
-            setPreferredSize(new Dimension(480, 100));
+        public MyTable(DefaultTableModel modelo, int idEscenario) {
+            setName("tabla" + idEscenario);
             setVisible(true);
+            setSize(310, 150);
 
             Border line = BorderFactory.createLineBorder(Color.black);
             setBorder(line);
             setSelectionMode(0);
             setGridColor(Color.black);
-            setRowHeight(50);
+            setRowHeight(20);
+            setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
             setLocation(20, 40);
             setModel(modelo);
+
 
             pack();
         }

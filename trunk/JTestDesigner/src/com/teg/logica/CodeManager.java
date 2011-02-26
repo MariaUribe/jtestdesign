@@ -39,7 +39,7 @@ public class CodeManager {
             if (java.equals("java") && lang.equals("lang")) {
                 if (nombre.equals("Integer") || nombre.equals("Byte") || nombre.equals("Float")
                         || nombre.equals("Character") || nombre.equals("Long") || nombre.equals("Short")
-                        || nombre.equals("Double") || nombre.equals("Boolean") || nombre.equals("Void") || nombre.equals("Void")) {
+                        || nombre.equals("Double") || nombre.equals("Boolean") || nombre.equals("Void")) {
                     esEnvolvente = true;
                 }
             } else {

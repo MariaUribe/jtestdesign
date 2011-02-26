@@ -21,6 +21,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import sun.misc.Cleaner;
 
 /**
  * Clase para el manejo del xml de los casos de pruebas 
@@ -168,15 +169,14 @@ public class XmlManager {
      */
     public Metodo agregarMetodoALista(ArrayList<Metodo> metodos, ClassMember method,
            int numVariable, ArrayList<Argumento> argumentos, AssertTest condAssert) {
-           //int numVariable, ArrayList<Argumento> argumentos, AssertTest condAssert, MockObject mockObject) {
-
+           
         Metodo miMetodo = new Metodo(method.getMetodo().getName(), new ClaseTest(method.getMetodo().getDeclaringClass().getName(),
                 method.getMetodo().getDeclaringClass().getSimpleName()));
         miMetodo.setRetorno(new Retorno(method.getMetodo().getReturnType().getName(),
                 method.getMetodo().getReturnType().getSimpleName(), "resultado" + numVariable));
         miMetodo.setArgumentos(argumentos);
         miMetodo.setAssertLinea(condAssert);
-        miMetodo.setClaseOrigen(method.getClaseDeOrigen());
+        miMetodo.setClaseOrigen(method.getClaseDeOrigen().getName());
 
         ArrayList<ClaseTest> excepciones = new ArrayList<ClaseTest>();
 
@@ -187,10 +187,6 @@ public class XmlManager {
         }
 
         miMetodo.setExcepciones(excepciones);
-
-//        if(mockObject != null){
-//            miMetodo.setMockObject(mockObject);
-//        }
 
         metodos.add(miMetodo);
 

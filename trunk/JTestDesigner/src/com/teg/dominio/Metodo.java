@@ -8,7 +8,7 @@ import java.util.ArrayList;
  */
 public class Metodo {
 
-    private Class claseOrigen;
+    private String claseOrigen;
     private String nombre;
     private ClaseTest clase;
     private Retorno retorno;
@@ -116,14 +116,14 @@ public class Metodo {
     /**
      * @return the claseOrigen
      */
-    public Class getClaseOrigen() {
+    public String getClaseOrigen() {
         return claseOrigen;
     }
 
     /**
      * @param claseOrigen the claseOrigen to set
      */
-    public void setClaseOrigen(Class claseOrigen) {
+    public void setClaseOrigen(String claseOrigen) {
         this.claseOrigen = claseOrigen;
     }
 
