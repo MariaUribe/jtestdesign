@@ -371,8 +371,11 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
         for (VariableInstancia variable : variablesGuardadas) {
 
             Class variableClase = variable.getInstancia().getClass();
+            
 
-            if (variableClase.getName().equals(argument.getName()) || argument.isAssignableFrom(variableClase) ==true) {
+            if (variableClase.getName().equals(argument.getName()) || 
+                    variableClase.getSuperclass().getName().equals(argument.getName()))
+                     {
 
                 combo.addItem(variable.getNombreVariable());
 
