@@ -2128,12 +2128,9 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
-                        .addContainerGap())
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                        .addComponent(ayudaMetodo)
-                        .addContainerGap())))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
+                    .addComponent(ayudaMetodo, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2470,17 +2467,17 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
             escenariosPrueba.add(escenarioPrueba);
 
 
-            varId = 0;
+            //varId = 0;
 
             metodosGuardados = new ArrayList<Metodo>();
 
-            variablesGuardadas.clear();
+           
 
             nombreEscenario.setText("");
 
-            DefaultTableModel model = (DefaultTableModel) tablaVariables.getModel();
+            //DefaultTableModel model = (DefaultTableModel) tablaVariables.getModel();
 
-            model.setNumRows(0);
+            //model.setNumRows(0);
 
             DefaultTableModel model2 = (DefaultTableModel) tablaMetodosRegistrados.getModel();
 
