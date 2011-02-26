@@ -282,7 +282,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
         for (ClassMember metodo : metodos) {
 
-            
+
 
             if (metodo.getClaseDeOrigen().getName().equals(metodoBuscar.getClaseOrigen())) {
 
@@ -302,7 +302,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
                     if (listaArgs.size() == argNombre.size()) {
 
-                        if (sonArgumentosIguales(metodoBuscar, argNombre)){
+                        if (sonArgumentosIguales(metodoBuscar, argNombre)) {
                             metodoEncontrado = metodo.getMetodo();
                         }
                     }
@@ -343,8 +343,6 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
         for (Metodo metodo : metodosGuardados) {
 
             method = getMetodoGuardado(metodo);
-
-            System.out.println(method.getName());
 
             if (!method.getReturnType().getName().equals("void")) {
                 Class retorno = method.getReturnType();
@@ -482,7 +480,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
         guardarBt.setEnabled(false);
     }
 
-    public void deshabilitarAssert(){
+    public void deshabilitarAssert() {
 
         panelAssert.setEnabled(false);
 
@@ -501,7 +499,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
         lbAssertVariables1.setEnabled(false);
     }
 
-    public void habilitarAssert(){
+    public void habilitarAssert() {
 
         panelAssert.setEnabled(true);
 
@@ -2409,8 +2407,8 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
                 boolean isIn = false;
 
                 Method metodoActual = metodoProcesar.getMetodo();
-                
-                if(metodoActual.getReturnType().getName().equals("void")){
+
+                if (metodoActual.getReturnType().getName().equals("void")) {
                     this.deshabilitarAssert();
                 } else {
                     this.habilitarAssert();
@@ -2532,6 +2530,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
         if (this.hasMetodosSet(metodosSet)) {
             CasoPrueba casoPrueba = this.crearCasoPrueba(this.inicio.getNombreCasoPrueba(), escenariosPrueba);
+            this.reiniciarContadores();
             this.inicio.caseTestToDependenciesSelection(this, metodosSet, casoPrueba, metodos);
         } else {
             XmlManager xmlManager = new XmlManager();
@@ -2540,6 +2539,21 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
         }
 
     }//GEN-LAST:event_siguienteActionPerformed
+
+    public void reiniciarContadores() {
+        varId = 0;
+        objId = 0;
+        coleccionId = 0;
+        mapaId = 0;
+        arregloId = 0;
+        contObject = 1;
+        contColeccion = 1;
+        contArreglo = 1;
+        contMapa = 1;
+        contObjectAssert = 1;
+        contColeccionAssert = 1;
+        contArregloAssert = 1;
+    }
 
     /**
      * Metodo para verificar la existencia de una clase
@@ -3151,7 +3165,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
                                 assertion.setGenerarXstream(true);
 
                             } else {
-                                valorComplejo = "resultadoObject" + contObjectAssert;
+                                valorComplejo = "resultadoObjeto" + contObjectAssert;
                                 assertion.setValorAssert(valorComplejo);
                                 assertion.setComplejo(true);
                                 assertion.setArreglo(false);
@@ -3288,8 +3302,12 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
 
             } else if (!clazz.isPrimitive()) {
-                String[] arregloCampos = clazz.getName().split("\\.");
+                //String[] arregloCampos = clazz.getName().split("\\.");
+                String[] arregloCampos = argumento.getTipo().split("\\.");
                 String primerCampo = arregloCampos[0];
+                System.out.println("clase: " + clazz.getName());
+                System.out.println("arg tipo: " + argumento.getTipo());
+                System.out.println("primer campo: " + primerCampo);
 
                 if (primerCampo.equals("java")) {
 
@@ -3336,7 +3354,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
                         contArreglo++;
 
                     } else {
-                        valorComplejo = "object" + contObject;
+                        valorComplejo = "objeto" + contObject;
                         argumento.setValor(valorComplejo);
                         argumento.setComplejo(true);
                         argumento.setArreglo(false);
