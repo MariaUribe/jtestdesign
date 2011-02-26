@@ -19,6 +19,7 @@ import com.teg.dominio.MockObject;
 import com.teg.dominio.Retorno;
 import com.teg.logica.XmlManager;
 import com.teg.util.EscenarioPersonalizado;
+import com.teg.vista.customlist.ClassMember;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -44,6 +45,7 @@ import javax.swing.text.StyledEditorKit;
 import net.miginfocom.swing.MigLayout;
 import org.apache.commons.lang.StringUtils;
 
+
 /**
  *
  * @author maya
@@ -57,13 +59,15 @@ public class DependenciesEditor extends javax.swing.JInternalFrame {
     private Inicio inicio;
     private JPanel scrollPaneContent;
     private JScrollPane scrollPane;
+    private java.util.List<ClassMember> metodosTodos;
 
     /** Creates new form DependenciesEditor */
-    public DependenciesEditor(ArrayList<Method> metodosSet, ArrayList<Method> metodosSetSeleccionados, Inicio inicio, CasoPrueba casoPrueba) {
+    public DependenciesEditor(ArrayList<Method> metodosSet, ArrayList<Method> metodosSetSeleccionados, Inicio inicio, CasoPrueba casoPrueba, java.util.List<ClassMember> metodosTodos) {
         initComponents();
         this.inicio = inicio;
         this.metodosSet = metodosSet;
         this.metodosSetSeleccionados = metodosSetSeleccionados;
+        this.metodosTodos = metodosTodos;
         this.casoPrueba = casoPrueba;
         this.myInits();
         this.paintFrame();
@@ -248,7 +252,7 @@ public class DependenciesEditor extends javax.swing.JInternalFrame {
 
     private void atrasButtonActionPerformed() {
         // volver a DependenciesSelection
-        this.inicio.dependenciesEditorToSelection(this, metodosSet, casoPrueba);
+        this.inicio.dependenciesEditorToSelection(this, metodosSet, casoPrueba, metodosTodos);
     }
 
     private void finalizarButtonActionPerformed() {

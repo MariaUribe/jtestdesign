@@ -9,6 +9,7 @@ import com.teg.dominio.Metodo;
 import com.teg.dominio.MockObject;
 import com.teg.dominio.Retorno;
 import com.teg.vista.Inicio;
+import com.teg.vista.customlist.ClassMember;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 import java.io.File;
@@ -165,20 +166,21 @@ public class XmlManager {
      * @param condAssert condicion de Assert para crear la variable
      * @return ArrayList<Metodo> la nueva lista de metodos con el metodo agregado 
      */
-    public Metodo agregarMetodoALista(ArrayList<Metodo> metodos, Method method,
+    public Metodo agregarMetodoALista(ArrayList<Metodo> metodos, ClassMember method,
            int numVariable, ArrayList<Argumento> argumentos, AssertTest condAssert) {
            //int numVariable, ArrayList<Argumento> argumentos, AssertTest condAssert, MockObject mockObject) {
 
-        Metodo miMetodo = new Metodo(method.getName(), new ClaseTest(method.getDeclaringClass().getName(),
-                method.getDeclaringClass().getSimpleName()));
-        miMetodo.setRetorno(new Retorno(method.getReturnType().getName(), 
-                method.getReturnType().getSimpleName(), "resultado" + numVariable));
+        Metodo miMetodo = new Metodo(method.getMetodo().getName(), new ClaseTest(method.getMetodo().getDeclaringClass().getName(),
+                method.getMetodo().getDeclaringClass().getSimpleName()));
+        miMetodo.setRetorno(new Retorno(method.getMetodo().getReturnType().getName(),
+                method.getMetodo().getReturnType().getSimpleName(), "resultado" + numVariable));
         miMetodo.setArgumentos(argumentos);
         miMetodo.setAssertLinea(condAssert);
+        miMetodo.setClaseOrigen(method.getClaseDeOrigen());
 
         ArrayList<ClaseTest> excepciones = new ArrayList<ClaseTest>();
 
-        Class[] methodExcepcions = method.getExceptionTypes();
+        Class[] methodExcepcions = method.getMetodo().getExceptionTypes();
         
         for (Class clazz : methodExcepcions) {
             excepciones.add(new ClaseTest(clazz.getName(), clazz.getSimpleName()));

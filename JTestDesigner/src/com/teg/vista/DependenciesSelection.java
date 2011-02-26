@@ -12,6 +12,7 @@ package com.teg.vista;
 
 import com.teg.dominio.CasoPrueba;
 import com.teg.logica.XmlManager;
+import com.teg.vista.customlist.ClassMember;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.lang.reflect.Method;
@@ -26,16 +27,18 @@ public class DependenciesSelection extends javax.swing.JInternalFrame {
     private ArrayList<Method> metodosSet = new ArrayList<Method>();
     private CasoPrueba casoPrueba = new CasoPrueba();
     private Inicio inicio;
+    private java.util.List<ClassMember> metodosTodos;
 
     /** Creates new form DependenciesSelection */
     public DependenciesSelection() {
         initComponents();
     }
 
-    DependenciesSelection(ArrayList<Method> metodosSet, CasoPrueba casoPrueba, Inicio inicio) {
+    DependenciesSelection(ArrayList<Method> metodosSet, CasoPrueba casoPrueba, Inicio inicio, java.util.List<ClassMember> metodosTodos) {
 
         this.metodosSet = metodosSet;
         this.inicio = inicio;
+        this.metodosTodos = metodosTodos;
         initComponents();
         this.myInits();
         panelSeleccion.setListData(metodosSet.toArray());
@@ -183,14 +186,14 @@ public class DependenciesSelection extends javax.swing.JInternalFrame {
             Object[] lista = panelSeleccion.getSelectedValues();
             ArrayList<Method> metodosSetSeleccionados = getMetodosSeleccionados(lista);
 
-            this.inicio.dependenciesSelectionToEditor(this, metodosSet, metodosSetSeleccionados, casoPrueba);
+            this.inicio.dependenciesSelectionToEditor(this, metodosSet, metodosSetSeleccionados, casoPrueba, metodosTodos);
         }
 
 }//GEN-LAST:event_siguienteActionPerformed
 
     private void atrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_atrasActionPerformed
 
-        this.inicio.dependenciesSelectionToCaseTest(this, metodosSet, casoPrueba.getEscenariosPrueba());
+        this.inicio.dependenciesSelectionToCaseTest(this, metodosSet, casoPrueba.getEscenariosPrueba(), metodosTodos);
 
     }//GEN-LAST:event_atrasActionPerformed
 

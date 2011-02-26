@@ -8,6 +8,7 @@ import java.util.ArrayList;
  */
 public class Metodo {
 
+    private Class claseOrigen;
     private String nombre;
     private ClaseTest clase;
     private Retorno retorno;
@@ -110,6 +111,20 @@ public class Metodo {
      */
     public void setExcepciones(ArrayList<ClaseTest> excepciones) {
         this.excepciones = excepciones;
+    }
+
+    /**
+     * @return the claseOrigen
+     */
+    public Class getClaseOrigen() {
+        return claseOrigen;
+    }
+
+    /**
+     * @param claseOrigen the claseOrigen to set
+     */
+    public void setClaseOrigen(Class claseOrigen) {
+        this.claseOrigen = claseOrigen;
     }
 
 }
