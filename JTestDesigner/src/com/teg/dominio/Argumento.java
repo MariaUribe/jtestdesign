@@ -6,6 +6,7 @@ package com.teg.dominio;
  */
 public class Argumento {
 
+    private String claseOrigen;
     private String nombre;
     private String tipo;
     private String valor;
@@ -127,6 +128,20 @@ public class Argumento {
      */
     public void setGenerarXstream(boolean generarXstream) {
         this.generarXstream = generarXstream;
+    }
+
+    /**
+     * @return the claseOrigen
+     */
+    public String getClaseOrigen() {
+        return claseOrigen;
+    }
+
+    /**
+     * @param claseOrigen the claseOrigen to set
+     */
+    public void setClaseOrigen(String claseOrigen) {
+        this.claseOrigen = claseOrigen;
     }
 
     

@@ -105,7 +105,7 @@ public class ${claseTemplate.nombreClase} {
     <#assign esComplejo = arg.complejo />
         <#if esComplejo && generarXstream>
         <#assign miCount = miCount + 1 />
-        <#if miCount==1 && miCountAssert==0 ><#assign imprimir = true />
+        <#if miCount==1 && miCountAssert==0 && !imprimirAssert ><#assign imprimir = true />
         try {
             XStream xstream = new XStream(new DomDriver());
         </#if>
