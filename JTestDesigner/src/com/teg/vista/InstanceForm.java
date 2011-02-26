@@ -552,11 +552,11 @@ public class InstanceForm extends javax.swing.JDialog {
             if (vieneDelAssert) {
 
                 fos = new FileOutputStream(metadata.getPath()
-                        + System.getProperty("file.separator") + "resultadoObject" + objId + ".xml");
+                        + System.getProperty("file.separator") + "resultadoObjeto" + objId + ".xml");
             } else {
 
                 fos = new FileOutputStream(metadata.getPath()
-                        + System.getProperty("file.separator") + "object" + objId + ".xml");
+                        + System.getProperty("file.separator") + "objeto" + objId + ".xml");
             }
 
             XStream xstream = new XStream(new DomDriver());
