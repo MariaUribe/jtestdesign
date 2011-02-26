@@ -174,7 +174,7 @@ public class ${claseTemplate.nombreClase} {
 
     <#assign ordenMetodos = codeManager.generarPrueba(casoPrueba, escenario) />
     <#list ordenMetodos as metodo>
-        <#if metodo.assertLinea??>${metodo.retorno.retorno} ${metodo.retorno.nombreVariable} = </#if>${metodo.clase.simpleNombre?uncap_first}.${metodo.getNombre()}(<#list metodo.argumentos as arg>${arg.valor}<#if arg_has_next>, </#if></#list>);
+        <#if metodo.assertLinea??>${metodo.retorno.retorno} ${metodo.retorno.nombreVariable} = </#if>${metodo.clase.simpleNombre?uncap_first}.${metodo.getNombre()}(<#list metodo.argumentos as arg><#assign esEnvolventeArg = codeManager.esClaseEnvolvente(arg.tipo) /><#if esEnvolventeArg>new ${arg.tipo}(${arg.valor})<#else>${arg.valor}</#if><#if arg_has_next>, </#if></#list>);
         <#if metodo.assertLinea??>Assert.${metodo.assertLinea.condicion}(${metodo.assertLinea.variable},<#if metodo.assertLinea.valorAssert??> <#assign esEnvolvente = codeManager.esClaseEnvolvente(metodo.retorno.retorno) /> <#if esEnvolvente>new ${metodo.retorno.retorno}(${metodo.assertLinea.valorAssert}),<#else>${metodo.assertLinea.valorAssert},</#if></#if> "${metodo.assertLinea.mensaje}");</#if>
 
     </#list>

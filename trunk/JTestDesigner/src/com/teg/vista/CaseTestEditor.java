@@ -371,11 +371,10 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
         for (VariableInstancia variable : variablesGuardadas) {
 
             Class variableClase = variable.getInstancia().getClass();
-            
 
-            if (variableClase.getName().equals(argument.getName()) || 
-                    variableClase.getSuperclass().getName().equals(argument.getName()))
-                     {
+
+            if (variableClase.getName().equals(argument.getName())
+                    || variableClase.getSuperclass().getName().equals(argument.getName())) {
 
                 combo.addItem(variable.getNombreVariable());
 
@@ -3293,6 +3292,21 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
                 argumento.setTipo(clase + "[]");
                 argumento.setArreglo(true);
 
+            } else if (!tablaArgumentos.getValueAt(contSimple - 1, 1).toString().startsWith("Crear:")) {
+                String valor = tablaArgumentos.getValueAt(contSimple - 1, 1).toString();
+                if (valor.startsWith("objeto")) {
+                    for (VariableInstancia var : variablesGuardadas) {
+                        if (var.getNombreVariable().equals(valor)) {
+                            argumento.setTipo(var.getInstancia().getClass().getName());
+                            argumento.setArreglo(false);
+                            System.out.println("tipo de dato: " + var.getInstancia().getClass().getName());
+                        }
+                    }
+                } else {
+                    String clase = tablaArgumentos.getValueAt(contFila, 0).toString();
+                    argumento.setTipo(clase);
+                    argumento.setArreglo(false);
+                }
             } else {
                 String clase = tablaArgumentos.getValueAt(contFila, 0).toString();
                 argumento.setTipo(clase);
@@ -3312,12 +3326,8 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
 
             } else if (!clazz.isPrimitive()) {
-                //String[] arregloCampos = clazz.getName().split("\\.");
                 String[] arregloCampos = argumento.getTipo().split("\\.");
                 String primerCampo = arregloCampos[0];
-                System.out.println("clase: " + clazz.getName());
-                System.out.println("arg tipo: " + argumento.getTipo());
-                System.out.println("primer campo: " + primerCampo);
 
                 if (primerCampo.equals("java")) {
 
@@ -3363,6 +3373,14 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
                         argumento.setGenerarXstream(true);
                         contArreglo++;
 
+                    } else if (tablaArgumentos.getValueAt(contSimple - 1, 1).toString().startsWith("objeto")) {
+                        String valor = tablaArgumentos.getValueAt(contSimple - 1, 1).toString();
+                        valorComplejo = valor;
+                        argumento.setValor(valorComplejo);
+                        argumento.setComplejo(false);
+                        argumento.setArreglo(false);
+                        argumento.setMapa(false);
+                        argumento.setGenerarXstream(false);
                     } else {
                         valorComplejo = "objeto" + contObject;
                         argumento.setValor(valorComplejo);
@@ -3385,6 +3403,8 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
                 argumento.setValor(tablaArgumentos.getValueAt(contSimple - 1, 1).toString());
                 argumento.setGenerarXstream(false);
             }
+
+
 
 //            System.out.println("ARGUMENTO ACTUAL, tipo: " + argumento.getTipo()
 //                    + " valor: " + argumento.getValor()
