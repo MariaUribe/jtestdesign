@@ -347,7 +347,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
             if (!method.getReturnType().getName().equals("void")) {
                 Class retorno = method.getReturnType();
 
-                if (retorno.getName().equals(argument.getName())) {
+                if (retorno.getName().equals(argument.getName()) || argument.isAssignableFrom(retorno) == true) {
 
                     combo.addItem(metodo.getRetorno().getNombreVariable());
 
@@ -372,7 +372,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
             Class variableClase = variable.getInstancia().getClass();
 
-            if (variableClase.getName().equals(argument.getName())) {
+            if (variableClase.getName().equals(argument.getName()) || argument.isAssignableFrom(variableClase) ==true) {
 
                 combo.addItem(variable.getNombreVariable());
 
@@ -2518,6 +2518,8 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
 
         this.inicio.caseTestToMethods(this, clases);
+
+        //this.dispose();
     }//GEN-LAST:event_volverActionPerformed
 
     private void tablaVariablesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaVariablesMouseClicked
@@ -2553,6 +2555,11 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
         contObjectAssert = 1;
         contColeccionAssert = 1;
         contArregloAssert = 1;
+        variablesGuardadas.clear();
+        arreglosGuardados.clear();
+        mapasGuardados.clear();
+        coleccionesGuardadas.clear();
+        metodos.clear();
     }
 
     /**
