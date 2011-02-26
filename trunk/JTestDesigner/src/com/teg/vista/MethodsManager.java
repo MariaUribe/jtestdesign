@@ -10,12 +10,16 @@
  */
 package com.teg.vista;
 
+import com.teg.vista.customlist.ClassMember;
+import com.teg.vista.customlist.ClassWrapper;
+import com.teg.vista.customlist.CustomListModel;
+import com.teg.vista.customlist.MethodWrapper;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
 import javax.swing.DefaultListModel;
 
 /**
@@ -31,34 +35,41 @@ public class MethodsManager extends javax.swing.JInternalFrame {
 
     /** Creates new form MethodsManager */
     public MethodsManager(Inicio inicio, ArrayList<Class> clases) {
+        
         initComponents();
+
+        initClases(clases);
+
         this.inicio = inicio;
+
         this.clases = clases;
+
         continuar.setEnabled(false);
+
         this.inicio.getSeleccionarJar().setEnabled(false);
+
         this.inicio.getAnadirJarAlClasspath().setEnabled(false);
 
-        ArrayList<String> nameClass = new ArrayList<String>();
-
-        for (Class clazz : clases) {
-            nameClass.add(clazz.getName());
-        }
-        classList.setListData(nameClass.toArray());
-
         javax.swing.plaf.InternalFrameUI ifu = this.getUI();
+
         ((javax.swing.plaf.basic.BasicInternalFrameUI) ifu).setNorthPane(null);
 
         int w2 = this.getSize().width;
+
         int h2 = this.getSize().height;
+
         this.inicio.setSize(new Dimension(w2, h2));
 
-        // Get the size of the screen
+
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 
         // Determine the new location of the window
         int w = this.inicio.getSize().width;
+
         int h = this.inicio.getSize().height;
+
         int x = (dim.width - w) / 2;
+
         int y = (dim.height - h) / 2;
 
         // Move the window
@@ -274,167 +285,203 @@ public class MethodsManager extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void selectAllOptionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_selectAllOptionMouseClicked
-        ArrayList<String> metodosIzquierda = new ArrayList<String>();
-        ArrayList<String> metodosDerecha = new ArrayList<String>();
 
-        metodosIzquierda = this.getMetodosIzquierda();
-        metodosDerecha = this.getMetodosDerecha();
+        ClassWrapper classWrapper = (ClassWrapper) classList.getSelectedValue();
 
-        metodosDerecha.addAll(metodosIzquierda);
-        metodosIzquierda.removeAll(metodosIzquierda);
+        CustomListModel<ClassMember> modeloSeleccionados =
+                ((CustomListModel<ClassMember>) selectedMethodsList.getModel());
 
-        metodosLista.setListData(metodosIzquierda.toArray());
-        selectedMethodsList.setListData(metodosDerecha.toArray());
+        CustomListModel<MethodWrapper> modeloMethod =
+                ((CustomListModel<MethodWrapper>)metodosLista.getModel());
 
-        this.setVisibilidadContinuar();
+       
+
+
+
+        for (Object selected : modeloMethod.getItems()){
+
+
+
+            ClassMember classMember = new ClassMember(classWrapper.getClaseDeOrigen(),
+                    ((MethodWrapper)selected).getMetodo());
+
+            modeloSeleccionados.addItem(classMember);
+
+        }
+
+       
+        selectedMethodsList.setModel(modeloSeleccionados.actualizar());
+
+        metodosLista.setModel(modeloMethod.clear());
+
+         setVisibilidadContinuar();
 }//GEN-LAST:event_selectAllOptionMouseClicked
 
     private void unselectAllOptionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_unselectAllOptionMouseClicked
-        ArrayList<String> metodosIzquierda = new ArrayList<String>();
-        ArrayList<String> metodosDerecha = new ArrayList<String>();
 
-        metodosIzquierda = this.getMetodosIzquierda();
-        metodosDerecha = this.getMetodosDerecha();
+        CustomListModel<ClassMember> modeloSeleccionados =
+                ((CustomListModel<ClassMember>) selectedMethodsList.getModel());
 
-        metodosIzquierda.addAll(metodosDerecha);
-        System.out.println(metodosIzquierda.size());
-        metodosDerecha.removeAll(metodosDerecha);
+         CustomListModel<MethodWrapper> modeloMethod =
+                ((CustomListModel<MethodWrapper>)metodosLista.getModel());
 
-        metodosLista.setListData(metodosIzquierda.toArray());
-        selectedMethodsList.setListData(metodosDerecha.toArray());
 
-        this.setVisibilidadContinuar();
+
+        for (ClassMember unselected : modeloSeleccionados.getItems()){
+
+
+            MethodWrapper metodo = new MethodWrapper(unselected.getMetodo());
+
+            if (modeloMethod.contains(metodo) == false) {
+
+                modeloMethod.addItem(metodo);
+            }
+        }
+
+        metodosLista.setModel(modeloMethod.actualizar());
+
+        selectedMethodsList.setModel(modeloSeleccionados.clear());
+
+         setVisibilidadContinuar();
 }//GEN-LAST:event_unselectAllOptionMouseClicked
 
     private void unselectOptionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_unselectOptionMouseClicked
-        ArrayList<String> metodosIzquierda = new ArrayList<String>();
-        ArrayList<String> metodosDerecha = new ArrayList<String>();
 
-        Object[] clasesSeleccionadas = selectedMethodsList.getSelectedValues();
+        CustomListModel<ClassMember> modeloSeleccionados =
+                ((CustomListModel<ClassMember>) selectedMethodsList.getModel());
 
-        metodosIzquierda = this.getMetodosIzquierda();
-        metodosDerecha = this.getMetodosDerecha();
+         CustomListModel<MethodWrapper> modeloMethod =
+                ((CustomListModel<MethodWrapper>)metodosLista.getModel());
 
-        for (Object object : clasesSeleccionadas) {
-            String clase = object.toString();
-            metodosIzquierda.add(clase);
-            metodosDerecha.remove(clase);
+        Object[] unselecteds =  selectedMethodsList.getSelectedValues();
+
+        for (Object unselected : unselecteds){
+
+            ClassMember unselect = (ClassMember) unselected;
+
+            MethodWrapper metodo = new MethodWrapper(unselect.getMetodo());
+
+            if (modeloMethod.contains(metodo) == false) {
+
+                modeloMethod.addItem(metodo);
+            }
         }
 
-        metodosLista.setListData(metodosIzquierda.toArray());
-        selectedMethodsList.setListData(metodosDerecha.toArray());
+        metodosLista.setModel(modeloMethod.actualizar());
 
-        this.setVisibilidadContinuar();
+
+        if (selectedMethodsList.getSelectedValues().length != 0){
+
+            List<ClassMember> clasesEliminar = new ArrayList<ClassMember>();
+
+            for (Object obj : selectedMethodsList.getSelectedValues()) {
+
+                clasesEliminar.add((ClassMember) obj);
+
+            }
+
+           modeloSeleccionados.removeItems(clasesEliminar);
+
+           selectedMethodsList.setModel(modeloSeleccionados.actualizar());
+
+        }
+
+         setVisibilidadContinuar();
+        
 }//GEN-LAST:event_unselectOptionMouseClicked
 
     private void selectOptionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_selectOptionMouseClicked
-        ArrayList<String> metodosIzquierda = new ArrayList<String>();
-        ArrayList<String> metodosDerecha = new ArrayList<String>();
 
-        Object[] metodosSeleccionados = metodosLista.getSelectedValues();
+        ClassWrapper classWrapper = (ClassWrapper) classList.getSelectedValue();
 
-        metodosIzquierda = this.getMetodosIzquierda();
-        metodosDerecha = this.getMetodosDerecha();
+        CustomListModel<ClassMember> modeloSeleccionados =
+                ((CustomListModel<ClassMember>) selectedMethodsList.getModel());
 
-        for (Object object : metodosSeleccionados) {
-            String clase = object.toString();
-            metodosIzquierda.remove(clase);
-            metodosDerecha.add(clase);
+        CustomListModel<MethodWrapper> modeloMethod =
+                ((CustomListModel<MethodWrapper>)metodosLista.getModel());
+
+        for (Object selected : metodosLista.getSelectedValues()) {
+
+            ClassMember classMember = new ClassMember(classWrapper.getClaseDeOrigen(),
+                    ((MethodWrapper)selected).getMetodo());
+
+            if (modeloSeleccionados.contains(classMember) == false){
+
+            modeloSeleccionados.addItem(classMember);
+            }
+
         }
 
-        metodosLista.setListData(metodosIzquierda.toArray());
-        selectedMethodsList.setListData(metodosDerecha.toArray());
+        selectedMethodsList.setModel(modeloSeleccionados.actualizar());
 
-        this.setVisibilidadContinuar();
+        if (metodosLista.getSelectedValues().length != 0) {
+
+            List<MethodWrapper> metodosEliminar = new ArrayList<MethodWrapper>();
+
+
+            for (ClassMember classMember : modeloSeleccionados.getItems()) {
+
+                MethodWrapper metodo = new MethodWrapper(classMember.getMetodo());
+
+                metodosEliminar.add(metodo);
+
+            }
+
+            modeloMethod.removeItems(metodosEliminar);
+
+            metodosLista.setModel(modeloMethod.actualizar());
+        }
+
+        setVisibilidadContinuar();
     }//GEN-LAST:event_selectOptionMouseClicked
 
     private void selectOptionMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_selectOptionMouseMoved
 }//GEN-LAST:event_selectOptionMouseMoved
 
     private void classListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_classListMouseClicked
-        ArrayList<String> metodosDerecha = new ArrayList<String>();
 
-        if (MouseEvent.BUTTON1 == 1) {
+         ClassWrapper classWrapper = (ClassWrapper) classList.getSelectedValue();
 
-            Method[] methods = null;
-            Method[] methodsHeritance = null;
+        CustomListModel<MethodWrapper> metodosModel = new CustomListModel<MethodWrapper>();
 
+        for (Method m : classWrapper.getClaseDeOrigen().getMethods()) {
+            metodosModel.addItem(new MethodWrapper(m));
+        }
 
-            String nameClass = classList.getSelectedValue().toString();
+        if (selectedMethodsList.getModel().getSize() != 0){
 
-            Class claseActual = null;
-            for (Class clazz : clases) {
-                if (clazz.getName().equals(nameClass)) {
+            CustomListModel<ClassMember> modeloSeleccionados =
+                    ((CustomListModel<ClassMember>) selectedMethodsList.getModel());
 
-                    claseActual = clazz;
+            java.util.List<MethodWrapper> metodosSeleccionados = new ArrayList<MethodWrapper>();
 
-                    methods = clazz.getDeclaredMethods();
-                   
-                    methodsHeritance = clazz.getMethods();
-                   
-                    
-                }
-            }
-            
-          
-            String nombre;
-              
+            for (ClassMember object : modeloSeleccionados.getItems())
+            {
 
-            ArrayList<String> nameMethods = new ArrayList<String>();
-
-            try{
-                
-            for (Method method : methods) {
-
-                if(method.toString().contains(" native ")){
-                    System.out.println(method.getName());
+                if (object.getClaseDeOrigen().equals(classWrapper.getClaseDeOrigen())) {
+                    metodosSeleccionados.add(new MethodWrapper(object.getMetodo()));
                 }
 
-                if (!method.toString().contains(" native ")){
-
-                nombre = getNombreDefinido(method, claseActual);
-
-                nameMethods.add(nombre);
-                }
-
-                //nameMethods.add(method.getDeclaringClass().getSimpleName() + "." + method.getName());
-            }
-            }catch (java.lang.ArrayIndexOutOfBoundsException e){
-                System.out.println(e);
             }
 
-            for (Method method : methodsHeritance) {
+            metodosModel.removeItems(metodosSeleccionados);
 
-
-                if (!method.toString().contains(" native ")) {
-                    nombre = getNombreDefinido(method, claseActual);
-
-
-                    if (nameMethods.contains(nombre) == false) {
-
-                        nameMethods.add(nombre);
-                    }
-
-                }
-            }
-
-
-            if (selectedMethodsList.getModel().getSize() > 0) {
-                metodosDerecha = this.getMetodosDerecha();
-                nameMethods.removeAll(metodosDerecha);
-            }
-
-            metodosLista.setListData(nameMethods.toArray());
 
         }
+
+        metodosLista.setModel(metodosModel);
+
+       
 }//GEN-LAST:event_classListMouseClicked
 
     private void continuarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_continuarActionPerformed
 
-        ArrayList<Method> metodos = new ArrayList<Method>();
-        metodos = this.getMetodos();
+       CustomListModel<ClassMember> modeloSeleccionados =
+               ((CustomListModel<ClassMember>) selectedMethodsList.getModel());
 
-        this.inicio.methodsToCaseTest(this, metodos);
+       
+
+        this.inicio.methodsToCaseTest(this, modeloSeleccionados.getItems());
 
     }//GEN-LAST:event_continuarActionPerformed
 
@@ -477,7 +524,7 @@ public class MethodsManager extends javax.swing.JInternalFrame {
 
              if (claseImplementacion[0].equals(clazz.getName())){
 
-                 String metodoNombre = getMetodoNombre(str);
+                 String metodoNombre = getMetodoNombre(claseImplementacion[1]);
 
                  for (Method method : clazz.getMethods()){
 
@@ -499,6 +546,21 @@ public class MethodsManager extends javax.swing.JInternalFrame {
         }
 
         return metodos;
+    }
+
+    private void initClases(ArrayList<Class> clases){
+
+        CustomListModel<ClassWrapper> classWrapperListModel = new CustomListModel<ClassWrapper>();
+
+        for (Class class1 : clases) {
+
+            classWrapperListModel.addItem(new ClassWrapper(class1));
+        }
+
+        classList.setModel(classWrapperListModel);
+
+        selectedMethodsList.setModel(new CustomListModel<ClassMember>());
+
     }
 
     private int getArgumentosCantidad(String metodo){

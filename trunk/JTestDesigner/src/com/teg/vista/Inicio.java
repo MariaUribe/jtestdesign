@@ -2,6 +2,7 @@ package com.teg.vista;
 
 import com.teg.dominio.CasoPrueba;
 import com.teg.dominio.EscenarioPrueba;
+import com.teg.vista.customlist.ClassMember;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.beans.PropertyVetoException;
@@ -307,7 +308,7 @@ public class Inicio extends javax.swing.JFrame {
         }
     }
 
-    public void methodsToCaseTest(JInternalFrame methodsManager, ArrayList<Method> metodos) {
+    public void methodsToCaseTest(JInternalFrame methodsManager, java.util.List<ClassMember> metodos) {
         try {
             methodsManager.setVisible(false);
 
@@ -335,10 +336,10 @@ public class Inicio extends javax.swing.JFrame {
         }
     }
 
-    public void caseTestToDependenciesSelection(JInternalFrame caseTestEditor, ArrayList<Method> metodos, CasoPrueba casoPrueba) {
+    public void caseTestToDependenciesSelection(JInternalFrame caseTestEditor, ArrayList<Method> metodos, CasoPrueba casoPrueba, java.util.List<ClassMember> metodosTodos) {
         try {
             caseTestEditor.setVisible(false);
-            DependenciesSelection dependencies = new DependenciesSelection(metodos, casoPrueba, this);
+            DependenciesSelection dependencies = new DependenciesSelection(metodos, casoPrueba, this, metodosTodos);
             dependencies.setVisible(true);
             this.getjDesktopPane().add(dependencies);
             dependencies.setMaximum(true);
@@ -348,10 +349,10 @@ public class Inicio extends javax.swing.JFrame {
         }
     }
 
-    public void dependenciesSelectionToCaseTest(JInternalFrame dependencies, ArrayList<Method> metodos, ArrayList<EscenarioPrueba> escenariosPrueba) {
+    public void dependenciesSelectionToCaseTest(JInternalFrame dependencies, java.util.ArrayList<Method> metodos, ArrayList<EscenarioPrueba> escenariosPrueba, java.util.List<ClassMember> metodosTodos) {
         try {
             dependencies.setVisible(false);
-            CaseTestEditor caseTest = new CaseTestEditor(metodos, this);
+            CaseTestEditor caseTest = new CaseTestEditor(metodosTodos, this);
             caseTest.setVisible(true);
             this.getjDesktopPane().add(caseTest);
             caseTest.setMaximum(true);
@@ -363,10 +364,10 @@ public class Inicio extends javax.swing.JFrame {
         }
     }
 
-    public void dependenciesEditorToSelection(JInternalFrame editor, ArrayList<Method> metodosSet, CasoPrueba casoPrueba) {
+    public void dependenciesEditorToSelection(JInternalFrame editor, ArrayList<Method> metodosSet, CasoPrueba casoPrueba, java.util.List<ClassMember> metodosTodos) {
         try {
             editor.setVisible(false);
-            DependenciesSelection selection = new DependenciesSelection(metodosSet, casoPrueba, this);
+            DependenciesSelection selection = new DependenciesSelection(metodosSet, casoPrueba, this, metodosTodos);
             selection.setVisible(true);
             this.getjDesktopPane().add(selection);
             selection.setMaximum(true);
@@ -376,10 +377,10 @@ public class Inicio extends javax.swing.JFrame {
         }
     }
 
-    public void dependenciesSelectionToEditor(JInternalFrame dependenciesSelection, ArrayList<Method> metodosSet, ArrayList<Method> metodosSetSeleccionados, CasoPrueba casoPrueba) {
+    public void dependenciesSelectionToEditor(JInternalFrame dependenciesSelection, ArrayList<Method> metodosSet, ArrayList<Method> metodosSetSeleccionados, CasoPrueba casoPrueba, java.util.List<ClassMember> metodosTodos) {
         try {
             dependenciesSelection.setVisible(false);
-            DependenciesEditor editor = new DependenciesEditor(metodosSet, metodosSetSeleccionados, this, casoPrueba);
+            DependenciesEditor editor = new DependenciesEditor(metodosSet, metodosSetSeleccionados, this, casoPrueba, metodosTodos);
             editor.setVisible(true);
             this.getjDesktopPane().add(editor);
             editor.setMaximum(true);

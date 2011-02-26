@@ -37,6 +37,9 @@ import com.teg.vista.ayuda.AyudaAssert;
 import com.teg.vista.ayuda.AyudaMetodos;
 
 import com.teg.vista.ayuda.AyudaVariables;
+import com.teg.vista.customlist.ClassMember;
+import com.teg.vista.customlist.CustomListModel;
+import com.teg.vista.customlist.MethodWrapper;
 
 import java.awt.Color;
 
@@ -45,8 +48,6 @@ import java.awt.Component;
 import java.awt.Dimension;
 
 import java.awt.Toolkit;
-import java.awt.event.FocusEvent;
-import java.awt.event.ItemEvent;
 
 import java.awt.event.MouseEvent;
 
@@ -93,7 +94,6 @@ import java.util.regex.Pattern;
 import javax.swing.BorderFactory;
 
 import javax.swing.DefaultCellEditor;
-import javax.swing.DefaultComboBoxModel;
 
 import javax.swing.JComboBox;
 
@@ -123,7 +123,7 @@ import javax.swing.table.TableCellEditor;
  */
 public class CaseTestEditor extends javax.swing.JInternalFrame {
 
-    private ArrayList<Method> metodos = new ArrayList<Method>();
+    private java.util.List<ClassMember> metodos = new java.util.ArrayList<ClassMember>();
 
     private ArrayList<DefaultCellEditor> editores = new ArrayList<DefaultCellEditor>();
 
@@ -157,7 +157,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
     private Class tipoVarRetorno;
 
-    private String actualNameMethod;
+    private ClassMember actualNameMethod;
 
     private JTable tablaArgumentos;
 
@@ -185,11 +185,13 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
     /** Creates new form CaseTestEditor */
     @SuppressWarnings("LeakingThisInConstructor")
-    public CaseTestEditor(ArrayList<Method> metodos, Inicio inicio) {
+    public CaseTestEditor(java.util.List<ClassMember> metodos, Inicio inicio) {
 
         initComponents();
 
         this.metodos = metodos;
+
+        listaMetodos.setModel(new CustomListModel<ClassMember>());
 
         this.inicio = inicio;
 
@@ -231,31 +233,18 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
     public void cargarMetodos() {
 
-        ArrayList<Object> metodosLista = new ArrayList<Object>();
+       CustomListModel<ClassMember> modeloMetodos =
+               ((CustomListModel<ClassMember>) listaMetodos.getModel());
 
-        for (Method method : metodos) {
+       for (ClassMember clase : metodos){
 
-            metodosLista.add(method.getName());
+           modeloMetodos.addItem(clase);
+       }
 
-        }
-
-        addMethodList(metodosLista);
+       listaMetodos.setModel(modeloMetodos.actualizar());
     }
 
-    public Method getActualMethod() {
-
-        Method metodo = null;
-
-        for (Method method : metodos) {
-
-            if (method.getName().equals(actualNameMethod)) {
-
-                metodo = method;
-            }
-        }
-
-        return metodo;
-    }
+    
 
     public void crearMetawidgetMetadata(Document docXml) throws JDOMException, IOException {
 
@@ -277,24 +266,16 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
         }
     }
 
-    public void addMethodList(ArrayList<Object> metodosLista) {
+    
 
-        listaMetodos.setListData(metodosLista.toArray());
-    }
+    public Method getMethodSelected(ClassMember clase) {
 
-    public Method getMethodSelected(String text) {
+         CustomListModel<ClassMember> modeloMetodos =
+                ((CustomListModel<ClassMember>) listaMetodos.getModel());
 
-        Method method = null;
+        ClassMember metodoBuscado;
 
-        for (Method method1 : metodos) {
-
-            if (text.equals(method1.getName())) {
-
-                method = method1;
-            }
-        }
-
-        return method;
+       return null;
     }
 
     public void cargarAssert(Class metodoRetorno) {
@@ -328,19 +309,53 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
     }
 
-    public Method getMetodoGuardado(String nombre) {
+    public Method getMetodoGuardado(Metodo metodoBuscar) {
 
-        Method metodo = null;
+        Method metodoEncontrado = null;
 
-        for (Method method : metodos) {
+        for (ClassMember metodo : metodos) {
 
-            if (method.getName().equals(nombre)) {
+            if (metodo.getClaseDeOrigen().equals(metodoBuscar.getClaseOrigen())){
 
-                metodo = method;
+                if (metodo.getMetodo().getName().equals(metodoBuscar.getNombre())){
+
+                    ArrayList<Argumento> listaArgs = metodoBuscar.getArgumentos();
+
+                    MethodWrapper metodoWrap = new MethodWrapper(metodo.getMetodo());
+                    
+                    ArrayList<String> argNombre = new ArrayList<String>();
+
+                    for (Class clase : metodoWrap.getArgumentos()){
+
+                        argNombre.add(clase.getName());
+
+                    }
+
+                    if (listaArgs.size() == argNombre.size()) {
+
+                        boolean estanTodos = false;
+
+                        for (Argumento argumento : listaArgs) {
+
+                            if (argNombre.contains(argumento.getTipo())) {
+
+                                estanTodos = true;
+                            } else {
+                                estanTodos = false;
+                                break;
+                            }
+                        }
+                        
+                        if (estanTodos == true){
+                            metodoEncontrado = metodo.getMetodo();
+                        }
+                    }
+
+                }
             }
         }
 
-        return metodo;
+        return metodoEncontrado;
     }
 
     public void cargarComboItemsComplex(JComboBox combo, Class argument) {
@@ -349,7 +364,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
         for (Metodo metodo : metodosGuardados) {
 
-            method = getMetodoGuardado(metodo.getNombre());
+            method = getMetodoGuardado(metodo);
 
             Class retorno = method.getReturnType();
 
@@ -489,7 +504,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
      * 
      * @param nombreMetodo
      */
-    public void habilitarMetodosData(String nombreMetodo) {
+    public void habilitarMetodosData(ClassMember metodoSeleccionado) {
 
         for (Component component : panelTablaArgumentos.getComponents()) {
 
@@ -497,7 +512,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
         }
 
-        Method metodo = getMethodSelected(nombreMetodo);
+        Method metodo = metodoSeleccionado.getMetodo();
 
         if (!metodo.getReturnType().getName().equals("void")) {
 
@@ -533,7 +548,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
         for (Metodo metodo : metodosGuardados) {
 
-            method = getMetodoGuardado(metodo.getNombre());
+            method = getMetodoGuardado(metodo);
 
             Class retorno = method.getReturnType();
 
@@ -785,7 +800,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
             model = (DefaultTableModel) tablaVariables.getModel();
 
-            Method method = this.getActualMethod();
+            Method method = actualNameMethod.getMetodo();
 
 
             listWidget.getVariableInstancia().setNombreVariable("objeto" + objId);
@@ -835,7 +850,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
             arreglos.add("arreglo" + arregloId);
 
-            arreglos.add(this.getActualMethod().getName());
+            arreglos.add(this.actualNameMethod.getMetodo().getName());
 
             arreglos.add(listWidget.getArregloInstancia().getClaseComponente());
 
@@ -869,7 +884,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
             mapas.add("mapa" + mapaId);
 
-            mapas.add(this.getActualMethod().getName());
+            mapas.add(actualNameMethod.getMetodo().getName());
 
             mapas.add("<" + listWidget.getMapaInstancia().getClaseKey().getName()
                     + "," + listWidget.getMapaInstancia().getClaseValue().getName() + ">");
@@ -893,7 +908,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
                     
                     , tablaArgumentos.getSelectedRow(), 0);
 
-            Method method = this.getActualMethod();
+            
 
 
 
@@ -905,7 +920,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
             colecciones.add("coleccion" + coleccionId);
 
-            colecciones.add(this.getActualMethod().getName());
+            colecciones.add(this.actualNameMethod.getMetodo().getName());
 
             colecciones.add(listWidget.getColeccionInstancia().getTipoDatoColeccion());
 
@@ -1293,7 +1308,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
     }
 
     @SuppressWarnings("empty-statement")
-    public void cargarTablaArgumentos(String text) {
+    public void cargarTablaArgumentos(ClassMember metodoSeleccionado) {
 
         for (Component component : panelTablaArgumentos.getComponents()) {
 
@@ -1306,9 +1321,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
         editores.clear();
 
-        Method metodo;
-
-        metodo = getMethodSelected(text);
+        Method metodo = metodoSeleccionado.getMetodo();
 
         this.labelObjetoRetorno.setText(metodo.getReturnType().getName());
 
@@ -1355,7 +1368,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
                             listWidget.setGuardado(false);
 
-                            Method metodo = getActualMethod();
+                            Method metodo = actualNameMethod.getMetodo();
 
                             ArrayList<Class> classInstances;
 
@@ -1723,6 +1736,8 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
         tablaArgumentos.setLocation(20, 40);
 
+
+
         for (int i = 0; i < parameterTypes.length; i++) {
 
             tablaArgumentos.setValueAt(parameterTypes[i].getName(), i, 0);
@@ -1768,8 +1783,6 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
         tipoDeDatoResultado = new javax.swing.JLabel();
         guardarBt = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         listaMetodos = new javax.swing.JList();
         ayudaMetodo = new javax.swing.JLabel();
@@ -2086,18 +2099,6 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Metodos", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Calibri", 1, 12))); // NOI18N
 
-        jLabel3.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jLabel3MouseClicked(evt);
-            }
-        });
-
-        jLabel4.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jLabel4MouseClicked(evt);
-            }
-        });
-
         listaMetodos.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 listaMetodosMouseClicked(evt);
@@ -2120,15 +2121,9 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel4Layout.createSequentialGroup()
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
-                            .addContainerGap())
-                        .addGroup(jPanel4Layout.createSequentialGroup()
-                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(276, 276, 276)
-                            .addComponent(jLabel3)
-                            .addGap(30, 30, 30)))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
+                        .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                         .addComponent(ayudaMetodo)
                         .addContainerGap())))
@@ -2140,10 +2135,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(ayudaMetodo)
-                .addGap(118, 118, 118)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel4)))
+                .addGap(118, 118, 118))
         );
 
         newTestEscenario.setText("Nuevo Escenario");
@@ -2284,11 +2276,13 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
     private void guardarBtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guardarBtActionPerformed
         this.deshabilitarMetodos();
 
-        Method method = this.getActualMethod();
+       
 
         varId++;
 
-        Metodo metodoActual = this.agregarMetodo(method, varId, this.getActualAssert(method), this.getArgumentos(method));
+        Metodo metodoActual = this.agregarMetodo(actualNameMethod, varId,
+                this.getActualAssert(actualNameMethod.getMetodo()),
+                this.getArgumentos(actualNameMethod.getMetodo()));
 
         tablaVariables.removeAll();
 
@@ -2352,57 +2346,6 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_assertCondicionesPopupMenuWillBecomeInvisible
 
-    private void jLabel4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel4MouseClicked
-
-        for (int i = 0; i < listaMetodos.getComponents().length; i++) {
-
-            JTextField text = (JTextField) listaMetodos.getComponent(i);
-
-            if (text.getText().equals(actualNameMethod)) {
-
-                if (i != 0) {
-
-                    int pos = i;
-
-                    pos--;
-
-                    JTextField textAntes = new JTextField();
-
-                    textAntes = (JTextField) listaMetodos.getComponent(pos);
-
-                    String textAntesValue = textAntes.getText();
-
-                    textAntes.setText(actualNameMethod);
-
-                    text.setText(textAntesValue);
-                }
-            }
-        }
-
-    }//GEN-LAST:event_jLabel4MouseClicked
-
-    private void jLabel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseClicked
-
-        for (int i = 0; i < listaMetodos.getComponents().length; i++) {
-
-            JTextField text = (JTextField) listaMetodos.getComponent(i);
-
-            if (text.getText().equals(actualNameMethod)) {
-
-                if (i < listaMetodos.getComponents().length) {
-
-                    JTextField textDespues = (JTextField) listaMetodos.getComponent(i + 1);
-
-                    text.setText(textDespues.getText());
-
-                    textDespues.setText(actualNameMethod);
-
-                    break;
-                }
-            }
-        }
-    }//GEN-LAST:event_jLabel3MouseClicked
-
     private void assertMensajeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_assertMensajeActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_assertMensajeActionPerformed
@@ -2413,7 +2356,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
         popMenuMetodos.removeAll();
 
-        String metodoNombre = (String) listaMetodos.getSelectedValue();
+        ClassMember metodoProcesar =  (ClassMember) listaMetodos.getSelectedValue();
 
         if (evt.getButton() == MouseEvent.BUTTON3) {
 
@@ -2427,7 +2370,9 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
                     popMenuMetodos.setVisible(false);
 
-                    Method metodoActual = getMethodSelected(listaMetodos.getSelectedValue().toString());
+                    ClassMember metodoSeleccionado = (ClassMember) listaMetodos.getSelectedValue();
+
+                    Method metodoActual = metodoSeleccionado.getMetodo();
 
                     JavadocFrame javadoc = new JavadocFrame(archivosJavaDoc, metodoActual);
 
@@ -2462,7 +2407,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
                 for (int i = 0; i < metodosGuardados.size(); i++) {
 
-                    if (metodosGuardados.get(i).getNombre().equals(metodoNombre)) {
+                    if (metodosGuardados.get(i).getNombre().equals(metodoProcesar.getMetodo().getName())) {
 
                         isIn = true;
 
@@ -2471,22 +2416,22 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
                 if (isIn == true) {
 
-                    cargarTablaArgumentos(metodoNombre);
+                    cargarTablaArgumentos(metodoProcesar);
 
-                    //deshabilitarMetodosData();
+                    deshabilitarMetodosData();
 
                 } else {
 
-                    cargarTablaArgumentos(metodoNombre);
+                    cargarTablaArgumentos(metodoProcesar);
 
-                    habilitarMetodosData(metodoNombre);//ver orden
+                    habilitarMetodosData(metodoProcesar);//ver orden
 
-                    actualNameMethod = metodoNombre;
+                    actualNameMethod = metodoProcesar;
                 }
             }
 
             if (assertVariables.getSelectedItem() != null) {
-                Method method = getActualMethod();
+                Method method = actualNameMethod.getMetodo();
                 Class retorno = method.getReturnType();
                 String opcionAssert[] = assertVariables.getSelectedItem().toString().split("\\.");
                 Class assertion = getClaseEvaluar(retorno, opcionAssert);
@@ -2576,7 +2521,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
         if (this.hasMetodosSet(metodosSet)) {
             CasoPrueba casoPrueba = this.crearCasoPrueba(this.inicio.getNombreCasoPrueba(), escenariosPrueba);
-            this.inicio.caseTestToDependenciesSelection(this, metodosSet, casoPrueba);
+            this.inicio.caseTestToDependenciesSelection(this, metodosSet, casoPrueba, metodos);
         } else {
             XmlManager xmlManager = new XmlManager();
             xmlManager.setInicio(inicio);
@@ -2606,11 +2551,17 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
         return flag;
     }
 
-    public ArrayList<Class> getClasesCasoPrueba(ArrayList<Method> metodosCasoPrueba) {
+    public ArrayList<Class> getClasesCasoPrueba(java.util.List<ClassMember> metodosCasoPrueba) {
 
         ArrayList<Class> clases = new ArrayList<Class>();
 
-        for (Method method : metodosCasoPrueba) {
+        ArrayList<Method> metodoCaso = new ArrayList<Method>();
+
+        for (ClassMember claseMember : metodosCasoPrueba){
+            metodoCaso.add(claseMember.getMetodo());
+        }
+
+        for (Method method : metodoCaso) {
 
             if (clases.isEmpty()) {
                 clases.add(method.getDeclaringClass());
@@ -2693,7 +2644,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
     private void resultadoAssertMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_resultadoAssertMouseClicked
 
-        Method method = getActualMethod();
+        Method method = actualNameMethod.getMetodo();
         Class retorno = method.getReturnType();
         String opcionAssert[] = assertVariables.getSelectedItem().toString().split("\\.");
         Class assertion = getClaseEvaluar(retorno, opcionAssert);
@@ -3000,7 +2951,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
     private void assertVariablesPopupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_assertVariablesPopupMenuWillBecomeInvisible
 
-        Method method = getActualMethod();
+        Method method = actualNameMethod.getMetodo();
         Class retorno = method.getReturnType();
         String opcionAssert[] = assertVariables.getSelectedItem().toString().split("\\.");
         Class assertion = getClaseEvaluar(retorno, opcionAssert);
@@ -3020,8 +2971,6 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
@@ -3228,7 +3177,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
         return assertion;
     }
 
-    public Metodo agregarMetodo(Method method, Integer cont, AssertTest condicionAssert, ArrayList<Argumento> argumentos) {
+    public Metodo agregarMetodo(ClassMember method, Integer cont, AssertTest condicionAssert, ArrayList<Argumento> argumentos) {
 
         Metodo metodo = null;
 

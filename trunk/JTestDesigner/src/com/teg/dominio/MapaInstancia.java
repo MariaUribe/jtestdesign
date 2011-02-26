@@ -21,6 +21,8 @@ public class MapaInstancia {
 
     private Class claseValue;
 
+    private String instanciaMapa;
+
     /**
      * @return the mapa
      */
@@ -79,6 +81,20 @@ public class MapaInstancia {
      */
     public void setClaseValue(Class claseValue) {
         this.claseValue = claseValue;
+    }
+
+    /**
+     * @return the instanciaMapa
+     */
+    public String getInstanciaMapa() {
+        return instanciaMapa;
+    }
+
+    /**
+     * @param instanciaMapa the instanciaMapa to set
+     */
+    public void setInstanciaMapa(String instanciaMapa) {
+        this.instanciaMapa = instanciaMapa;
     }
 
 }
