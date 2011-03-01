@@ -16,7 +16,6 @@ import com.teg.vista.customlist.CustomListModel;
 import com.teg.vista.customlist.MethodWrapper;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.awt.event.MouseEvent;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -445,7 +444,14 @@ public class MethodsManager extends javax.swing.JInternalFrame {
         CustomListModel<MethodWrapper> metodosModel = new CustomListModel<MethodWrapper>();
 
         for (Method m : classWrapper.getClaseDeOrigen().getMethods()) {
-            metodosModel.addItem(new MethodWrapper(m));
+
+            MethodWrapper methodWrapper = new MethodWrapper(m);
+
+
+            if (!methodWrapper.getMetodo().getDeclaringClass().getName().equals("java.lang.Object")){
+            
+                metodosModel.addItem(methodWrapper);
+            }
         }
 
         if (selectedMethodsList.getModel().getSize() != 0){
