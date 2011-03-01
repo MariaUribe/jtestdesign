@@ -582,7 +582,14 @@ public class InstanceListForm extends javax.swing.JDialog {
 
         listaSeleccionColeccion.setVisibleRowCount(-1);
 
-        javax.swing.JScrollPane listScroller = new javax.swing.JScrollPane(listaSeleccionColeccion);
+        listaSeleccionColeccion.setFont(new Font("Calibri",Font.BOLD,13));
+
+        javax.swing.JScrollPane listScroller = new javax.swing.JScrollPane();
+
+        
+
+        listScroller.setViewportView(listaSeleccionColeccion);
+
 
         listScroller.setPreferredSize(new Dimension(250, 300));
         
@@ -753,9 +760,15 @@ public class InstanceListForm extends javax.swing.JDialog {
 
         listaSeleccionObjeto.setVisibleRowCount(-1);
 
+        listaSeleccionObjeto.setFont(new Font("Calibri",Font.BOLD,13));
+
         javax.swing.JScrollPane listaObjetoScroller = new javax.swing.JScrollPane(listaSeleccionObjeto);
 
-        listaObjetoScroller.setPreferredSize(new Dimension(200, 300));
+    
+
+
+
+        listaObjetoScroller.setPreferredSize(new Dimension(150, 300));
 
         java.util.List<Class> clasesPadres = getClasesPadres(clasesGenericos.get(0));
 
@@ -799,9 +812,14 @@ public class InstanceListForm extends javax.swing.JDialog {
 
         listaSeleccionColeccion.setVisibleRowCount(-1);
 
+        listaSeleccionColeccion.setAutoscrolls(true);
+
         javax.swing.JScrollPane listaColeccionScroller = new javax.swing.JScrollPane(listaSeleccionColeccion);
 
-        listaColeccionScroller.setPreferredSize(new Dimension(200, 300));
+
+  
+
+        listaColeccionScroller.setPreferredSize(new Dimension(150, 300));
 
         llenarListaColeccionSeleccion(listaSeleccionColeccion);
 
@@ -809,9 +827,9 @@ public class InstanceListForm extends javax.swing.JDialog {
 
         c.gridy = 0;
 
-        c.insets = new Insets(10,20,0,5);
+        //c.insets = new Insets(10,20,0,5);
 
-        c.anchor = GridBagConstraints.CENTER;
+        c.anchor = GridBagConstraints.EAST;
 
         panelSeleccion.add(listaColeccionScroller, c);
 
@@ -827,21 +845,27 @@ public class InstanceListForm extends javax.swing.JDialog {
 
         listaSeleccionObjeto.setVisibleRowCount(-1);
 
+        listaSeleccionObjeto.setFont(new Font("Calibri",Font.BOLD,13));
+
         javax.swing.JScrollPane listaObjetoScroller = new javax.swing.JScrollPane(listaSeleccionObjeto);
 
-        listaObjetoScroller.setPreferredSize(new Dimension(200, 300));
+        listaSeleccionObjeto.setAutoscrolls(true);
+
+
+
+        listaObjetoScroller.setPreferredSize(new Dimension(150, 300));
 
         java.util.List<Class> clasesPadres = getClasesPadres(clasesGenericos.get(0));
 
         listaSeleccionObjeto.setListData(clasesPadres.toArray());
 
-        c.gridx = 1;
+        c.gridx = 2;
 
         c.gridy = 0;
 
-        c.insets = new Insets(10,20,0,5);
+        //c.insets = new Insets(10,20,0,5);
 
-        c.anchor = GridBagConstraints.CENTER;
+        c.anchor = GridBagConstraints.WEST;
 
         panelSeleccion.add(listaObjetoScroller, c);
 
@@ -993,13 +1017,22 @@ public class InstanceListForm extends javax.swing.JDialog {
 
         listaSeleccionColeccion.setMaximumSize(new Dimension(1000,1000));
 
+        
+
         listaSeleccionColeccion.setLayoutOrientation(JList.HORIZONTAL_WRAP);
 
         listaSeleccionColeccion.setVisibleRowCount(-1);
 
-        javax.swing.JScrollPane listaColeccionScroller = new javax.swing.JScrollPane(listaSeleccionColeccion);
+        listaSeleccionColeccion.setFont(new Font("Calibri",Font.BOLD,13));
 
-        listaColeccionScroller.setPreferredSize(new Dimension(200, 300));
+        javax.swing.JScrollPane listaColeccionScroller = new javax.swing.JScrollPane(listaSeleccionColeccion,
+                javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+                javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
+        //listaSeleccionColeccion.setAutoscrolls(true);
+
+
+        listaColeccionScroller.setPreferredSize(new Dimension(250, 300));
 
         llenarListaColeccionSeleccion(listaSeleccionColeccion);
 
@@ -1007,9 +1040,9 @@ public class InstanceListForm extends javax.swing.JDialog {
 
         c.gridy = 0;
 
-        c.insets = new Insets(10,20,0,5);
+       // c.insets = new Insets(10,20,0,5);
 
-        c.anchor = GridBagConstraints.CENTER;
+        c.anchor = GridBagConstraints.EAST;
 
         panelSeleccion.add(listaColeccionScroller, c);
 
@@ -1019,25 +1052,33 @@ public class InstanceListForm extends javax.swing.JDialog {
 
         listaSeleccionObjeto.setSize(new Dimension(100,100));
 
+
         listaSeleccionObjeto.setMaximumSize(new Dimension(1000,1000));
 
         listaSeleccionObjeto.setLayoutOrientation(JList.HORIZONTAL_WRAP);
 
         listaSeleccionObjeto.setVisibleRowCount(-1);
 
-        javax.swing.JScrollPane listaObjetoScroller = new javax.swing.JScrollPane(listaSeleccionObjeto);
+        listaSeleccionObjeto.setFont(new Font("Calibri",Font.BOLD,13));
 
-        listaObjetoScroller.setPreferredSize(new Dimension(200, 300));
+        javax.swing.JScrollPane listaObjetoScroller = new javax.swing.JScrollPane(listaSeleccionObjeto,
+                javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+                javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
+       // listaSeleccionObjeto.setAutoscrolls(true);
+
+
+        listaObjetoScroller.setPreferredSize(new Dimension(250, 300));
 
         llenarListaJarSeleccion(listaSeleccionObjeto);
 
-        c.gridx = 1;
+        c.gridx = 2;
 
         c.gridy = 0;
 
-        c.insets = new Insets(10,20,0,5);
+        //c.insets = new Insets(10,20,0,5);
 
-        c.anchor = GridBagConstraints.CENTER;
+        c.anchor = GridBagConstraints.WEST;
 
         panelSeleccion.add(listaObjetoScroller, c);
 
@@ -1196,7 +1237,10 @@ public class InstanceListForm extends javax.swing.JDialog {
 
         javax.swing.JScrollPane listaColeccionScroller = new javax.swing.JScrollPane(listaSeleccionColeccion);
 
-        listaColeccionScroller.setPreferredSize(new Dimension(250, 300));
+
+        listaSeleccionColeccion.setAutoscrolls(true);
+
+        listaColeccionScroller.setPreferredSize(new Dimension(150, 300));
 
         c.gridx = 0;
 
@@ -1712,6 +1756,8 @@ public class InstanceListForm extends javax.swing.JDialog {
 
 
        aceptarSeleccion.setEnabled(false);
+
+       cancelarSeleccion.setEnabled(true);
 
 
     }
