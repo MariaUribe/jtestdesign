@@ -2471,7 +2471,7 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
 
             metodosGuardados = new ArrayList<Metodo>();
 
-           
+
 
             nombreEscenario.setText("");
 
@@ -3284,19 +3284,35 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
             argumento.setNombre("arg" + contSimple);
             argumento.setClaseOrigen(clazz.getName());
 
-            if (clazz.isArray()) {
-                String clase = this.classNameArray(tablaArgumentos.getValueAt(contFila, 0).toString());
-                argumento.setTipo(clase + "[]");
-                argumento.setArreglo(true);
-
-            } else if (!tablaArgumentos.getValueAt(contSimple - 1, 1).toString().startsWith("Crear:")) {
+            if (!tablaArgumentos.getValueAt(contSimple - 1, 1).toString().startsWith("Crear:")) {
                 String valor = tablaArgumentos.getValueAt(contSimple - 1, 1).toString();
                 if (valor.startsWith("objeto")) {
                     for (VariableInstancia var : variablesGuardadas) {
                         if (var.getNombreVariable().equals(valor)) {
                             argumento.setTipo(var.getInstancia().getClass().getName());
                             argumento.setArreglo(false);
-                            System.out.println("tipo de dato: " + var.getInstancia().getClass().getName());
+                        }
+                    }
+                } else if (valor.startsWith("coleccion")) {
+                    for (ColeccionInstancia var : coleccionesGuardadas) {
+                        if (var.getColeccionInstancia().getClass().getName().equals(valor)) {
+                            argumento.setTipo(var.getColeccionInstancia().getClass().getName());
+                            argumento.setArreglo(false);
+                        }
+                    }
+                } else if (valor.startsWith("mapa")) {
+                    for (MapaInstancia var : mapasGuardados) {
+                        if (var.getMapa().getClass().getName().equals(valor)) {
+                            argumento.setTipo(var.getMapa().getClass().getName());
+                            argumento.setArreglo(false);
+                        }
+                    }
+                } else if (valor.startsWith("arreglo")) {
+                    for (ArregloInstancia var : arreglosGuardados) {
+                        if (var.getArreglo().getClass().getName().equals(valor)) {
+                            String clase = this.classNameArray(var.getArreglo().getClass().getName());
+                            argumento.setTipo(clase + "[]");
+                            argumento.setArreglo(true);
                         }
                     }
                 } else {
@@ -3304,6 +3320,11 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
                     argumento.setTipo(clase);
                     argumento.setArreglo(false);
                 }
+            } else if (clazz.isArray()) {
+                String clase = this.classNameArray(tablaArgumentos.getValueAt(contFila, 0).toString());
+                argumento.setTipo(clase + "[]");
+                argumento.setArreglo(true);
+
             } else {
                 String clase = tablaArgumentos.getValueAt(contFila, 0).toString();
                 argumento.setTipo(clase);
@@ -3400,8 +3421,6 @@ public class CaseTestEditor extends javax.swing.JInternalFrame {
                 argumento.setValor(tablaArgumentos.getValueAt(contSimple - 1, 1).toString());
                 argumento.setGenerarXstream(false);
             }
-
-
 
 //            System.out.println("ARGUMENTO ACTUAL, tipo: " + argumento.getTipo()
 //                    + " valor: " + argumento.getValor()
